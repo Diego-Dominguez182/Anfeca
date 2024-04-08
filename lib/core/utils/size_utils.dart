@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-const num FIGMA_DESIGN_WIDTH = 360;
-const num FIGMA_DESIGN_HEIGHT = 800;
-const num FIGMA_DESIGN_STATUS_BAR = 0;
+const num desing_width = 360;
+const num desing_height = 800;
+const num status_bar = 0;
 typedef ResponsiveBuild = Widget Function(
   BuildContext context,
   Orientation orientation,
@@ -48,11 +48,11 @@ class SizeUtils {
 
     if (orientation == Orientation.portrait) {
       width =
-          boxConstraints.maxWidth.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
+          boxConstraints.maxWidth.isNonZero(defaultValue: desing_width);
       height = boxConstraints.maxHeight.isNonZero();
     } else {
       width =
-          boxConstraints.maxHeight.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
+          boxConstraints.maxHeight.isNonZero(defaultValue: desing_width);
       height = boxConstraints.maxWidth.isNonZero();
     }
     deviceType = DeviceType.mobile;
@@ -64,10 +64,10 @@ extension ResponsiveExtension on num {
 
   double get _height => SizeUtils.height;
 
-  double get h => ((this * _width) / FIGMA_DESIGN_WIDTH);
+  double get h => ((this * _width) / desing_width);
 
   double get v =>
-      (this * _height) / (FIGMA_DESIGN_HEIGHT - FIGMA_DESIGN_STATUS_BAR);
+      (this * _height) / (desing_height - status_bar);
 
   double get adaptSize {
     var height = v;
