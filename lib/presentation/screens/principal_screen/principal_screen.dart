@@ -1,0 +1,166 @@
+import 'package:resty_app/presentation/screens/tenant_profile_main_screen.dart';
+import 'package:resty_app/presentation/widgets/custom_search_view.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:async';
+import 'widgets/main_item_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:resty_app/core/app_export.dart';
+
+
+// ignore: must_be_immutable
+class PrincipalScreen extends StatelessWidget {
+  PrincipalScreen({Key? key}) : super(key: key);
+
+  TextEditingController searchController = TextEditingController();
+  Completer<GoogleMapController> googleMapController = Completer();
+
+  // Función para obtener la cantidad de cuartos desde la base de datos
+  Future<int> getCantidadCuartos() async {
+    // Aquí deberías realizar la lógica para obtener la cantidad de cuartos desde tu base de datos
+    // Por ahora, lo simularemos con un valor fijo
+    return Future.delayed(const Duration(seconds: 1), () => 10);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          child: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTwelve(context),
+                const SizedBox(height: 8),
+                _buildImageThree(context),
+                const SizedBox(height: 7),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    "Cerca de ti",
+                    style: CustomTextStyles.bodySmallBlack900,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                FutureBuilder<int>(
+                  future: getCantidadCuartos(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator(); // Muestra un indicador de carga mientras se obtiene la cantidad de cuartos
+                    } else {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        // Aquí se construye el GridView con la cantidad de cuartos obtenida
+                        return _buildMain(context, snapshot.data ?? 0);
+                      }
+                    }
+                  },
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTwelve(BuildContext context) {
+    return Container(
+      width: double.maxFinite,
+      padding: const EdgeInsets.fromLTRB(4, 12, 4, 11),
+      decoration: AppDecoration.outlineBlack,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: CustomSearchView(
+                controller: searchController,
+                autofocus: false,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TenantProfileMainScreen()),
+              );
+            },
+            child: Container(
+              height: 57,
+              width: 47,
+              margin: const EdgeInsets.only(
+                left: 5,
+                bottom: 5,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 1),
+              decoration: AppDecoration.outlineBlack900.copyWith(
+                borderRadius: BorderRadius.circular(23),
+              ),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgPerfil1,
+                height: 42,
+                width: 42,
+                alignment: Alignment.center,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageThree(BuildContext context) {
+    return SizedBox(
+      height: 100,
+      width: double.infinity,
+      child: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: const CameraPosition(
+          target: LatLng(
+            37.43296265331129,
+            -122.08832357078792,
+          ),
+          zoom: 14.4746,
+        ),
+        onMapCreated: (GoogleMapController controller) {
+          googleMapController.complete(controller);
+        },
+        zoomControlsEnabled: false,
+        zoomGesturesEnabled: false,
+        myLocationButtonEnabled: false,
+        myLocationEnabled: false,
+      ),
+    );
+  }
+
+  Widget _buildMain(BuildContext context, int cantidadCuartos) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 24,
+        right: 29,
+      ),
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisExtent:190,
+          crossAxisCount: 1,
+          mainAxisSpacing: 37,
+          crossAxisSpacing: 37,
+        ),
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: cantidadCuartos,
+        itemBuilder: (context, index) {
+          return const MainItemWidget();
+        },
+      ),
+    );
+  }
+}

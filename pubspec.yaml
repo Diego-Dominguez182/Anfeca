@@ -1,0 +1,45 @@
+name: resty_app
+description: "A new Flutter project."
+
+# Prevent accidental publishing to pub.dev.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.1 <4.0.0'
+
+dependencies:
+  cached_network_image: ^3.3.1
+  flutter:
+    sdk: flutter
+  permission_handler: ^11.3.0
+  flutter_localizations:
+    sdk: flutter
+  flutter_svg: ^2.0.10+1
+  file_picker: ^8.0.0+1
+  pin_code_fields: ^8.0.1
+  provider: ^6.1.2
+  google_maps_flutter: ^2.6.0
+  firebase_core: ^2.28.0
+  firebase_auth: ^4.19.0
+  email_auth: ^1.1.1
+  mailer: ^6.1.0
+  cloud_firestore: ^4.16.0
+  firebase_storage: ^11.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Enable generation of localized Strings from arb files.
+  generate: true
+
+  assets:
+    # Add assets from the images directory to the application.
+    - assets/images/
