@@ -26,12 +26,7 @@ class MainRegistrationScreen extends StatelessWidget {
                   SizedBox(height: 8.v),
                   _buildOwnerRegistrationButton(context),
                   SizedBox(height: 8.v),
-                  CustomOutlinedButton(
-                      text: "Cancelar",
-                      margin: EdgeInsets.only(left: 34.h, right: 33.h),
-                      onPressed: () {
-                        onTapCancelar(context);
-                      }),
+                  _buildCancelButton(context)
                 ]))));
   }
 
@@ -59,6 +54,15 @@ class MainRegistrationScreen extends StatelessWidget {
     });
   }
 
+Widget _buildCancelButton(BuildContext context){
+  return CustomOutlinedButton(
+    text: "Cancelar",
+    margin: EdgeInsets.only(left: 34.h, right: 33.h),
+    onPressed: () {
+      onTapCancel(context);
+    }
+  );
+}
   onTapTenant(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.tenantRegistrationScreen);
   }
@@ -67,7 +71,7 @@ class MainRegistrationScreen extends StatelessWidget {
     Navigator.pushNamed(context, AppRoutes.ownerRegistrationScreen);
   }
 
-  onTapCancelar(BuildContext context) {
+  onTapCancel(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.mainScreen);
   }
 }

@@ -21,24 +21,9 @@ const MessageTenantRegisterScreen({ Key? key }) : super(key: key);
                   width: 282.h,
                 ),
                 SizedBox(height: 14.v),
-                Container(
-                  width: 233.h,
-                  margin: EdgeInsets.symmetric(horizontal: 28.h),
-                  child: Text(
-                    "Estamos revisando los documentos que subiste, obtendras respuesta lo más pronto posible",
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 5,
-                    textAlign: TextAlign.center,
-                    style: restyTextTheme.displaySmall,
-                  ),
-                ),
+                _buildMessage(context),
                 SizedBox(height: 34.v),
-                CustomOutlinedButton(
-                  text: "Aceptar",
-                  margin: EdgeInsets.symmetric(horizontal: 34.h),
-                  onPressed: () {
-                    onTapAccept(context);
-                  }),
+                _buildAcceptButton(context),
               ]
             )
           )
@@ -46,7 +31,29 @@ const MessageTenantRegisterScreen({ Key? key }) : super(key: key);
     );
   }
 
+Widget _buildMessage(BuildContext context){
+  return Container(
+    width: 233.h,
+    margin: EdgeInsets.symmetric(horizontal: 28.h),
+    child: Text(
+      "Estamos revisando los documentos que subiste, obtendras respuesta lo más pronto posible",
+      overflow: TextOverflow.ellipsis,
+      maxLines: 5,
+      textAlign: TextAlign.center,
+      style: restyTextTheme.displaySmall,
+    ),
+  );
+}
 
+Widget _buildAcceptButton(BuildContext context){
+  return CustomOutlinedButton(
+    text: "Aceptar",
+    margin: EdgeInsets.symmetric(horizontal: 34.h),
+    onPressed: () {
+      onTapAccept(context);
+    }
+  );
+}
   onTapAccept(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.mainScreen);
   }

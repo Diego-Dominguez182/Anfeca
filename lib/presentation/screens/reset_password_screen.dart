@@ -27,31 +27,11 @@ class ResetPasswordScreen extends StatelessWidget {
                 margin: EdgeInsets.only(left: 10),
               ),
               SizedBox(height: 7),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 43),
-                child: CustomTextFormField(
-                  controller: correoElectronicoController,
-                  hintText: "Correo electrónico",
-                  textInputAction: TextInputAction.done,
-                  autofocus: false,
-                ),
-              ),
+              _buildEmail(context),
               SizedBox(height: 18),
-              CustomOutlinedButton(
-                text: "Reestablecer contraseña",
-                margin: EdgeInsets.symmetric(horizontal: 43),
-                onPressed: () {
-                  onTapResetPassword(context);
-                },
-              ),
+              _buildResetPassword(context),
               SizedBox(height: 7),
-              CustomOutlinedButton(
-                text: "Regresar",
-                margin: EdgeInsets.symmetric(horizontal: 43),
-                onPressed: () {
-                  onTapBack(context);
-                },
-              ),
+              _buildBackButton(context),
               SizedBox(height: 5)
             ],
           ),
@@ -60,6 +40,37 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildEmail(BuildContext context){
+    return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 43),
+                child: CustomTextFormField(
+                  controller: correoElectronicoController,
+                  hintText: "Correo electrónico",
+                  textInputAction: TextInputAction.done,
+                  autofocus: false,
+                ),
+              );
+  }
+
+  Widget _buildResetPassword(BuildContext context){
+    return CustomOutlinedButton(
+                text: "Reestablecer contraseña",
+                margin: EdgeInsets.symmetric(horizontal: 43),
+                onPressed: () {
+                  onTapResetPassword(context);
+                },
+              );
+  }
+
+  Widget _buildBackButton(BuildContext context){
+    return CustomOutlinedButton(
+                text: "Regresar",
+                margin: EdgeInsets.symmetric(horizontal: 43),
+                onPressed: () {
+                  onTapBack(context);
+                },
+              );
+  }
   onTapBack(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.mainScreen);
   }

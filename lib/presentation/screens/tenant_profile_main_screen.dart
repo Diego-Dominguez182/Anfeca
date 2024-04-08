@@ -18,9 +18,9 @@ class TenantProfileMainScreen extends StatelessWidget {
           width: double.maxFinite,
           child: Column(
             children: [
-              _buildFifteen(context),
-              _buildFourteen(context),
-              _buildEleven(context),
+              _buildMyProfile(context),
+              _buildMyPreferences(context),
+              _buildMyProperties(context),
               SizedBox(height: 5.v),
               _buildLogoutButton(context),
             ],
@@ -52,7 +52,7 @@ class TenantProfileMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFifteen(BuildContext context) {
+  Widget _buildMyProfile(BuildContext context) {
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.fromLTRB(11.h, 14.v, 11.h, 13.v),
@@ -64,7 +64,7 @@ class TenantProfileMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFourteen(BuildContext context) {
+  Widget _buildMyPreferences(BuildContext context) {
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.fromLTRB(12.h, 14.v, 12.h, 13.v),
@@ -76,7 +76,7 @@ class TenantProfileMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEleven(BuildContext context) {
+  Widget _buildMyProperties(BuildContext context) {
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.fromLTRB(11.h, 14.v, 11.h, 13.v),

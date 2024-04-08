@@ -182,8 +182,6 @@ class _MainScreenState extends State<MainScreen> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    _showUploadButton = false;
-                    print(_showUploadButton);
                   },
                   child: Text("OK"),
                 ),
@@ -209,8 +207,6 @@ class _MainScreenState extends State<MainScreen> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    _showUploadButton = false;
-                    print(_showUploadButton);
                   },
                   child: Text("OK"),
                 ),
@@ -222,11 +218,26 @@ class _MainScreenState extends State<MainScreen> {
         Navigator.pushNamed(context, AppRoutes.principalScreen);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+              showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Cuenta no registrada"),
+              content: Text("Revisa tus credenciales"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
         const SnackBar(
           content: Text('Revisa tus credenciales'),
-        ),
-      );
+        );
     }
   }
 

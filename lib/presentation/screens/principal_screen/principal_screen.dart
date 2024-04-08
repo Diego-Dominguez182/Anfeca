@@ -7,17 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:resty_app/core/app_export.dart';
 
 
-// ignore: must_be_immutable
 class PrincipalScreen extends StatelessWidget {
   PrincipalScreen({Key? key}) : super(key: key);
 
   TextEditingController searchController = TextEditingController();
   Completer<GoogleMapController> googleMapController = Completer();
 
-  // Función para obtener la cantidad de cuartos desde la base de datos
   Future<int> getCantidadCuartos() async {
-    // Aquí deberías realizar la lógica para obtener la cantidad de cuartos desde tu base de datos
-    // Por ahora, lo simularemos con un valor fijo
     return Future.delayed(const Duration(seconds: 1), () => 10);
   }
 
@@ -48,12 +44,11 @@ class PrincipalScreen extends StatelessWidget {
                   future: getCantidadCuartos(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator(); // Muestra un indicador de carga mientras se obtiene la cantidad de cuartos
+                      return const CircularProgressIndicator();
                     } else {
                       if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
-                        // Aquí se construye el GridView con la cantidad de cuartos obtenida
                         return _buildMain(context, snapshot.data ?? 0);
                       }
                     }
