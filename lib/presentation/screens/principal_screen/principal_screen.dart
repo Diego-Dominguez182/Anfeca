@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:resty_app/core/app_export.dart';
 
 
+// ignore: must_be_immutable
 class PrincipalScreen extends StatelessWidget {
   PrincipalScreen({Key? key}) : super(key: key);
 
