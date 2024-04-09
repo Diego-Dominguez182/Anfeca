@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'Roomates',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.mainScreen,
+          initialRoute: AppRoutes.principalScreen,
           routes: AppRoutes.routes,
         );
       },

@@ -31,17 +31,32 @@ class PrincipalScreen extends StatelessWidget {
               children: [
                 _buildTwelve(context),
                 const SizedBox(height: 8),
-                _buildImageThree(context),
+                _buildGoogleMaps(context),
                 const SizedBox(height: 7),
-                Padding(
+                _buildMessage(context),
+                const SizedBox(height: 10),
+                _buildRooms(context),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMessage(BuildContext context){
+    return                 Padding(
                   padding: const EdgeInsets.only(left: 15),
                   child: Text(
                     "Cerca de ti",
                     style: CustomTextStyles.bodySmallBlack900,
                   ),
-                ),
-                const SizedBox(height: 10),
-                FutureBuilder<int>(
+                );
+  }
+
+  Widget _buildRooms(BuildContext context){
+    return FutureBuilder<int>(
                   future: getCantidadCuartos(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -54,16 +69,9 @@ class PrincipalScreen extends StatelessWidget {
                       }
                     }
                   },
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+                );
   }
-
+  
   Widget _buildTwelve(BuildContext context) {
     return Container(
       width: double.maxFinite,
@@ -113,7 +121,7 @@ class PrincipalScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildImageThree(BuildContext context) {
+  Widget _buildGoogleMaps(BuildContext context) {
     return SizedBox(
       height: 100,
       width: double.infinity,

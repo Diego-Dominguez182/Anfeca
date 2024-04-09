@@ -116,6 +116,6 @@ class TenantProfileMainScreen extends StatelessWidget {
   }
 
   onTapTelevision(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.mainScreen);
+    Navigator.pushNamed(context, AppRoutes.principalScreen);
   }
 }
