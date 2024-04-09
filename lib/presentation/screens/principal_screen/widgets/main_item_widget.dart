@@ -7,34 +7,49 @@ class MainItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.green[50],
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(width: 1.0, color: Colors.blue),
+      ),
       height: 75.v,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start, // Alinea los hijos a la izquierda
         children: [
           Expanded(
-            child: CustomImageView(
-              imagePath: ImageConstant.imgImage1,
-              fit: BoxFit.cover,
-              width: double.infinity,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgImage1,
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
             ),
           ),
           SizedBox(height: 5),
-          Text(
-            'Tu primer texto aquí',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0), // Agrega un relleno a la izquierda del texto
+            child: Text(
+              'Tu primer texto aquí',
+              textAlign: TextAlign.left, // Alinea el texto a la izquierda
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
           ),
           SizedBox(height: 2),
-          Text(
-            'Tu segundo texto aquí',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0), // Agrega un relleno a la izquierda del texto
+            child: Text(
+              'Tu segundo texto aquí',
+              textAlign: TextAlign.left, // Alinea el texto a la izquierda
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
           ),
         ],
