@@ -11,26 +11,34 @@ import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
 
 class ImageModel extends ChangeNotifier {
   File? file;
-  Future<void> pickFile(BuildContext context) async {
-  try {
-    final FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.video);
-    if (result != null && result.files.isNotEmpty && result.files.single.path != null) {
-      if (result.files.single.extension == 'mp4' || result.files.single.extension == 'mov' || result.files.single.extension == 'avi' || result.files.single.extension == 'wmv' || result.files.single.extension == 'flv' || result.files.single.extension == 'mkv') {
-        file = File(result.files.single.path!);
-        notifyListeners();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Por favor selecciona un archivo de vídeo.'),
-          ),
-        );
-      }
-    }
-  } catch (e) {
-    print('Error al seleccionar el archivo: $e');
-  }
-}
 
+  Future<void> pickFile(BuildContext context) async {
+    try {
+      final FilePickerResult? result =
+          await FilePicker.platform.pickFiles(type: FileType.video);
+      if (result != null &&
+          result.files.isNotEmpty &&
+          result.files.single.path != null) {
+        if (result.files.single.extension == 'mp4' ||
+            result.files.single.extension == 'mov' ||
+            result.files.single.extension == 'avi' ||
+            result.files.single.extension == 'wmv' ||
+            result.files.single.extension == 'flv' ||
+            result.files.single.extension == 'mkv') {
+          file = File(result.files.single.path!);
+          notifyListeners();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Por favor selecciona un archivo de vídeo.'),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      print('Error al seleccionar el archivo: $e');
+    }
+  }
 
   Future<String?> uploadFile() async {
     try {
@@ -38,7 +46,8 @@ class ImageModel extends ChangeNotifier {
         throw Exception('File is not initialized');
       }
       final storageRef = FirebaseStorage.instance.ref();
-      final mountainsRef = storageRef.child('User/${DateTime.now().millisecondsSinceEpoch}');
+      final mountainsRef =
+          storageRef.child('User/${DateTime.now().millisecondsSinceEpoch}');
       await mountainsRef.putFile(file!);
       return await mountainsRef.getDownloadURL();
     } catch (e) {
@@ -102,17 +111,16 @@ class MessageFileScreen extends StatelessWidget {
     );
   }
 
-Widget _buildSelectFile(BuildContext context) {
-  return CustomOutlinedButton(
-    text: "Seleccionar archivo",
-    margin: EdgeInsets.symmetric(horizontal: 34.h),
-    onPressed: () async {
-      final imageModel = Provider.of<ImageModel>(context, listen: false);
-      await imageModel.pickFile(context);
-    },
-  );
-}
-
+  Widget _buildSelectFile(BuildContext context) {
+    return CustomOutlinedButton(
+      text: "Seleccionar archivo",
+      margin: EdgeInsets.symmetric(horizontal: 34.h),
+      onPressed: () async {
+        final imageModel = Provider.of<ImageModel>(context, listen: false);
+        await imageModel.pickFile(context);
+      },
+    );
+  }
 
   Widget _buildUploadFile(BuildContext context) {
     return Selector<ImageModel, File?>(
@@ -124,14 +132,14 @@ Widget _buildSelectFile(BuildContext context) {
             margin: EdgeInsets.symmetric(horizontal: 34.h),
             onPressed: () async {
               final imageModel =
-              Provider.of<ImageModel>(context, listen: false);
+                  Provider.of<ImageModel>(context, listen: false);
               String? downloadUrl = await imageModel.uploadFile();
               if (downloadUrl != null) {
                 await saveDownloadUrl(downloadUrl);
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                  builder: (context) => MessageTenantRegisterScreen()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MessageTenantRegisterScreen()));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -164,7 +172,8 @@ Future<void> saveDownloadUrl(String downloadUrl) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       String uid = user.uid;
-      DocumentReference userDocRef = FirebaseFirestore.instance.collection('User').doc(uid);
+      DocumentReference userDocRef =
+          FirebaseFirestore.instance.collection('User').doc(uid);
       await userDocRef.set({
         'schoolFile': downloadUrl,
       }, SetOptions(merge: true));
@@ -172,6 +181,6 @@ Future<void> saveDownloadUrl(String downloadUrl) async {
       throw Exception('User is not authenticated');
     }
   } catch (error) {
-        print("Error al guardar el URL de descarga: $error");
+    print("Error al guardar el URL de descarga: $error");
   }
 }

@@ -6,7 +6,6 @@ import 'widgets/main_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:resty_app/core/app_export.dart';
 
-
 // ignore: must_be_immutable
 class PrincipalScreen extends StatelessWidget {
   PrincipalScreen({Key? key}) : super(key: key);
@@ -31,7 +30,7 @@ class PrincipalScreen extends StatelessWidget {
               children: [
                 _buildTwelve(context),
                 const SizedBox(height: 8),
-                _buildGoogleMaps(context),
+                _buildMap(context),
                 const SizedBox(height: 7),
                 _buildMessage(context),
                 const SizedBox(height: 10),
@@ -45,33 +44,33 @@ class PrincipalScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMessage(BuildContext context){
-    return                 Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Text(
-                    "Cerca de ti",
-                    style: CustomTextStyles.bodySmallBlack900,
-                  ),
-                );
+  Widget _buildMessage(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15),
+      child: Text(
+        "Cerca de ti",
+        style: CustomTextStyles.bodySmallBlack900,
+      ),
+    );
   }
 
-  Widget _buildRooms(BuildContext context){
+  Widget _buildRooms(BuildContext context) {
     return FutureBuilder<int>(
-                  future: getCantidadCuartos(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else {
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return _buildMain(context, snapshot.data ?? 0);
-                      }
-                    }
-                  },
-                );
+      future: getCantidadCuartos(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return _buildMain(context, snapshot.data ?? 0);
+          }
+        }
+      },
+    );
   }
-  
+
   Widget _buildTwelve(BuildContext context) {
     return Container(
       width: double.maxFinite,
@@ -94,7 +93,8 @@ class PrincipalScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TenantProfileMainScreen()),
+                MaterialPageRoute(
+                    builder: (context) => TenantProfileMainScreen()),
               );
             },
             child: Container(
@@ -121,27 +121,8 @@ class PrincipalScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGoogleMaps(BuildContext context) {
+  Widget _buildMap(BuildContext context) {
     return SizedBox(
-      height: 100,
-      width: double.infinity,
-      child: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(
-            37.43296265331129,
-            -122.08832357078792,
-          ),
-          zoom: 14.4746,
-        ),
-        onMapCreated: (GoogleMapController controller) {
-          googleMapController.complete(controller);
-        },
-        zoomControlsEnabled: false,
-        zoomGesturesEnabled: false,
-        myLocationButtonEnabled: false,
-        myLocationEnabled: false,
-      ),
     );
   }
 
@@ -154,7 +135,7 @@ class PrincipalScreen extends StatelessWidget {
       child: GridView.builder(
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          mainAxisExtent:190,
+          mainAxisExtent: 190,
           crossAxisCount: 1,
           mainAxisSpacing: 37,
           crossAxisSpacing: 37,

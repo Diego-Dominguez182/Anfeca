@@ -40,37 +40,38 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmail(BuildContext context){
+  Widget _buildEmail(BuildContext context) {
     return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 43),
-                child: CustomTextFormField(
-                  controller: correoElectronicoController,
-                  hintText: "Correo electrónico",
-                  textInputAction: TextInputAction.done,
-                  autofocus: false,
-                ),
-              );
+      padding: EdgeInsets.symmetric(horizontal: 43),
+      child: CustomTextFormField(
+        controller: correoElectronicoController,
+        hintText: "Correo electrónico",
+        textInputAction: TextInputAction.done,
+        autofocus: false,
+      ),
+    );
   }
 
-  Widget _buildResetPassword(BuildContext context){
+  Widget _buildResetPassword(BuildContext context) {
     return CustomOutlinedButton(
-                text: "Reestablecer contraseña",
-                margin: EdgeInsets.symmetric(horizontal: 43),
-                onPressed: () {
-                  onTapResetPassword(context);
-                },
-              );
+      text: "Reestablecer contraseña",
+      margin: EdgeInsets.symmetric(horizontal: 43),
+      onPressed: () {
+        onTapResetPassword(context);
+      },
+    );
   }
 
-  Widget _buildBackButton(BuildContext context){
+  Widget _buildBackButton(BuildContext context) {
     return CustomOutlinedButton(
-                text: "Regresar",
-                margin: EdgeInsets.symmetric(horizontal: 43),
-                onPressed: () {
-                  onTapBack(context);
-                },
-              );
+      text: "Regresar",
+      margin: EdgeInsets.symmetric(horizontal: 43),
+      onPressed: () {
+        onTapBack(context);
+      },
+    );
   }
+
   onTapBack(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.mainScreen);
   }

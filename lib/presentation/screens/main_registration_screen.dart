@@ -54,15 +54,15 @@ class MainRegistrationScreen extends StatelessWidget {
     });
   }
 
-Widget _buildCancelButton(BuildContext context){
-  return CustomOutlinedButton(
-    text: "Cancelar",
-    margin: EdgeInsets.only(left: 34.h, right: 33.h),
-    onPressed: () {
-      onTapCancel(context);
-    }
-  );
-}
+  Widget _buildCancelButton(BuildContext context) {
+    return CustomOutlinedButton(
+        text: "Cancelar",
+        margin: EdgeInsets.only(left: 34.h, right: 33.h),
+        onPressed: () {
+          onTapCancel(context);
+        });
+  }
+
   onTapTenant(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.tenantRegistrationScreen);
   }
