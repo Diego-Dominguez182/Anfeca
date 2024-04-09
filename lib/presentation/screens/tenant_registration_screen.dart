@@ -156,7 +156,7 @@ class _TenantRegistrationScreenState extends State<TenantRegistrationScreen> {
   void onTapContinue(BuildContext context) async {
     try {
       UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailFieldController.text,
         password: passwordFieldController.text,
       );

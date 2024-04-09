@@ -30,11 +30,15 @@ class AppbarLeadingIconbutton extends StatelessWidget {
         child: CustomIconButton(
           height: 50.adaptSize,
           width: 50.adaptSize,
-          child: CustomImageView(
-            imagePath: ImageConstant.imgTelevision,
+          child: Align(
+            alignment: Alignment.center,
+              child: Align (
+                alignment: Alignment(-.4,0),
+                child: CustomImageView(
+                  imagePath: ImageConstant.imgTelevision,
           ),
         ),
       ),
-    );
+    )));
   }
 }

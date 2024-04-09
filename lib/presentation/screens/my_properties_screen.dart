@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resty_app/core/app_export.dart';
@@ -5,8 +8,16 @@ import 'package:resty_app/presentation/widgets/app_bar/appbar_leading_iconbutton
 import 'package:resty_app/presentation/widgets/app_bar/appbar_title.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 
-class TenantProfileMainScreen extends StatelessWidget {
-  const TenantProfileMainScreen({Key? key}) : super(key: key);
+class MyPropertiesMainScreen extends StatefulWidget {
+  const MyPropertiesMainScreen({Key? key}) : super(key: key);
+
+  @override
+  _MyPropertiesMainScreenState createState() =>
+      _MyPropertiesMainScreenState();
+}
+
+class _MyPropertiesMainScreenState extends State<MyPropertiesMainScreen> {
+  late String userType = '';
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +25,6 @@ class TenantProfileMainScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: appTheme.lightBlue900,
         appBar: _buildAppBar(context),
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              _buildMyProfile(context),
-              _buildMyPreferences(context),
-              _buildMyProperties(context),
-              SizedBox(height: 5.v),
-              _buildLogoutButton(context),
-            ],
-          ),
-        ),
       ),
     );
   }

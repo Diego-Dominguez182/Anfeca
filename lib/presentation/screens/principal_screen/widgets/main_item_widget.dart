@@ -9,12 +9,16 @@ class MainItemWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(width: 1.0, color: Colors.blue),
+        border: Border(
+          bottom: BorderSide(color: Colors.blue),
+          left: BorderSide(color: Colors.blue),
+          right: BorderSide(color: Colors.blue)
+        )
       ),
       height: 75.v,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start, // Alinea los hijos a la izquierda
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: ClipRRect(
@@ -28,10 +32,10 @@ class MainItemWidget extends StatelessWidget {
           ),
           SizedBox(height: 5),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0), // Agrega un relleno a la izquierda del texto
+            padding: const EdgeInsets.only(left: 8.0), 
             child: Text(
               'Tu primer texto aquí',
-              textAlign: TextAlign.left, // Alinea el texto a la izquierda
+              textAlign: TextAlign.left,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -41,10 +45,10 @@ class MainItemWidget extends StatelessWidget {
           ),
           SizedBox(height: 2),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0), // Agrega un relleno a la izquierda del texto
+            padding: const EdgeInsets.only(left: 8.0),
             child: Text(
               'Tu segundo texto aquí',
-              textAlign: TextAlign.left, // Alinea el texto a la izquierda
+              textAlign: TextAlign.left,
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resty_app/presentation/screens/menu_screen.dart';
 import '../presentation/screens/message_tenant_register_screen.dart';
 import '../presentation/screens/main_registration_screen.dart';
 import '../presentation/screens/main_screen.dart';
@@ -7,7 +8,6 @@ import '../presentation/screens/tenant_registration_screen.dart';
 import '../presentation/screens/reset_password_screen.dart';
 import '../presentation/screens/message_file_screen.dart';
 import '../presentation/screens/principal_screen/principal_screen.dart';
-
 class AppRoutes {
   static const String mainRegistrationScreen = '/main_registration_screen';
 
@@ -27,7 +27,7 @@ class AppRoutes {
 
   static const String principalScreen = '/principal_screen';
   
-  static const String tenantProfileMainScreen = '/tenant_profile_main_screen';
+  static const String menuScreen = '/menu_screen';
 
 
 
@@ -40,6 +40,6 @@ class AppRoutes {
     resetPasswordScreen: (context) => ResetPasswordScreen(),
     messageFileScreen: (context) => MessageFileScreen(),
     messageTenantRegisterSccreen: (context) => MessageTenantRegisterScreen(),
-    tenantProfileMainScreen: (context) => TenantRegistrationScreen(),
+    menuScreen: (context) => MenuScreen(),
   };
 }

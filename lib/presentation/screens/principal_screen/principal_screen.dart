@@ -1,4 +1,4 @@
-import 'package:resty_app/presentation/screens/tenant_profile_main_screen.dart';
+import 'package:resty_app/presentation/screens/menu_screen.dart';
 import 'package:resty_app/presentation/widgets/custom_search_view.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
@@ -94,7 +94,7 @@ class PrincipalScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => TenantProfileMainScreen()),
+                    builder: (context) => MenuScreen()),
               );
             },
             child: Container(
