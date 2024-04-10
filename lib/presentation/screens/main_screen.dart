@@ -1,274 +1,249 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
+import 'package:resty_app/presentation/screens/menu_screen.dart';
+import 'package:resty_app/presentation/widgets/custom_search_view.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:resty_app/presentation/widgets/icon_button_with_text.dart';
+import 'dart:async';
+import '../widgets/main_item_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:resty_app/core/app_export.dart';
-import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
-import 'package:resty_app/presentation/widgets/custom_text_form_field.dart';
-import 'package:resty_app/presentation/widgets/button_state.dart';
+import 'package:geolocator/geolocator.dart';
 
-// ignore_for_file: must_be_immutable
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  MainScreen({Key? key}) : super(key: key);
 
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  TextEditingController emailFieldController = TextEditingController();
-  TextEditingController passwordFieldController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
+  Completer<GoogleMapController> googleMapController = Completer();
+  late Future<int> cantidadCuartosFuture;
+  bool mapIsOn = false;
+  Position? currentPosition;
 
-  bool _isPasswordObscured = true;
-  bool _showUploadButton = false;
+  @override
+  void initState() {
+    super.initState();
+    cantidadCuartosFuture = getCantidadCuartos();
+    getUserCurrentLocation(); 
+  }
+
+  Future<int> getCantidadCuartos() async {
+    return Future.delayed(const Duration(seconds: 1), () => 10);
+  }
+
+  Future<void> getUserCurrentLocation() async {
+    await Geolocator.requestPermission().then((value) async {
+      Position position = await Geolocator.getCurrentPosition();
+      setState(() {
+        currentPosition = position;
+      });
+    }).catchError((error) async {
+      await Geolocator.requestPermission();
+      print("ERROR: $error");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        width: double.maxFinite,
-        padding: EdgeInsets.symmetric(horizontal: 35.h, vertical: 24.v),
-        child: Column(
-          children: [
-            CustomImageView(
-              imagePath: ImageConstant.imgRoommateroots1,
-              height: 250.v,
-              width: 282.h,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          child: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildAppBar(context),
+                const SizedBox(height: 8),
+                _buildSettingsBar(context),
+                const SizedBox(height: 8),
+                if(mapIsOn) ...[
+                  _buildMaps(context)],
+                if(!mapIsOn) ... [
+                  _buildMessage(context)],
+                const SizedBox(height: 10),
+                if(!mapIsOn) ... [
+                  _buildRooms(context)],
+                const SizedBox(height: 20),
+              ],
             ),
-            SizedBox(height: 31.v),
-            _buildEmail(context),
-            SizedBox(height: 9.v),
-            _buildPassword(context),
-            SizedBox(height: 18.v),
-            _buildLoginButton(context),
-            SizedBox(height: 9.v),
-            _buildRegisterButton(context),
-            SizedBox(height: 9.v),
-            _buildResetPassword(context),
-            SizedBox(height: 9.v),
-            if (_showUploadButton) ...[
-              _buildUploadFile(context),
-            ],
-          ],
+          ),
         ),
-      ),
-    ));
-  }
-
-  Widget _buildEmail(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 34.h),
-      child: CustomTextFormField(
-        controller: emailFieldController,
-        hintText: "Correo electrónico",
-        autofocus: false,
       ),
     );
   }
 
-  Widget _buildPassword(BuildContext context) {
+  Widget _buildMaps(BuildContext context){
+    LatLng initialCameraPosition = LatLng(
+      currentPosition?.latitude ?? 0.0,
+      currentPosition?.longitude ?? 0.0,
+    );
+
+    return SizedBox(
+      height: 600,
+      width: double.infinity,
+      child: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: CameraPosition(
+          target: initialCameraPosition,
+          zoom: 14.0,
+        ),
+        zoomControlsEnabled: false,
+        zoomGesturesEnabled: true,
+        myLocationEnabled: true,
+      ),
+    );
+  }
+
+  Widget _buildSettingsBar(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double buttonWidth = (screenWidth / 7) - 24.0;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 34.h),
-      child: Stack(
-        alignment: Alignment.centerRight,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
         children: [
-          CustomTextFormField(
-            obscureText: _isPasswordObscured,
-            controller: passwordFieldController,
-            hintText: "Contraseña",
-            textInputAction: TextInputAction.done,
-            autofocus: false,
-          ),
-          IconButton(
-            icon: Icon(
-              _isPasswordObscured ? Icons.visibility : Icons.visibility_off,
-              color: Colors.grey,
+          Expanded(
+            child: IconButtonWithText(
+              imageName: ImageConstant.listIcon,
+              text: "Lista",
+              onPressed: () {
+                setState(() {
+                  mapIsOn = false;
+                });
+              },
             ),
-            onPressed: () {
-              setState(() {
-                _isPasswordObscured = !_isPasswordObscured;
-              });
-            },
+          ),
+          SizedBox(width: buttonWidth),
+          Expanded(
+            child: IconButtonWithText(
+              imageName: ImageConstant.mapIcon,
+              text: "Mapa",
+              onPressed: () {
+                setState(() {
+                  mapIsOn = true;
+                });
+              },
+            ),
+          ),
+          SizedBox(width: buttonWidth),
+          Expanded(
+            child: IconButtonWithText(
+              imageName: ImageConstant.filterIcon,
+              text: "Filtros",
+              onPressed: () {
+                onTapFilter(context);
+              },
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildRegisterButton(BuildContext context) {
-    return CustomOutlinedButton(
-      text: "Registrarse",
-      margin: EdgeInsets.symmetric(horizontal: 34.h),
-      onPressed: () {
-        onTapRegisterButton(context);
+  Widget _buildMessage(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15),
+      child: Text(
+        "Cerca de ti",
+        style: CustomTextStyles.bodySmallBlack900,
+      ),
+    );
+  }
+
+  Widget _buildRooms(BuildContext context) {
+    return FutureBuilder<int>(
+      future: cantidadCuartosFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return _buildMain(context, snapshot.data ?? 0);
+          }
+        }
       },
     );
   }
 
-  Widget _buildResetPassword(BuildContext context) {
-    return Consumer<ButtonState>(
-      builder: (context, buttonState, _) {
-        return CustomOutlinedButton(
-          text: "Reestablecer contraseña",
-          margin: EdgeInsets.symmetric(horizontal: 34.h),
-          onPressed: () {
-            buttonState.setResetPasswordPressed("Reset");
-            onTapResetPassword(context);
-          },
-        );
-      },
-    );
-  }
-
-  void onTapLoginButton(BuildContext context) async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailFieldController.text,
-        password: passwordFieldController.text,
-      );
-
-      DocumentSnapshot<Map<String, dynamic>> snapshot_user =
-          await FirebaseFirestore.instance
-              .collection('User')
-              .doc(userCredential.user!.uid)
-              .get();
-      DocumentSnapshot<Map<String, dynamic>> snapshot_user_check =
-          await FirebaseFirestore.instance
-              .collection('User_check')
-              .doc(userCredential.user!.uid)
-              .get();
-
-      if (!userCredential.user!.emailVerified) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error de inicio de sesión"),
-              content: Text(
-                  "Tu correo electrónico aún no ha sido verificado. Por favor, verifica tu correo electrónico."),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
-      } else if (snapshot_user.data()!["userType"] == "Owner") {
-        await FirebaseFirestore.instance
-            .collection('User')
-            .doc(userCredential.user!.uid)
-            .update({
-          'verified': true,
-        });
-        Navigator.pushNamed(context, AppRoutes.principalScreen);
-      } else if ((snapshot_user.data()!["userType"] == "Tenant" &&
-              snapshot_user.data()!["schoolFile"] == null) ||
-          (snapshot_user_check.data()!["userType"] == "Tenant" &&
-              snapshot_user_check.data()!["schoolFile"] == null)) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error de inicio de sesión"),
-              content: Text("No has subido tu archivo."),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
-        setState(() {
-          _showUploadButton = true;
-        });
-      } else if ((snapshot_user.exists &&
-              snapshot_user.data()!["verified"] == false) ||
-          (snapshot_user_check.exists &&
-              snapshot_user_check.data()!["verified"] == false)) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error de inicio de sesión"),
-              content:
-                  Text("Seguimos revisando tus documentos, intenta más tarde"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        Navigator.pushNamed(context, AppRoutes.principalScreen);
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Cuenta no registrada"),
-            content: Text("Revisa tus credenciales"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
+  Widget _buildAppBar(BuildContext context) {
+    return Container(
+      width: double.maxFinite,
+      padding: const EdgeInsets.fromLTRB(4, 12, 4, 11),
+      decoration: AppDecoration.outlineBlack,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: CustomSearchView(
+                controller: searchController,
+                autofocus: false,
               ),
-            ],
-          );
-        },
-      );
-      const SnackBar(
-        content: Text('Revisa tus credenciales'),
-      );
-    }
-  }
-
-  Widget _buildLoginButton(BuildContext context) {
-    return CustomOutlinedButton(
-      text: "Iniciar sesión",
-      margin: EdgeInsets.symmetric(horizontal: 34.h),
-      onPressed: () {
-        onTapLoginButton(context);
-      },
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MenuScreen()),
+              );
+            },
+            child: Container(
+              height: 57,
+              width: 47,
+              margin: const EdgeInsets.only(
+                left: 5,
+                bottom: 5,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 1),
+              decoration: AppDecoration.outlineBlack900.copyWith(
+                borderRadius: BorderRadius.circular(23),
+              ),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgPerfil1,
+                height: 42,
+                width: 42,
+                alignment: Alignment.center,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildUploadFile(BuildContext context) {
-    return CustomOutlinedButton(
-        text: "Sube tu archivo",
-        margin: EdgeInsets.symmetric(horizontal: 34.h),
-        onPressed: () {
-          onTapUploadFile(context);
-        });
+  Widget _buildMain(BuildContext context, int cantidadCuartos) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 24,
+        right: 29,
+      ),
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisExtent: 190,
+          crossAxisCount: 1,
+          mainAxisSpacing: 37,
+          crossAxisSpacing: 37,
+        ),
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: cantidadCuartos,
+        itemBuilder: (context, index) {
+          return const MainItemWidget();
+        },
+      ),
+    );
   }
 
-  void onTapUploadFile(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.messageFileScreen);
-  }
-
-  void onTapResetPassword(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.resetPasswordScreen);
-  }
-
-  void onTapRegisterButton(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.mainRegistrationScreen);
+  void onTapFilter(BuildContext context) {
+    print("pene");
   }
 }

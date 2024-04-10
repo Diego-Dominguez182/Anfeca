@@ -161,7 +161,7 @@ class MessageFileScreen extends StatelessWidget {
       text: "Cancelar",
       margin: EdgeInsets.symmetric(horizontal: 34.h),
       onPressed: () {
-        Navigator.pushNamed(context, AppRoutes.mainScreen);
+        Navigator.pushNamed(context, AppRoutes.loginScreen);
       },
     );
   }

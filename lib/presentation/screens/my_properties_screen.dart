@@ -8,22 +8,22 @@ import 'package:resty_app/presentation/widgets/app_bar/appbar_leading_iconbutton
 import 'package:resty_app/presentation/widgets/app_bar/appbar_title.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 
-class MyPropertiesMainScreen extends StatefulWidget {
-  const MyPropertiesMainScreen({Key? key}) : super(key: key);
+class MyPropertiesScreen extends StatefulWidget {
+  const MyPropertiesScreen({Key? key}) : super(key: key);
 
   @override
-  _MyPropertiesMainScreenState createState() =>
-      _MyPropertiesMainScreenState();
+  _MyPropertiesScreenState createState() =>
+      _MyPropertiesScreenState();
 }
 
-class _MyPropertiesMainScreenState extends State<MyPropertiesMainScreen> {
+class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
   late String userType = '';
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: appTheme.lightBlue900,
+      
         appBar: _buildAppBar(context),
       ),
     );
@@ -31,9 +31,8 @@ class _MyPropertiesMainScreenState extends State<MyPropertiesMainScreen> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      leadingWidth: 51.h,
+      leadingWidth: 48.h,
       leading: AppbarLeadingIconbutton(
-        imagePath: ImageConstant.imgTelevision,
         margin: EdgeInsets.only(
           left: 4.h,
           top: 12.v,
@@ -51,70 +50,7 @@ class _MyPropertiesMainScreenState extends State<MyPropertiesMainScreen> {
     );
   }
 
-  Widget _buildMyProfile(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      padding: EdgeInsets.fromLTRB(11.h, 14.v, 11.h, 13.v),
-      decoration: AppDecoration.outlineWhiteA,
-      child: Text(
-        "Mi perfil",
-        style: CustomTextStyles.bodySmallWhiteA700,
-      ),
-    );
-  }
-
-  Widget _buildMyPreferences(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      padding: EdgeInsets.fromLTRB(12.h, 14.v, 12.h, 13.v),
-      decoration: AppDecoration.outlineWhiteA,
-      child: Text(
-        "Mis preferencias",
-        style: CustomTextStyles.bodySmallWhiteA700,
-      ),
-    );
-  }
-
-  Widget _buildMyProperties(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      padding: EdgeInsets.fromLTRB(11.h, 14.v, 11.h, 13.v),
-      decoration: AppDecoration.outlineWhiteA,
-      child: Text(
-        "Mis propiedades",
-        style: CustomTextStyles.bodySmallWhiteA700,
-      ),
-    );
-  }
-
-  Widget _buildLogoutButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _signOut(context);
-      },
-      child: Container(
-        width: double.maxFinite,
-        padding: EdgeInsets.fromLTRB(11.h, 14.v, 11.h, 13.v),
-        decoration: AppDecoration.outlineWhiteA,
-        child: Text(
-          "Cerrar sesión",
-          style: CustomTextStyles.bodySmallWhiteA700,
-        ),
-      ),
-    );
-  }
-
-  void _signOut(BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      Navigator.pushNamedAndRemoveUntil(
-          context, AppRoutes.mainScreen, (route) => false);
-    } catch (e) {
-      print("Error signing out: $e");
-    }
-  }
-
   onTapTelevision(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.principalScreen);
+    Navigator.pushNamed(context, AppRoutes.menuScreen);
   }
 }

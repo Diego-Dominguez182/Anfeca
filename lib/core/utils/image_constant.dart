@@ -12,4 +12,10 @@ class ImageConstant {
   static String imgPerfil1 = '$imagePath/img_perfil_1.png';
 
   static String imgImage1 = '$imagePath/img_image_1.png';
+
+  static String filterIcon = 'images/filterIcon.png';
+
+  static String listIcon = 'images/list.png';
+
+  static String mapIcon = 'images/map.png';
 }

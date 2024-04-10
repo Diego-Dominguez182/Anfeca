@@ -17,7 +17,7 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  late String userType = '';
+  late String userType = 'Tenant';
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      leadingWidth: 51.h,
+      leadingWidth: 48.h,
       leading: AppbarLeadingIconbutton(
         imagePath: ImageConstant.imgTelevision,
         margin: EdgeInsets.only(
@@ -140,13 +140,13 @@ class _MenuScreenState extends State<MenuScreen> {
     try {
       await FirebaseAuth.instance.signOut();
       Navigator.pushNamedAndRemoveUntil(
-          context, AppRoutes.mainScreen, (route) => false);
+          context, AppRoutes.loginScreen, (route) => false);
     } catch (e) {
       print("Error signing out: $e");
     }
   }
 
   onTapTelevision(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.principalScreen);
+    Navigator.pushNamed(context, AppRoutes.mainScreen);
   }
 }

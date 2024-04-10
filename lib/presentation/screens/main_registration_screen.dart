@@ -72,6 +72,6 @@ class MainRegistrationScreen extends StatelessWidget {
   }
 
   onTapCancel(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.mainScreen);
+    Navigator.pushNamed(context, AppRoutes.loginScreen);
   }
 }

@@ -150,7 +150,7 @@ class _OwnerRegistrationScreenState extends State<OwnerRegistrationScreen> {
         );
       }
       Map<String, dynamic> datosActualizados = {"verified": true};
-      Navigator.pushNamed(context, AppRoutes.mainScreen);
+      Navigator.pushNamed(context, AppRoutes.loginScreen);
       FirebaseFirestore.instance
           .collection("User")
           .doc(userCredential.user!.uid)
@@ -179,16 +179,16 @@ class _OwnerRegistrationScreenState extends State<OwnerRegistrationScreen> {
         text: "Regresar",
         margin: EdgeInsets.only(left: 34.h, right: 33.h),
         onPressed: () {
-          onTapRegresar(context);
+          onTapBack(context);
         });
   }
 
-  onTapRegresar(BuildContext context) {
+  onTapBack(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.mainRegistrationScreen);
   }
 
   onTapRegister(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.mainScreen);
+    Navigator.pushNamed(context, AppRoutes.loginScreen);
   }
 
   void _registerWithEmailAndPassword(BuildContext context) async {

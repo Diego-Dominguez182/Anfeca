@@ -73,7 +73,7 @@ class ResetPasswordScreen extends StatelessWidget {
   }
 
   onTapBack(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.mainScreen);
+    Navigator.pushNamed(context, AppRoutes.loginScreen);
   }
 
   onTapResetPassword(BuildContext context) async {
