@@ -10,6 +10,7 @@ import '../presentation/screens/reset_password_screen.dart';
 import '../presentation/screens/message_file_screen.dart';
 import '../presentation/screens/main_screen.dart';
 import '../presentation/screens/my_properties_screen.dart';
+import '../presentation/screens/upload_room_screen.dart';
 class AppRoutes {
   static const String mainRegistrationScreen = '/main_registration_screen';
 
@@ -33,6 +34,8 @@ class AppRoutes {
 
   static const String myPropertiesScreen = '/my_properties_screen';
 
+  static const String uploadRoomScreen = '/upload_room_screen';
+
 
 
 
@@ -47,5 +50,6 @@ class AppRoutes {
     messageTenantRegisterSccreen: (context) => MessageTenantRegisterScreen(),
     menuScreen: (context) => MenuScreen(),
     myPropertiesScreen: (context) => MyPropertiesScreen(),
+    uploadRoomScreen: (context) => UploadRoomScreen(),
   };
 }

@@ -4,9 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resty_app/core/app_export.dart';
-import 'package:resty_app/presentation/widgets/app_bar/appbar_leading_iconbutton.dart';
-import 'package:resty_app/presentation/widgets/app_bar/appbar_title.dart';
-import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
+
+import '../widgets/app_bar/appbar_leading_iconbutton.dart';
+import '../widgets/app_bar/appbar_title.dart';
+import '../widgets/app_bar/custom_app_bar.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  late String userType = 'Tenant';
+  late String userType = 'Owner';
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _MenuScreenState extends State<MenuScreen> {
         userType = snapshot.data()!["userType"];
       });
     } catch (e) {
+      print("Error getting user type: $e");
     }
   }
 
@@ -43,16 +45,18 @@ class _MenuScreenState extends State<MenuScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: appTheme.lightBlue900,
-        appBar: _buildAppBar(context),
         body: SizedBox(
           width: double.maxFinite,
           child: Column(
             children: [
+              _buildAppBar(context),
               _buildMyProfile(context),
               if (userType == "Tenant") ...[
-              _buildMyPreferences(context)],
+                _buildMyPreferences(context)
+              ],
               if (userType == "Owner") ...[
-              _buildMyProperties(context)],
+                _buildMyProperties(context),
+              ],
               _buildLogoutButton(context),
             ],
           ),
@@ -65,7 +69,6 @@ class _MenuScreenState extends State<MenuScreen> {
     return CustomAppBar(
       leadingWidth: 48.h,
       leading: AppbarLeadingIconbutton(
-        imagePath: ImageConstant.imgTelevision,
         margin: EdgeInsets.only(
           left: 4.h,
           top: 12.v,
@@ -76,17 +79,20 @@ class _MenuScreenState extends State<MenuScreen> {
         },
       ),
       title: AppbarTitle(
-        text: "Mi cuenta",
+        text: "Mis propiedades",
         margin: EdgeInsets.only(left: 19.h),
       ),
       styleType: Style.bgOutline,
     );
   }
-
+  
+    void onTapTelevision(BuildContext context) {
+    Navigator.pushNamed(context, AppRoutes.menuScreen);
+  }
   Widget _buildMyProfile(BuildContext context) {
     return Container(
       width: double.maxFinite,
-      padding: EdgeInsets.fromLTRB(11.h, 14.v, 11.h, 13.v),
+      padding: EdgeInsets.fromLTRB(11, 14, 11, 13),
       decoration: AppDecoration.outlineWhiteA,
       child: Text(
         "Mi perfil",
@@ -98,7 +104,7 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget _buildMyPreferences(BuildContext context) {
     return Container(
       width: double.maxFinite,
-      padding: EdgeInsets.fromLTRB(12.h, 14.v, 12.h, 13.v),
+      padding: EdgeInsets.fromLTRB(12, 14, 12, 13),
       decoration: AppDecoration.outlineWhiteA,
       child: Text(
         "Mis preferencias",
@@ -107,16 +113,21 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
+
   Widget _buildMyProperties(BuildContext context) {
-    return Container(
+    return GestureDetector(
+       onTap: () {
+        _goToMyProperties(context);
+      },
+      child: Container(
       width: double.maxFinite,
-      padding: EdgeInsets.fromLTRB(11.h, 14.v, 11.h, 13.v),
+      padding: EdgeInsets.fromLTRB(11, 14, 11, 13),
       decoration: AppDecoration.outlineWhiteA,
       child: Text(
         "Mis propiedades",
         style: CustomTextStyles.bodySmallWhiteA700,
       ),
-    );
+  ));
   }
 
   Widget _buildLogoutButton(BuildContext context) {
@@ -126,7 +137,7 @@ class _MenuScreenState extends State<MenuScreen> {
       },
       child: Container(
         width: double.maxFinite,
-        padding: EdgeInsets.fromLTRB(11.h, 14.v, 11.h, 13.v),
+        padding: EdgeInsets.fromLTRB(11, 14, 11, 13),
         decoration: AppDecoration.outlineWhiteA,
         child: Text(
           "Cerrar sesión",
@@ -146,7 +157,11 @@ class _MenuScreenState extends State<MenuScreen> {
     }
   }
 
-  onTapTelevision(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.mainScreen);
+  void _goToMyProperties(BuildContext context){
+    Navigator.pushNamed(context, AppRoutes.myPropertiesScreen);
+  }
+
+  void _goToUploadRoom(BuildContext context){
+    Navigator.pushNamed(context, AppRoutes.myPropertiesScreen);
   }
 }

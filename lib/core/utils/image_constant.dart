@@ -18,4 +18,6 @@ class ImageConstant {
   static String listIcon = 'images/list.png';
 
   static String mapIcon = 'images/map.png';
+
+  static String propertie = 'images/house.png';
 }
