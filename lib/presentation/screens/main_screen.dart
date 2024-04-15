@@ -21,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   Completer<GoogleMapController> googleMapController = Completer();
   late Future<int> cantidadCuartosFuture;
   bool mapIsOn = false;
-  Position? currentPosition;
+  LatLng? _currentPosition;
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
     await Geolocator.requestPermission().then((value) async {
       Position position = await Geolocator.getCurrentPosition();
       setState(() {
-        currentPosition = position;
+        _currentPosition = LatLng(position.latitude, position.longitude);
       });
     }).catchError((error) async {
       await Geolocator.requestPermission();
@@ -79,8 +79,8 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildMaps(BuildContext context){
     LatLng initialCameraPosition = LatLng(
-      currentPosition?.latitude ?? 0.0,
-      currentPosition?.longitude ?? 0.0,
+      _currentPosition?.latitude ?? 0.0,
+      _currentPosition?.longitude ?? 0.0,
     );
 
     return SizedBox(
@@ -189,7 +189,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
               Navigator.push(
                 context,

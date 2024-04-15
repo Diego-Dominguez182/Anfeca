@@ -168,9 +168,11 @@ class _loginScreenState extends State<LoginScreen> {
           'verified': true,
         });
         Navigator.pushNamed(context, AppRoutes.mainScreen);
-      } else if ((snapshot_user.data()!["userType"] == "Tenant" &&
+      } else if ((snapshot_user.data() != null &&
+              snapshot_user.data()!["userType"] == "Tenant" &&
               snapshot_user.data()!["schoolFile"] == null) ||
-          (snapshot_user_check.data()!["userType"] == "Tenant" &&
+          (snapshot_user_check.data() != null &&
+              snapshot_user_check.data()!["userType"] == "Tenant" &&
               snapshot_user_check.data()!["schoolFile"] == null)) {
         showDialog(
           context: context,
@@ -192,9 +194,9 @@ class _loginScreenState extends State<LoginScreen> {
         setState(() {
           _showUploadButton = true;
         });
-      } else if ((snapshot_user.exists &&
+      } else if ((snapshot_user.data()!["schoolFile"] != null &&
               snapshot_user.data()!["verified"] == false) ||
-          (snapshot_user_check.exists &&
+          (snapshot_user_check.data()!["schoolFile"] != null &&
               snapshot_user_check.data()!["verified"] == false)) {
         showDialog(
           context: context,

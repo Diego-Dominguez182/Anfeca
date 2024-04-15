@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resty_app/presentation/widgets/button_state.dart';
-import 'package:firebase_core/firebase_core.dart'; // Importa el paquete de Firebase Core
+import 'package:firebase_core/firebase_core.dart'; 
 import 'core/app_export.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-void main() async {
+void main() async { 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'Roomates',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.mainScreen,
+          initialRoute: AppRoutes.uploadRoomScreen ,
           routes: AppRoutes.routes,
         );
       },

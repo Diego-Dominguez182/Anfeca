@@ -1,8 +1,6 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resty_app/core/app_export.dart';
 
 import '../widgets/app_bar/appbar_leading_iconbutton.dart';
@@ -13,20 +11,20 @@ class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
 
   @override
-  _MenuScreenState createState() =>
-      _MenuScreenState();
+  _MenuScreenState createState() => _MenuScreenState();
 }
 
 class _MenuScreenState extends State<MenuScreen> {
   late String userType = 'Owner';
+  late String userName = '';
 
   @override
   void initState() {
     super.initState();
-    getUid();
+    getUserInfo();
   }
 
-  Future<void> getUid() async {
+  Future<void> getUserInfo() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       String uid = user!.uid;
@@ -34,9 +32,10 @@ class _MenuScreenState extends State<MenuScreen> {
           await FirebaseFirestore.instance.collection('User').doc(uid).get();
       setState(() {
         userType = snapshot.data()!["userType"];
+        userName = snapshot.data()!["firstName"]; // Asumiendo que el campo se llama "userName"
       });
     } catch (e) {
-      print("Error getting user type: $e");
+      print("Error getting user info: $e");
     }
   }
 
@@ -44,10 +43,11 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: appTheme.lightBlue900,
+        
         body: SizedBox(
           width: double.maxFinite,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildAppBar(context),
               _buildMyProfile(context),
@@ -86,17 +86,37 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
   
-    void onTapTelevision(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.menuScreen);
+  void onTapTelevision(BuildContext context) {
+    Navigator.pushNamed(context, AppRoutes.mainScreen);
   }
+
   Widget _buildMyProfile(BuildContext context) {
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.fromLTRB(11, 14, 11, 13),
       decoration: AppDecoration.outlineWhiteA,
-      child: Text(
-        "Mi perfil",
-        style: CustomTextStyles.bodySmallWhiteA700,
+      child: Row(
+        children: [
+          CustomImageView( imagePath: ImageConstant.imgPerfil1,
+                height: 50,
+                width: 50,
+                alignment: Alignment.center,),
+          SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                userName,
+                style: restyTextTheme.labelLarge,
+              ),
+              Text(
+                "Mi perfil",
+                style: CustomTextStyles.bodySmallWhiteA700,
+                
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -113,21 +133,21 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-
   Widget _buildMyProperties(BuildContext context) {
     return GestureDetector(
-       onTap: () {
+      onTap: () {
         _goToMyProperties(context);
       },
       child: Container(
-      width: double.maxFinite,
-      padding: EdgeInsets.fromLTRB(11, 14, 11, 13),
-      decoration: AppDecoration.outlineWhiteA,
-      child: Text(
-        "Mis propiedades",
-        style: CustomTextStyles.bodySmallWhiteA700,
+        width: double.maxFinite,
+        padding: EdgeInsets.fromLTRB(11, 14, 11, 13),
+        decoration: AppDecoration.outlineWhiteA,
+        child: Text(
+          "Mis propiedades",
+          style: CustomTextStyles.bodySmallWhiteA700,
+        ),
       ),
-  ));
+    );
   }
 
   Widget _buildLogoutButton(BuildContext context) {

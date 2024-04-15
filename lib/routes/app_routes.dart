@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resty_app/presentation/screens/menu_screen.dart';
 import 'package:resty_app/presentation/screens/my_properties_screen.dart';
+import 'package:resty_app/presentation/screens/upload_property_photos.dart';
 import '../presentation/screens/message_tenant_register_screen.dart';
 import '../presentation/screens/main_registration_screen.dart';
 import '../presentation/screens/login_screen.dart';
@@ -9,8 +10,12 @@ import '../presentation/screens/tenant_registration_screen.dart';
 import '../presentation/screens/reset_password_screen.dart';
 import '../presentation/screens/message_file_screen.dart';
 import '../presentation/screens/main_screen.dart';
-import '../presentation/screens/my_properties_screen.dart';
 import '../presentation/screens/upload_room_screen.dart';
+import '../presentation/screens/update_password_screen.dart';
+import '../presentation/screens/settings_house_screen.dart';
+import '../presentation/screens/location_propertie_screen.dart';
+import '../presentation/screens/property_services_screen.dart';
+
 class AppRoutes {
   static const String mainRegistrationScreen = '/main_registration_screen';
 
@@ -36,7 +41,15 @@ class AppRoutes {
 
   static const String uploadRoomScreen = '/upload_room_screen';
 
+  static const String updatePasswordScreen = '/update_password_screen.dart';
 
+  static const String settingHouseScreen = '/settings_house_screen.dart';
+
+  static const String locationPropertieScreen = '/location_propertie_screen.dart';
+
+  static const String propertyServicesScreen = '/property_services_screen.dart';
+
+  static const String uploadPropertyScreen = '/upload_property_screen.dart';
 
 
   static Map<String, WidgetBuilder> routes = {
@@ -51,5 +64,10 @@ class AppRoutes {
     menuScreen: (context) => MenuScreen(),
     myPropertiesScreen: (context) => MyPropertiesScreen(),
     uploadRoomScreen: (context) => UploadRoomScreen(),
+    updatePasswordScreen: (context) => UpdatePasswordScreen(),
+    settingHouseScreen: (context) => SettingHouseScreen(),
+    locationPropertieScreen: (context) => LocationPropertieScreen(),
+    propertyServicesScreen: (context) => PropertyServicesScreen(),
+    uploadPropertyScreen: (context) => UploadPropertyScreen(),
   };
 }

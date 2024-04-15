@@ -180,12 +180,6 @@ class _TenantRegistrationScreenState extends State<TenantRegistrationScreen> {
           },
         );
       } else {
-        await FirebaseFirestore.instance
-            .collection('User')
-            .doc(userCredential.user!.uid)
-            .update({
-          'verified': true,
-        });
         Navigator.pushNamed(context, AppRoutes.messageFileScreen);
       }
     } catch (e) {
@@ -202,9 +196,9 @@ class _TenantRegistrationScreenState extends State<TenantRegistrationScreen> {
   }
 
   void _registerWithEmailAndPassword(BuildContext context) async {
+    final String email = emailFieldController.text.trim();
+    final String domain = email.split('@').last;
     try {
-      final String email = emailFieldController.text.trim();
-      final String domain = email.split('@').last;
 
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
           await FirebaseFirestore.instance
@@ -218,12 +212,24 @@ class _TenantRegistrationScreenState extends State<TenantRegistrationScreen> {
       if (allowedDomains.contains(domain)) {
         _registerUserInCollection(context, email, isVerified: false);
       } else if (disallowedDomains.contains(domain)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content:
-                Text('Este dominio de correo electrónico no está permitido.'),
-          ),
-        );
+        showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Dominio no permitido"),
+            content: Text(
+                "El dominio @" + domain + " no está permitido."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
       } else {
         _registerUserInCollection(context, email,
             isVerified: false, collection: 'User_check');
