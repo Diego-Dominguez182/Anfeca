@@ -80,7 +80,7 @@ class _SettingHouseScreenState extends State<SettingHouseScreen> {
             _buildDivider(),
             _buildCounterOption(
                 "Inquilinos", _tenantsCount, 'tenants', context),
-            SizedBox(height: screenHeight * .35),
+            SizedBox(height: screenHeight * .38),
             _buildAppBar(context),
           ],
         ),

@@ -26,7 +26,7 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
             _buildHouseButton(context),
             SizedBox(height: 20),
             _buildRoomButton(context),
-            SizedBox(height: screenHeight * .35),
+            SizedBox(height: screenHeight * .38),
             _buildAppBar(context),
           ],
         ),

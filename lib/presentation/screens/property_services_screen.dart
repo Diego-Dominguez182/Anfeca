@@ -24,70 +24,75 @@ class _PropertyServicesScreenState extends State<PropertyServicesScreen> {
       appBar: AppBar(
         title: Text('¿Qué tipos de servicio ofrece tu propiedad?'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Selecciona los servicios:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              children: services.map((service) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      service.isSelected = !service.isSelected;
-                    });
-                  },
-                  child: Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      side: BorderSide(color: Colors.grey),
-                    ),
-                    color: service.isSelected ? Colors.blue : Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            service.icon,
-                            size: 40,
-                            color: service.isSelected ? Colors.white : Colors.black,
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            service.name,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: service.isSelected ? Colors.white : Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 5),
-            _buildAppBar(context)
-          ],
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: _buildPropertyServices(context),
+          ),
+          _buildAppBar(context),
+        ],
       ),
     );
   }
-}
 
-Widget _buildAppBar(BuildContext context) {
+  Widget _buildPropertyServices(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Selecciona los servicios:',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 20),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          children: services.map((service) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  service.isSelected = !service.isSelected;
+                });
+              },
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(color: Colors.grey),
+                ),
+                color: service.isSelected ? Colors.blue : Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        service.icon,
+                        size: 40,
+                        color: service.isSelected ? Colors.white : Colors.black,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        service.name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: service.isSelected ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       backgroundColor: Colors.white,
       leadingWidth: 48,
@@ -102,7 +107,8 @@ Widget _buildAppBar(BuildContext context) {
       },
     );
   }
-  
+}
+
 class PropertyService {
   final String name;
   final IconData icon;

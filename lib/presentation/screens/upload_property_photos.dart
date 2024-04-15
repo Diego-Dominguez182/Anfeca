@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:resty_app/core/app_export.dart';
 
-import '../widgets/app_bar/custom_app_bar.dart';
-import '../widgets/custom_outlined_button.dart';
 
 class ImageModel extends ChangeNotifier {
   List<File> selectedFiles = [];
@@ -18,7 +15,7 @@ class ImageModel extends ChangeNotifier {
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'],
-        allowMultiple: true, // Permitir la selección de múltiples archivos
+        allowMultiple: true,  
       );
       if (result != null && result.files.isNotEmpty) {
         result.files.forEach((file) {
@@ -39,9 +36,6 @@ class ImageModel extends ChangeNotifier {
 
   Future<String?> uploadFile(File file) async {
     try {
-      if (file == null) {
-        throw Exception('File is not initialized');
-      }
       final storageRef = FirebaseStorage.instance.ref();
       final mountainsRef =
           storageRef.child('User/${DateTime.now().millisecondsSinceEpoch}');
@@ -86,8 +80,10 @@ class UploadPropertyScreen extends StatelessWidget {
   }
 
   Widget _buildImageGrid(BuildContext context) {
-    final imageModel = Provider.of<ImageModel>(context);
-    return Column(
+  final imageModel = Provider.of<ImageModel>(context);
+  return Padding(
+    padding: const EdgeInsets.all(8.0), 
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
@@ -100,37 +96,55 @@ class UploadPropertyScreen extends StatelessWidget {
             itemCount: imageModel.selectedFiles.length,
             itemBuilder: (context, index) {
               final file = imageModel.selectedFiles[index];
-              return Image.file(file);
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border.all(width: 2, color: Colors.black),
+                ),
+                padding: EdgeInsets.all(4), 
+                child: Image.file(file),
+              );
             },
           ),
         ),
-        SizedBox(height: 16),
-        Center(
-          child: ElevatedButton(
-            onPressed: () async {
-              final imageModel = Provider.of<ImageModel>(context, listen: false);
-              await imageModel.pickFile(context);
-              for (final file in imageModel.selectedFiles) {
-                String? downloadUrl = await imageModel.uploadFile(file);
-                if (downloadUrl != null) {
-                  await saveDownloadUrl(downloadUrl);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Error al subir el archivo.'),
-                    ),
-                  );
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                final imageModel = Provider.of<ImageModel>(context, listen: false);
+                await imageModel.pickFile(context);
+              },
+              child: Text('Seleccionar fotos'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final imageModel = Provider.of<ImageModel>(context, listen: false);
+                for (final file in imageModel.selectedFiles) {
+                  String? downloadUrl = await imageModel.uploadFile(file);
+                  if (downloadUrl != null) {
+                    await saveDownloadUrl(downloadUrl);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Error al subir el archivo.'),
+                      ),
+                    );
+                  }
                 }
-              }
-              
-              imageModel.selectedFiles.clear();
-            },
-            child: Text('Subir archivos'),
-          ),
+                imageModel.selectedFiles.clear();
+              },
+              child: Text('Subir archivos'),
+            ),
+          ],
         ),
       ],
-    );
-  }
+    ),
+  );
+}
+
+
+
+
 
   Future<void> saveDownloadUrl(String downloadUrl) async {
     try {
