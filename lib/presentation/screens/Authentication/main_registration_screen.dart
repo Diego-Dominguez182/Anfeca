@@ -16,7 +16,7 @@ class MainRegistrationScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 38.h, vertical: 24.v),
                 child: Column(children: [
                   CustomImageView(
-                      imagePath: ImageConstant.imgRoommateroots1,
+                      imagePath: ImageConstant.securiSpaceIcon,
                       height: 250.v,
                       width: 282.h),
                   SizedBox(height: 28.v),

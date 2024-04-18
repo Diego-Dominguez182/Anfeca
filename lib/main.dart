@@ -27,12 +27,13 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return MaterialApp(
           theme: theme,
-          title: 'Roomates',
+          title: 'SecuriSpace',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.loginScreen ,
+          initialRoute: AppRoutes.propertyDescriptionScreen ,
           routes: AppRoutes.routes,
         );
       },
     );
   }
 }
+              

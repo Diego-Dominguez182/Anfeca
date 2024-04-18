@@ -31,7 +31,7 @@ class _TenantRegistrationScreenState extends State<TenantRegistrationScreen> {
           child: Column(
             children: [
               CustomImageView(
-                imagePath: ImageConstant.imgRoommateroots1,
+                imagePath: ImageConstant.securiSpaceIcon,
                 height: 250.v,
                 width: 282.h,
               ),

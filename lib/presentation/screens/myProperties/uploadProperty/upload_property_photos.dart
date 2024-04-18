@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_description_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_services_screen.dart';
 
 import '../../../../routes/app_routes.dart';
@@ -42,7 +43,7 @@ class ImageModel extends ChangeNotifier {
       final storageRef = FirebaseStorage.instance.ref();
       final folderName = idProperty;
       final imageName =
-          '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}'; // Nombre único para la imagen
+          '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
       final imageRef = storageRef.child('$folderName/$imageName');
       await imageRef.putFile(file);
       return await imageRef.getDownloadURL();
@@ -100,21 +101,34 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
         onTapRigthText: () async {
           final imageModel = Provider.of<ImageModel>(context, listen: false);
           final List<File> filesToUpload = List.from(imageModel.selectedFiles);
+
           if (filesToUpload.length > 4) {
+            List<String> downloadUrls = [];
+
             for (final file in filesToUpload) {
               String? downloadUrl =
                   await imageModel.uploadFile(file, widget.idProperty!);
               if (downloadUrl != null) {
-                await saveDownloadUrl(downloadUrl);
+                downloadUrls.add(downloadUrl);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Error al subir el archivo.'),
                   ),
                 );
+                return; // Detener el proceso si hay un error de carga
               }
+            }
+
+            if (downloadUrls.isNotEmpty) {
+              await saveDownloadUrls(downloadUrls);
               imageModel.selectedFiles.clear();
-              Navigator.pushNamed(context, AppRoutes.myPropertiesScreen);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PropertyDescriptionScreen(
+                            idProperty: widget.idProperty,
+                          )));
             }
           } else {
             showDialog(
@@ -196,7 +210,7 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
     );
   }
 
-  Future<void> saveDownloadUrl(String downloadUrl) async {
+  Future<void> saveDownloadUrls(List<String> downloadUrls) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -204,14 +218,14 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
             .collection('Property')
             .doc(widget.idProperty);
         await userDocRef.set(
-          {'propertyPhotos': downloadUrl},
+          {'propertyPhotos': FieldValue.arrayUnion(downloadUrls)},
           SetOptions(merge: true),
         );
       } else {
         throw Exception('Usuario no autenticado');
       }
     } catch (error) {
-      print("Error al guardar el URL de descarga: $error");
+      print("Error al guardar los URLs de descarga: $error");
     }
   }
 }

@@ -1,7 +1,7 @@
 class ImageConstant {
   static String imagePath = 'assets/images';
 
-  static String imgRoommateroots1 = '$imagePath/resty.png';
+  static String securiSpaceIcon = 'assets/images/seguriSpaceIcon.png';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
 

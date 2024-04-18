@@ -95,11 +95,6 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
           } else {
             agregarPropiedad(userId!, _selectedProperty!);
           }
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      SettingHouseScreen(idProperty: existingPropertyId)));
         } else {
           showDialog(
             context: context,
@@ -251,11 +246,16 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
     );
   }
 
-  void agregarPropiedad(String userId, String propertyType) {
-    FirebaseFirestore.instance.collection('Property').add({
+  Future<void> agregarPropiedad(String userId, String propertyType) async {
+    DocumentReference docRef =
+        await FirebaseFirestore.instance.collection('Property').add({
       'userId': userId,
       'propertyType': propertyType,
     });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SettingHouseScreen(idProperty: docRef.id)));
   }
 
   void actualizarPropiedad(
@@ -264,5 +264,10 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
       'userId': userId,
       'propertyType': propertyType,
     });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                       SettingHouseScreen(idProperty: existingPropertyId)));
   }
 }

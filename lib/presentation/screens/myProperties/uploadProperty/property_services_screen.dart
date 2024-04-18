@@ -85,7 +85,6 @@ class _PropertyServicesScreenState extends State<PropertyServicesScreen> {
           'Selecciona los servicios:',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 20),
         GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,

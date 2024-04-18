@@ -74,7 +74,7 @@ class MessageFileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   CustomImageView(
-                    imagePath: ImageConstant.imgRoommateroots1,
+                    imagePath: ImageConstant.securiSpaceIcon,
                     height: 250.v,
                     width: 282.h,
                   ),

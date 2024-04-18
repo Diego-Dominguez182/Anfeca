@@ -21,7 +21,7 @@ class ResetPasswordScreen extends StatelessWidget {
           child: Column(
             children: [
               CustomImageView(
-                imagePath: ImageConstant.imgRoommateroots1,
+                imagePath: ImageConstant.securiSpaceIcon,
                 height: 250,
                 width: 293,
                 margin: EdgeInsets.only(left: 10),
