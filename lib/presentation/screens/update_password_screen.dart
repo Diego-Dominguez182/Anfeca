@@ -18,16 +18,14 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
         body: SizedBox(
           width: double.maxFinite,
           child: Column(
-            children: [
-              _buildNewPassword(context)
-            ],
+            children: [_buildNewPassword(context)],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildNewPassword(BuildContext context){
+  Widget _buildNewPassword(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(20.0),
       child: Form(

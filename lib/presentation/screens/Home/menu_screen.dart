@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resty_app/core/app_export.dart';
 
-import '../widgets/app_bar/appbar_leading_iconbutton.dart';
-import '../widgets/app_bar/appbar_title.dart';
-import '../widgets/app_bar/custom_app_bar.dart';
+import '../../widgets/app_bar/appbar_leading_iconbutton.dart';
+import '../../widgets/app_bar/appbar_title.dart';
+import '../../widgets/app_bar/custom_app_bar.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  late String userType = 'Owner';
+  late String userType = '';
   late String userName = '';
 
   @override
@@ -32,7 +32,7 @@ class _MenuScreenState extends State<MenuScreen> {
           await FirebaseFirestore.instance.collection('User').doc(uid).get();
       setState(() {
         userType = snapshot.data()!["userType"];
-        userName = snapshot.data()!["firstName"]; // Asumiendo que el campo se llama "userName"
+        userName = snapshot.data()!["firstName"];
       });
     } catch (e) {
       print("Error getting user info: $e");
@@ -43,7 +43,6 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        
         body: SizedBox(
           width: double.maxFinite,
           child: Column(
@@ -51,9 +50,7 @@ class _MenuScreenState extends State<MenuScreen> {
             children: [
               _buildAppBar(context),
               _buildMyProfile(context),
-              if (userType == "Tenant") ...[
-                _buildMyPreferences(context)
-              ],
+              if (userType == "Tenant") ...[_buildMyPreferences(context)],
               if (userType == "Owner") ...[
                 _buildMyProperties(context),
               ],
@@ -75,7 +72,7 @@ class _MenuScreenState extends State<MenuScreen> {
           bottom: 22.v,
         ),
         onTap: () {
-          onTapTelevision(context);
+          onTapBack(context);
         },
       ),
       title: AppbarTitle(
@@ -85,8 +82,8 @@ class _MenuScreenState extends State<MenuScreen> {
       styleType: Style.bgOutline,
     );
   }
-  
-  void onTapTelevision(BuildContext context) {
+
+  void onTapBack(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.mainScreen);
   }
 
@@ -97,10 +94,12 @@ class _MenuScreenState extends State<MenuScreen> {
       decoration: AppDecoration.outlineWhiteA,
       child: Row(
         children: [
-          CustomImageView( imagePath: ImageConstant.imgPerfil1,
-                height: 50,
-                width: 50,
-                alignment: Alignment.center,),
+          CustomImageView(
+            imagePath: ImageConstant.imgPerfil1,
+            height: 50,
+            width: 50,
+            alignment: Alignment.center,
+          ),
           SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +111,6 @@ class _MenuScreenState extends State<MenuScreen> {
               Text(
                 "Mi perfil",
                 style: CustomTextStyles.bodySmallWhiteA700,
-                
               ),
             ],
           ),
@@ -177,11 +175,11 @@ class _MenuScreenState extends State<MenuScreen> {
     }
   }
 
-  void _goToMyProperties(BuildContext context){
+  void _goToMyProperties(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.myPropertiesScreen);
   }
 
-  void _goToUploadRoom(BuildContext context){
+  void _goToUploadRoom(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.myPropertiesScreen);
   }
 }

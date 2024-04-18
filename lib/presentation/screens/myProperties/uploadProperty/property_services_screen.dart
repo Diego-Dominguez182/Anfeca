@@ -1,11 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/location_propertie_screen.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
 
-import '../../routes/app_routes.dart';
-import '../widgets/app_bar/custom_app_bar.dart';
+import '../../../widgets/app_bar/custom_app_bar.dart';
 
 class PropertyServicesScreen extends StatefulWidget {
+  final String? idProperty;
+
+  const PropertyServicesScreen({Key? key, this.idProperty}) : super(key: key);
+
   @override
   _PropertyServicesScreenState createState() => _PropertyServicesScreenState();
+}
+
+class PropertyService {
+  final String name;
+  final IconData icon;
+  bool isSelected;
+
+  PropertyService(
+      {required this.name, required this.icon, required this.isSelected});
 }
 
 class _PropertyServicesScreenState extends State<PropertyServicesScreen> {
@@ -13,10 +28,37 @@ class _PropertyServicesScreenState extends State<PropertyServicesScreen> {
     PropertyService(name: 'Cocina', icon: Icons.kitchen, isSelected: false),
     PropertyService(name: 'Lavadora', icon: Icons.wash, isSelected: false),
     PropertyService(name: 'WiFi', icon: Icons.wifi, isSelected: false),
-    PropertyService(name: 'Estacionamiento', icon: Icons.local_parking, isSelected: false),
+    PropertyService(
+        name: 'Estacionamiento', icon: Icons.local_parking, isSelected: false),
     PropertyService(name: 'TV', icon: Icons.tv, isSelected: false),
-    PropertyService(name: 'Aire Acondicionado', icon: Icons.ac_unit, isSelected: false),
+    PropertyService(
+        name: 'Aire Acondicionado', icon: Icons.ac_unit, isSelected: false),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    getPropertyServices();
+  }
+
+  Future<void> getPropertyServices() async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+          .instance
+          .collection('Property')
+          .doc(widget.idProperty)
+          .get();
+      List<String>? selectedServices =
+          List<String>.from(snapshot.data()!['services']);
+      setState(() {
+        services.forEach((service) {
+          service.isSelected = selectedServices.contains(service.name);
+        });
+      });
+    } catch (e) {
+      print("Error getting user info: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +120,8 @@ class _PropertyServicesScreenState extends State<PropertyServicesScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: service.isSelected ? Colors.white : Colors.black,
+                          color:
+                              service.isSelected ? Colors.white : Colors.black,
                         ),
                       ),
                     ],
@@ -100,19 +143,32 @@ class _PropertyServicesScreenState extends State<PropertyServicesScreen> {
       rightText: "Siguiente",
       showBoxShadow: false,
       onTapLeftText: () {
-        Navigator.pushNamed(context, AppRoutes.locationPropertieScreen);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    LocationPropertieScreen(idProperty: widget.idProperty)));
       },
       onTapRigthText: () {
-        Navigator.pushNamed(context, AppRoutes.uploadPropertyScreen);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    UploadPropertyScreen(idProperty: widget.idProperty)));
+        actualizarPropiedad(widget.idProperty!);
       },
     );
   }
-}
 
-class PropertyService {
-  final String name;
-  final IconData icon;
-  bool isSelected;
-
-  PropertyService({required this.name, required this.icon, required this.isSelected});
+  void actualizarPropiedad(String idProperty) {
+    List<String> selectedServices = [];
+    for (var service in services) {
+      if (service.isSelected) {
+        selectedServices.add(service.name);
+      }
+    }
+    FirebaseFirestore.instance.collection('Property').doc(idProperty).update({
+      'services': selectedServices,
+    });
+  }
 }

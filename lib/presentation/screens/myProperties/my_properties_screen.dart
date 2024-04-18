@@ -4,7 +4,7 @@ import 'package:resty_app/presentation/widgets/app_bar/appbar_leading_iconbutton
 import 'package:resty_app/presentation/widgets/app_bar/appbar_title.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 
-import '../widgets/icon_button_with_text.dart';
+import '../../widgets/icon_button_with_text.dart';
 
 class MyPropertiesScreen extends StatelessWidget {
   const MyPropertiesScreen({Key? key}) : super(key: key);
@@ -59,7 +59,7 @@ class MyPropertiesScreen extends StatelessWidget {
           bottom: 22.v,
         ),
         onTap: () {
-          onTapTelevision(context);
+          onTapBack(context);
         },
       ),
       title: AppbarTitle(
@@ -70,7 +70,7 @@ class MyPropertiesScreen extends StatelessWidget {
     );
   }
 
-  void onTapTelevision(BuildContext context) {
+  void onTapBack(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.menuScreen);
   }
 }

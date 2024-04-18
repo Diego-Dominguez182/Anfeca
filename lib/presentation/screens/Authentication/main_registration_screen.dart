@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_types_as_parameter_names, non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resty_app/core/app_export.dart';

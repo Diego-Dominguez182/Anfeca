@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resty_app/core/app_export.dart';
-import 'package:resty_app/presentation/screens/message_tenant_register_screen.dart';
+import 'package:resty_app/presentation/screens/Authentication/tenantRegister/message_tenant_register_screen.dart';
 import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
 
 class ImageModel extends ChangeNotifier {

@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:resty_app/core/app_export.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/location_propertie_screen.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 
 class SettingHouseScreen extends StatefulWidget {
-  const SettingHouseScreen({Key? key}) : super(key: key);
+  final String? idProperty;
+
+  const SettingHouseScreen({Key? key, this.idProperty}) : super(key: key);
 
   @override
   _SettingHouseScreenState createState() => _SettingHouseScreenState();
@@ -14,6 +18,30 @@ class _SettingHouseScreenState extends State<SettingHouseScreen> {
   int _bedsCount = 0;
   int _bathroomsCount = 0;
   int _tenantsCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserInfo();
+  }
+
+  Future<void> getUserInfo() async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+          .instance
+          .collection('Property')
+          .doc(widget.idProperty)
+          .get();
+      setState(() {
+        _roomsCount = snapshot.data()!["numOfRooms"];
+        _bedsCount = snapshot.data()!["numOfBeds"];
+        _bathroomsCount = snapshot.data()!["numOfBathrooms"];
+        _tenantsCount = snapshot.data()!["numOfTenants"];
+      });
+    } catch (e) {
+      print("Error getting user info: $e");
+    }
+  }
 
   void _incrementCounter(String field) {
     setState(() {
@@ -70,13 +98,11 @@ class _SettingHouseScreenState extends State<SettingHouseScreen> {
               ),
             ),
             SizedBox(height: 20),
-            _buildCounterOption(
-                "Habitaciones", _roomsCount, 'rooms', context),
+            _buildCounterOption("Habitaciones", _roomsCount, 'rooms', context),
             _buildDivider(),
             _buildCounterOption("Camas", _bedsCount, 'beds', context),
             _buildDivider(),
-            _buildCounterOption(
-                "Baños", _bathroomsCount, 'bathrooms', context),
+            _buildCounterOption("Baños", _bathroomsCount, 'bathrooms', context),
             _buildDivider(),
             _buildCounterOption(
                 "Inquilinos", _tenantsCount, 'tenants', context),
@@ -99,7 +125,36 @@ class _SettingHouseScreenState extends State<SettingHouseScreen> {
         Navigator.pushNamed(context, AppRoutes.uploadRoomScreen);
       },
       onTapRigthText: () {
-        Navigator.pushNamed(context, AppRoutes.locationPropertieScreen);
+        if (_roomsCount != 0 && _tenantsCount != 0 && _bathroomsCount != 0) {
+          if (widget.idProperty != null) {
+            actualizarPropiedad(widget.idProperty!, _bathroomsCount, _bedsCount,
+                _roomsCount, _tenantsCount);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LocationPropertieScreen(
+                        idProperty: widget.idProperty)));
+          }
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Alerta"),
+                content: Text(
+                    "Debe haber por lo menos 1 habitación, 1 baño y 1 inquilino."),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Aceptar"),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       },
     );
   }
@@ -144,5 +199,15 @@ class _SettingHouseScreenState extends State<SettingHouseScreen> {
         thickness: 1,
       ),
     );
+  }
+
+  void actualizarPropiedad(String idProperty, int _bathroomsCount,
+      int _bedsCount, int _roomsCount, int _tenantsCount) {
+    FirebaseFirestore.instance.collection('Property').doc(idProperty).update({
+      'numOfBathrooms': _bathroomsCount,
+      'numOfBeds': _bedsCount,
+      'numOfRooms': _roomsCount,
+      'numOfTenants': _tenantsCount
+    });
   }
 }

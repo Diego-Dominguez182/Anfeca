@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:resty_app/presentation/screens/menu_screen.dart';
+import 'package:resty_app/presentation/screens/Home/menu_screen.dart';
 import 'package:resty_app/presentation/widgets/custom_search_view.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:resty_app/presentation/widgets/icon_button_with_text.dart';
 import 'dart:async';
-import '../widgets/main_item_widget.dart';
+import '../../widgets/main_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:resty_app/core/app_export.dart';
 import 'package:geolocator/geolocator.dart';
@@ -27,7 +27,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     cantidadCuartosFuture = getCantidadCuartos();
-    getUserCurrentLocation(); 
+    getUserCurrentLocation();
   }
 
   Future<int> getCantidadCuartos() async {
@@ -61,13 +61,10 @@ class _MainScreenState extends State<MainScreen> {
                 const SizedBox(height: 8),
                 _buildSettingsBar(context),
                 const SizedBox(height: 8),
-                if(mapIsOn) ...[
-                  _buildMaps(context)],
-                if(!mapIsOn) ... [
-                  _buildMessage(context)],
+                if (mapIsOn) ...[_buildMaps(context)],
+                if (!mapIsOn) ...[_buildMessage(context)],
                 const SizedBox(height: 10),
-                if(!mapIsOn) ... [
-                  _buildRooms(context)],
+                if (!mapIsOn) ...[_buildRooms(context)],
                 const SizedBox(height: 20),
               ],
             ),
@@ -77,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildMaps(BuildContext context){
+  Widget _buildMaps(BuildContext context) {
     LatLng initialCameraPosition = LatLng(
       _currentPosition?.latitude ?? 0.0,
       _currentPosition?.longitude ?? 0.0,

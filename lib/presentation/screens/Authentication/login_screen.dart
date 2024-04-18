@@ -7,9 +7,9 @@ import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
 import 'package:resty_app/presentation/widgets/custom_text_form_field.dart';
 import 'package:resty_app/presentation/widgets/button_state.dart';
 
-// ignore_for_file: must_be_immutable
+
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   _loginScreenState createState() => _loginScreenState();
@@ -194,10 +194,10 @@ class _loginScreenState extends State<LoginScreen> {
         setState(() {
           _showUploadButton = true;
         });
-      } else if ((snapshot_user.data()!["schoolFile"] != null &&
-              snapshot_user.data()!["verified"] == false) ||
-          (snapshot_user_check.data()!["schoolFile"] != null &&
-              snapshot_user_check.data()!["verified"] == false)) {
+      } else if ((snapshot_user.data()?["schoolFile"] != null &&
+              snapshot_user.data()?["verified"] == false) ||
+          (snapshot_user_check.data()?["schoolFile"] != null &&
+              snapshot_user_check.data()?["verified"] == false)) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
