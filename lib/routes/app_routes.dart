@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:resty_app/presentation/screens/Home/menu_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
@@ -17,6 +16,7 @@ import '../presentation/screens/myProperties/uploadProperty/settings_house_scree
 import '../presentation/screens/myProperties/uploadProperty/location_propertie_screen.dart';
 import '../presentation/screens/myProperties/uploadProperty/property_services_screen.dart';
 import '../presentation/screens/myProperties/uploadProperty/property_description_screen.dart';
+import '../presentation/screens/myProperties/uploadProperty/property_price_screen.dart';
 
 class AppRoutes {
   static const String mainRegistrationScreen = '/main_registration_screen';
@@ -55,6 +55,8 @@ class AppRoutes {
 
   static const String propertyDescriptionScreen = '/property_description_screen.dart';
 
+  static const String propertyPriceScreen = '/property_price_screen.dart';
+
 
   static Map<String, WidgetBuilder> routes = {
     mainRegistrationScreen: (context) => MainRegistrationScreen(),
@@ -73,6 +75,7 @@ class AppRoutes {
     propertyServicesScreen: (context) => PropertyServicesScreen(),
     uploadPropertyScreen: (context) => UploadPropertyScreen(),
     locationPropertieScreen: (context) => LocationPropertieScreen(),
-    propertyDescriptionScreen: (context) => PropertyDescriptionScreen()
+    propertyDescriptionScreen: (context) => PropertyDescriptionScreen(),
+    propertyPriceScreen: (context) => PropertyPriceScreen()
   };
 }

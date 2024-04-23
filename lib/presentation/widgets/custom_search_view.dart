@@ -171,7 +171,7 @@ class CustomSearchView extends StatelessWidget {
       );
 }
 
-/// Extension on [CustomSearchView] to facilitate inclusion of all types of border style etc
+
 extension SearchViewStyleHelper on CustomSearchView {
   static OutlineInputBorder get outlineBlackTL20 => OutlineInputBorder(
         borderRadius: BorderRadius.vertical(

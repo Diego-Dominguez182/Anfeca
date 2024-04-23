@@ -45,7 +45,10 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
             data.containsKey('numOfTenants') &&
             data.containsKey('propertyPhotos') &&
             data.containsKey('propertyType') &&
-            data.containsKey('services'))) {
+            data.containsKey('services') &&
+            data.containsKey('description') &&
+            data.containsKey('title') &&
+            data.containsKey('price'))) {
           allCompleted = false;
           break;
         }
@@ -268,6 +271,6 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                       SettingHouseScreen(idProperty: existingPropertyId)));
+            SettingHouseScreen(idProperty: existingPropertyId)));
   }
 }

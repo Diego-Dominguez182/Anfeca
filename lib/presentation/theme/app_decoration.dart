@@ -7,7 +7,6 @@ class AppDecoration {
       );
 
       
-  // Outline decorations
   static BoxDecoration get outlineBlack => BoxDecoration(
         color: appTheme.lightBlue900,
         border: Border(
@@ -65,12 +64,10 @@ class AppDecoration {
 }
 
 class BorderRadiusStyle {
-  // Custom borders
   static BorderRadius get customBorderBL20 => BorderRadius.vertical(
         bottom: Radius.circular(20.h),
       );
 
-  // Rounded borders
   static BorderRadius get roundedBorder23 => BorderRadius.circular(
         23.h,
       );

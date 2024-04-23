@@ -106,12 +106,12 @@ class _LocationPropertieScreenState extends State<LocationPropertieScreen> {
                     SettingHouseScreen(idProperty: widget.idProperty)));
       },
       onTapRigthText: () {
+        actualizarPropiedad(widget.idProperty!);
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
                     PropertyServicesScreen(idProperty: widget.idProperty)));
-        actualizarPropiedad(widget.idProperty!);
       },
     );
   }

@@ -86,19 +86,9 @@ class PrimaryColors {
   Color get blueGray100 => Color(0XFFD9D9D9);
   Color get gray50 => Color(0XFFF8F8F8);
   Color get whiteA700 => Color(0XFFFFFFFF);
-  // Black
   Color get black900 => Color(0XFF000000);
-
-  // BlueGray
-
-  // LightBlue
   Color get lightBlue900 => Color(0XFF0B4E7F);
-
-  // Red
   Color get redA700 => Color(0XFFFF0000);
-
-  // White
-
 }
 
 

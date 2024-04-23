@@ -8,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_description_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_services_screen.dart';
 
-import '../../../../routes/app_routes.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
 
 class ImageModel extends ChangeNotifier {
@@ -64,6 +63,8 @@ class UploadPropertyScreen extends StatefulWidget {
 }
 
 class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
+  bool _isButtonDisabled = false;  
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ImageModel>(
@@ -99,6 +100,11 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
                       PropertyServicesScreen(idProperty: widget.idProperty)));
         },
         onTapRigthText: () async {
+          if (_isButtonDisabled) return; 
+          setState(() {
+            _isButtonDisabled = true; 
+          });
+
           final imageModel = Provider.of<ImageModel>(context, listen: false);
           final List<File> filesToUpload = List.from(imageModel.selectedFiles);
 
@@ -116,7 +122,10 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
                     content: Text('Error al subir el archivo.'),
                   ),
                 );
-                return; // Detener el proceso si hay un error de carga
+                setState(() {
+                  _isButtonDisabled = false;
+                });
+                return; 
               }
             }
 
@@ -141,6 +150,9 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
+                        setState(() {
+                          _isButtonDisabled = false;
+                        });
                       },
                       child: Text("OK"),
                     ),
@@ -151,7 +163,6 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
           }
         });
   }
-
   Widget _buildSelectFile(BuildContext context) {
     return Center(
       child: ElevatedButton(

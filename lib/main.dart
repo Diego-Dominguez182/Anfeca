@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'SecuriSpace',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.propertyDescriptionScreen ,
+          initialRoute: AppRoutes.loginScreen  ,
           routes: AppRoutes.routes,
         );
       },

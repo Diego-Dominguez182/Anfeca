@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class IconButtonWithText extends StatelessWidget {
   final String text;
-  final String imageName; // Nombre de la imagen
+  final String imageName;  
   final VoidCallback onPressed;
 
   const IconButtonWithText({

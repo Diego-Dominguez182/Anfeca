@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 enum ImageSection {
-  browseFiles, // The UI shows the button to pick files
-  imageLoaded, noStoragePermissionPermanent, noStoragePermission, // File picked and shown in the screen
+  browseFiles, 
+  imageLoaded, noStoragePermissionPermanent, noStoragePermission, 
 }
 
 class ImageModel extends ChangeNotifier {
@@ -28,7 +28,6 @@ class ImageModel extends ChangeNotifier {
     if (Platform.isAndroid) {
       result = PermissionStatus.granted;
     } else {
-      // For iOS, request photos permission
       result = await Permission.photos.request();
     }
 

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomImageView extends StatelessWidget {
-  ///[imagePath] is required parameter for showing image
   String? imagePath;
 
   double? height;
@@ -21,8 +20,6 @@ class CustomImageView extends StatelessWidget {
   BorderRadius? radius;
   BoxBorder? border;
 
-  ///a [CustomImageView] it can be used for showing any type of images
-  /// it will shows the placeholder image if image is not found on network image
   CustomImageView({
     this.imagePath,
     this.height,
@@ -57,7 +54,6 @@ class CustomImageView extends StatelessWidget {
     );
   }
 
-  ///build the image with border radius
   _buildCircleImage() {
     if (radius != null) {
       return ClipRRect(
@@ -69,7 +65,6 @@ class CustomImageView extends StatelessWidget {
     }
   }
 
-  ///build the image with border and border radius style
   _buildImageWithBorder() {
     if (border != null) {
       return Container(
