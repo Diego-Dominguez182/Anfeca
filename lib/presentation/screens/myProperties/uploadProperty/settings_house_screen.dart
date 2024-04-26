@@ -132,7 +132,7 @@ class _SettingHouseScreenState extends State<SettingHouseScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => LocationPropertieScreen(
+                    builder: (context) => LocationPropertyScreen(
                         idProperty: widget.idProperty)));
           }
         } else {

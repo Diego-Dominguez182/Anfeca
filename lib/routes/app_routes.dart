@@ -17,6 +17,7 @@ import '../presentation/screens/myProperties/uploadProperty/location_propertie_s
 import '../presentation/screens/myProperties/uploadProperty/property_services_screen.dart';
 import '../presentation/screens/myProperties/uploadProperty/property_description_screen.dart';
 import '../presentation/screens/myProperties/uploadProperty/property_price_screen.dart';
+import '../presentation/screens/Home/main_screen_map.dart';
 
 class AppRoutes {
   static const String mainRegistrationScreen = '/main_registration_screen';
@@ -57,6 +58,8 @@ class AppRoutes {
 
   static const String propertyPriceScreen = '/property_price_screen.dart';
 
+  static const String mainScreenMap = '/main_screen_map.dart';
+
 
   static Map<String, WidgetBuilder> routes = {
     mainRegistrationScreen: (context) => MainRegistrationScreen(),
@@ -74,8 +77,9 @@ class AppRoutes {
     settingHouseScreen: (context) => SettingHouseScreen(),
     propertyServicesScreen: (context) => PropertyServicesScreen(),
     uploadPropertyScreen: (context) => UploadPropertyScreen(),
-    locationPropertieScreen: (context) => LocationPropertieScreen(),
+    locationPropertieScreen: (context) => LocationPropertyScreen(),
     propertyDescriptionScreen: (context) => PropertyDescriptionScreen(),
-    propertyPriceScreen: (context) => PropertyPriceScreen()
+    propertyPriceScreen: (context) => PropertyPriceScreen(),
+    mainScreenMap: (context) => MainScreenMap(),
   };
 }

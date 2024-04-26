@@ -8,9 +8,10 @@ import '../../../widgets/app_bar/custom_app_bar.dart';
 class PropertyServicesScreen extends StatefulWidget {
   final String? idProperty;
 
-  const PropertyServicesScreen({Key? key, this.idProperty}) : super(key: key);
+  const PropertyServicesScreen({super.key, this.idProperty});
 
   @override
+  // ignore: library_private_types_in_public_api
   _PropertyServicesScreenState createState() => _PropertyServicesScreenState();
 }
 
@@ -51,9 +52,9 @@ class _PropertyServicesScreenState extends State<PropertyServicesScreen> {
       List<String>? selectedServices =
           List<String>.from(snapshot.data()!['services']);
       setState(() {
-        services.forEach((service) {
+        for (var service in services) {
           service.isSelected = selectedServices.contains(service.name);
-        });
+        }
       });
     } catch (e) {
       print("Error getting user info: $e");
@@ -146,7 +147,7 @@ class _PropertyServicesScreenState extends State<PropertyServicesScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    LocationPropertieScreen(idProperty: widget.idProperty)));
+                    LocationPropertyScreen(idProperty: widget.idProperty)));
       },
       onTapRigthText: () {
         Navigator.push(

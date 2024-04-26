@@ -9,7 +9,6 @@
   import 'package:geolocator/geolocator.dart';
   import 'package:google_maps_flutter/google_maps_flutter.dart';
   import 'package:resty_app/core/utils/image_constant.dart';
-import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
   import 'package:resty_app/presentation/screens/Home/menu_screen.dart';
   import 'package:resty_app/presentation/theme/app_decoration.dart';
   import 'package:resty_app/presentation/theme/custom_text_style.dart';
@@ -19,36 +18,26 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
   import 'package:resty_app/presentation/widgets/main_item_widget.dart';
 import 'package:resty_app/routes/app_routes.dart';
 
-  class MainScreen extends StatefulWidget {
-    const MainScreen({super.key});
+  class MainScreenMap extends StatefulWidget {
+    final LatLng? currentPosition; 
+    const MainScreenMap({super.key,  this.currentPosition, });
 
     @override
-    _MainScreenState createState() => _MainScreenState();
+    _MainScreenMapState createState() => _MainScreenMapState();
   }
 
-  class _MainScreenState extends State<MainScreen> {
+  class _MainScreenMapState extends State<MainScreenMap> {
     TextEditingController searchController = TextEditingController();
     Completer<GoogleMapController> googleMapController = Completer();
     late Future<List<Property>>? propertiesFuture;
-        LatLng? _currentPosition;
+    LatLng? _currentPosition;
 
     @override
     void initState() {
       super.initState();
       propertiesFuture = getPropertiesFromFirebase();
       getUserCurrentLocation();
-    }
-
- Future<void> getUserCurrentLocation() async {
-      await Geolocator.requestPermission().then((value) async {
-        Position position = await Geolocator.getCurrentPosition();
-        setState(() {
-          _currentPosition = LatLng(position.latitude, position.longitude);
-        });
-      }).catchError((error) async {
-        await Geolocator.requestPermission();
-        print("ERROR: $error");
-      });
+      _currentPosition = widget.currentPosition;
     }
 
     Future<List<Property>> getPropertiesFromFirebase() async {
@@ -70,6 +59,51 @@ import 'package:resty_app/routes/app_routes.dart';
   }
 
 
+    Future<void> getUserCurrentLocation() async {
+      await Geolocator.requestPermission().then((value) async {
+        Position position = await Geolocator.getCurrentPosition();
+        setState(() {
+          _currentPosition = LatLng(position.latitude, position.longitude);
+        });
+      }).catchError((error) async {
+        await Geolocator.requestPermission();
+        print("ERROR: $error");
+      });
+    }
+
+    Future<void> moveToLocation(String address) async {
+
+  try {
+    List<Location> locations = await locationFromAddress(address);
+    if (locations.isNotEmpty ) {
+      Location location = locations.first;
+      _moveToLocation(LatLng(location.latitude, location.longitude));
+    } else {
+      print("No se encontraron coordenadas para la dirección ingresada");
+    }
+  } catch (e) {
+    print("Error al obtener las coordenadas de la dirección: $e");
+  }
+}
+
+void _moveToLocation(LatLng target) async {
+
+  try {
+    final GoogleMapController? controller = await googleMapController.future;
+    if (controller != null) {
+      controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: target,
+          zoom: 16.0,
+        ),
+      ));
+    }
+  } catch (e) {
+    print("Error al mover la cámara a la posición: $e");
+  }
+}
+
+
     @override
 Widget build(BuildContext context) {
   return SafeArea(
@@ -85,9 +119,7 @@ Widget build(BuildContext context) {
               const SizedBox(height: 8),
               _buildSettingsBar(context),
               const SizedBox(height: 8),
-              _buildMessage(context),
-              const SizedBox(height: 10),
-              _buildRooms(context),
+              _buildMaps(context),
               const SizedBox(height: 20),
             ],
           ),
@@ -123,8 +155,12 @@ Widget build(BuildContext context) {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.search), onPressed: () {  },
-
+                      icon: const Icon(Icons.search),
+                      onPressed: () {
+    googleMapController.future.then((controller) {
+      moveToLocation(searchController.text);
+        });
+  },
 
                     ),
                   ],
@@ -174,8 +210,7 @@ Widget build(BuildContext context) {
                 imageName: ImageConstant.listIcon,
                 text: "Lista",
                 onPressed: () {
-                  setState(() {
-                  });
+                  Navigator.pushNamed(context, AppRoutes.mainScreen);
                 },
               ),
             ),
@@ -185,10 +220,7 @@ Widget build(BuildContext context) {
                 imageName: ImageConstant.mapIcon,
                 text: "Mapa",
                 onPressed: () {
-                  Navigator.push(
-                    context, MaterialPageRoute(
-                      builder: (context) => MainScreenMap(currentPosition: _currentPosition)));
-                } 
+                },
               ),
             ),
             SizedBox(width: buttonWidth),
@@ -206,55 +238,25 @@ Widget build(BuildContext context) {
       );
     }
 
-    Widget _buildMessage(BuildContext context) {
-      return Padding(
-        padding: const EdgeInsets.only(left: 15),
-        child: Text(
-          "Cerca de ti",
-          style: CustomTextStyles.bodySmallBlack900,
-        ),
-      );
-    }
+  Widget _buildMaps(BuildContext context) {
+    LatLng initialCameraPosition = _currentPosition ?? const LatLng(0.0, 0.0);
 
-    Widget _buildRooms(BuildContext context) {
-      return FutureBuilder<List<Property>>(
-        future: propertiesFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          } else {
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              return _buildMain(context, snapshot.data ?? []);
-            }
-          }
-        },
-      );
-    }
-  Widget _buildMain(BuildContext context, List<Property> properties) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 24,
-        right: 29,
-      ),
-      child: GridView.builder(
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          mainAxisExtent: 190,
-          crossAxisCount: 1,
-          mainAxisSpacing: 37,
-          crossAxisSpacing: 37,
+    return SizedBox(
+      height: 600,
+      width: double.infinity,
+      child: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: CameraPosition(
+          target: initialCameraPosition,
+          zoom: 14.0,
         ),
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: properties.length,
-        itemBuilder: (context, index) {
-          return MainItemWidget(
-            address: properties[index].address,
-            price: properties[index].price,
-            propertyPhotos: properties[index].photos, 
-            property: properties[index],
-          );
+        zoomControlsEnabled: false,
+        zoomGesturesEnabled: true,
+        myLocationEnabled: true,
+        onMapCreated: (GoogleMapController controller) {
+          if (!googleMapController.isCompleted) { 
+            googleMapController.complete(controller);
+          }
         },
       ),
     );

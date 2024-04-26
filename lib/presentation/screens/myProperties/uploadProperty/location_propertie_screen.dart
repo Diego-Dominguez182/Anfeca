@@ -9,23 +9,24 @@ import 'package:resty_app/presentation/screens/myProperties/uploadProperty/setti
 
 import '../../../widgets/app_bar/custom_app_bar.dart';
 
-class LocationPropertieScreen extends StatefulWidget {
+class LocationPropertyScreen extends StatefulWidget {
   final String? idProperty;
 
-  const LocationPropertieScreen({Key? key, this.idProperty}) : super(key: key);
+  const LocationPropertyScreen({Key? key, this.idProperty}) : super(key: key);
 
   @override
-  _LocationPropertieScreenState createState() =>
-      _LocationPropertieScreenState();
+  _LocationPropertyScreen createState() =>
+      _LocationPropertyScreen();
 }
 
-class _LocationPropertieScreenState extends State<LocationPropertieScreen> {
+class _LocationPropertyScreen extends State<LocationPropertyScreen> {
   Completer<GoogleMapController> googleMapController = Completer();
   TextEditingController _searchController = TextEditingController();
   CameraPosition _currentCameraPosition = CameraPosition(
     target: LatLng(18.1288823, -94.44264989999999),
     zoom: 14.0,
   );
+  String? addres;
 
   Set<Marker> _markers = {};
 
@@ -50,6 +51,7 @@ class _LocationPropertieScreenState extends State<LocationPropertieScreen> {
     });
   }
 
+
   Future<void> _onSearch() async {
     try {
       String address = _searchController.text;
@@ -59,23 +61,17 @@ class _LocationPropertieScreenState extends State<LocationPropertieScreen> {
         setState(() {
           _currentCameraPosition = CameraPosition(
             target: LatLng(location.latitude, location.longitude),
-            zoom: 14.0,
+            zoom: 16.5,
           );
           _markers.clear();
-          _markers.add(
-            Marker(
-              markerId: MarkerId('searched_location'),
-              position: LatLng(location.latitude, location.longitude),
-              infoWindow: InfoWindow(title: 'Searched Location'),
-            ),
-          );
+
         });
         _moveToSearchedLocation();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                'No se encontraron resultados para la dirección ingresada'),
+            content:
+                Text('No se encontraron resultados para la dirección ingresada'),
           ),
         );
       }
@@ -98,6 +94,7 @@ class _LocationPropertieScreenState extends State<LocationPropertieScreen> {
       leftText: "Atrás",
       rightText: "Siguiente",
       showBoxShadow: false,
+
       onTapLeftText: () {
         Navigator.push(
             context,
@@ -117,29 +114,33 @@ class _LocationPropertieScreenState extends State<LocationPropertieScreen> {
   }
 
   Widget _buildMaps(BuildContext context) {
-    return GoogleMap(
-      mapType: MapType.normal,
-      initialCameraPosition: _currentCameraPosition,
-      zoomControlsEnabled: false,
-      zoomGesturesEnabled: true,
-      myLocationEnabled: true,
-      markers: _markers,
-      onCameraMove: (CameraPosition position) {
-        _markers.removeWhere(
-            (marker) => marker.markerId.value == 'center_location');
+    return SizedBox(
+      height: 600,
+      width: double.infinity,
+      child: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: _currentCameraPosition,
+        zoomControlsEnabled: false,
+        zoomGesturesEnabled: true,
+        myLocationEnabled: true,
+        markers: _markers,
+        onCameraMove: (CameraPosition position) {
+          _markers.add(
+            Marker(
+              markerId: MarkerId('center_location'),
+              position: position.target,
+              infoWindow: InfoWindow(title: 'Center Location'),
+            ),
+          );
 
-        _markers.add(
-          Marker(
-            markerId: MarkerId('center_location'),
-            position: position.target,
-            infoWindow: InfoWindow(title: 'Center Location'),
-          ),
-        );
-        setState(() {
-          _currentCameraPosition = position;
-        });
-      },
-      onMapCreated: (GoogleMapController controller) {},
+          setState(() {
+            _currentCameraPosition = position;
+          });
+        },
+        onMapCreated: (GoogleMapController controller) {
+          googleMapController.complete(controller);
+        },
+      ),
     );
   }
 
@@ -174,10 +175,23 @@ class _LocationPropertieScreenState extends State<LocationPropertieScreen> {
     );
   }
 
-  void actualizarPropiedad(String idProperty) {
+  void actualizarPropiedad(String idProperty) async {
+  double latitude = _currentCameraPosition.target.latitude;
+  double longitude = _currentCameraPosition.target.longitude;
+
+  List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+
+  if (placemarks.isNotEmpty) {
+    Placemark placemark = placemarks.first;
+    String address = "${placemark.street}, ${placemark.locality}, ${placemark.country}";
+    print("Dirección encontrada: $address");
     FirebaseFirestore.instance.collection('Property').doc(idProperty).update({
-      'latitude': _currentCameraPosition.target.latitude,
-      'longitude': _currentCameraPosition.target.longitude,
+      'latitude': latitude,
+      'longitude': longitude,
+      'address': address,
     });
+  } else {
+    print("No se pudo encontrar la dirección para las coordenadas: ($latitude, $longitude)");
   }
+}
 }

@@ -125,7 +125,7 @@ class _loginScreenState extends State<LoginScreen> {
   void onTapLoginButton(BuildContext context) async {
     try {
       UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailFieldController.text,
         password: passwordFieldController.text,
       );
@@ -263,7 +263,7 @@ class _loginScreenState extends State<LoginScreen> {
   }
 
   void onTapUploadFile(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.messageFileScreen);
+    Navigator.pushNamed(context, AppRoutes.loginScreen);
   }
 
   void onTapResetPassword(BuildContext context) {
