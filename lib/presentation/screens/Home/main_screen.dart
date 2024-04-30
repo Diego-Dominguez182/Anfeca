@@ -4,7 +4,6 @@
 
   import 'package:flutter/material.dart';
   import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/widgets.dart';
 
   import 'package:geolocator/geolocator.dart';
   import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -259,6 +258,8 @@ Widget build(BuildContext context) {
             propertyPhotos: properties[index].photos,
             withRoomie: properties[index].withRoomie,
             property: properties[index],
+            numOfRooms: properties[index].numOfRooms,
+            description: properties[index].description,
           );
         },
       ),
@@ -274,6 +275,10 @@ Widget build(BuildContext context) {
   final double price;
   final List<String> photos;
   final String withRoomie;
+  final int numOfRooms;
+  final bool canBeShared;
+  final bool isRented;
+  final String description;
 
   Property({
     required this.idProperty,
@@ -281,12 +286,16 @@ Widget build(BuildContext context) {
     required this.price,
     required this.photos,
     required this.withRoomie,
+    required this.numOfRooms,
+    required this.canBeShared,
+    required this.isRented,
+    required this.description,
   });
 
   factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
   Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
 
-  if (data == null || data.isEmpty) {
+  if (data == null || data.isEmpty ) { 
     throw Exception("Documento vacío o incompleto");
   }
 
@@ -295,6 +304,10 @@ Widget build(BuildContext context) {
   double price = (data['price'] ?? 0).toDouble();
   List<String> propertyPhotos = data['propertyPhotos'] != null ? List<String>.from(data['propertyPhotos']) : [];
   String withRoomie = data['withRoomie'] ?? '';
+  int numOfRooms = data['numOfRooms'];
+  bool canBeShared = data['canBeShared'];
+  bool isRented = data['isRented'];
+  String description = data['description'];
 
   return Property(
     idProperty: idProperty, 
@@ -302,11 +315,19 @@ Widget build(BuildContext context) {
     price: price,
     photos: propertyPhotos,
     withRoomie: withRoomie,
+    numOfRooms: numOfRooms,
+    canBeShared: canBeShared,
+    isRented: isRented,
+    description: description,
   );
 }
 
 
   bool isValid() {
-    return address.isNotEmpty && price > 0 && photos.isNotEmpty;
+
+      return address.isNotEmpty && price > 0 && photos.isNotEmpty && numOfRooms > 0 
+      && ((isRented == true && canBeShared == true) || (isRented == false && canBeShared == false));
+
+    }
   }
-}
+

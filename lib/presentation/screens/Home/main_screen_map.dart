@@ -29,6 +29,8 @@ import 'package:resty_app/routes/app_routes.dart';
     late Future<List<Property>>? propertiesFuture;
     LatLng? _currentPosition;
 
+  final Set<Marker> _markers = {};
+  
     @override
     void initState() {
       super.initState();
@@ -44,7 +46,12 @@ import 'package:resty_app/routes/app_routes.dart';
       for (var doc in querySnapshot.docs) {
         Property property = Property.fromDocumentSnapshot(doc);
         if (property.isValid()) { 
-          loadedProperties.add(property);
+           _markers.add(
+            Marker(
+              markerId: MarkerId(property.idProperty),
+              position: LatLng(property.latitude , property.longitude ),
+            ),
+          );
         }
       }
       return loadedProperties;
@@ -253,28 +260,76 @@ Widget build(BuildContext context) {
       print("pene");
     }
   }
+  
   class Property {
-    final String address;
-    final double price;
-    final List<String> photos;
+  final String idProperty;
+  final String address;
+  final double price;
+  final List<String> photos;
+  final String withRoomie;
+  final int numOfRooms;
+  final bool canBeShared;
+  final bool isRented;
+  final String description;
+  final double latitude; 
+  final double longitude;
 
-    Property({required this.address, required this.price, required this.photos});
+  Property({
+    required this.idProperty,
+    required this.address,
+    required this.price,
+    required this.photos,
+    required this.withRoomie,
+    required this.numOfRooms,
+    required this.canBeShared,
+    required this.isRented,
+    required this.description,
+    required this.latitude,
+    required this.longitude,
+  });
 
-    factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
-      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      List<String> propertyPhotos =
-          data['propertyPhotos'] != null ? List<String>.from(data['propertyPhotos']) : [];
+  factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
+  Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
 
-      return Property(
-        address: data['address'] ?? '',
-        price: (data['price'] ?? 0).toDouble(),
-        photos: propertyPhotos,
-      );
+  if (data == null || data.isEmpty ) { 
+    throw Exception("Documento vacío o incompleto");
+  }
+
+  String idProperty = snapshot.id;
+  String address = data['address'] ?? '';
+  double price = (data['price'] ?? 0).toDouble();
+  List<String> propertyPhotos = data['propertyPhotos'] != null ? List<String>.from(data['propertyPhotos']) : [];
+  String withRoomie = data['withRoomie'] ?? '';
+  int numOfRooms = data['numOfRooms'];
+  bool canBeShared = data['canBeShared'];
+  bool isRented = data['isRented'];
+  String description = data['description'];
+  LatLng latitude = data['latitude'];
+  LatLng longitude = data['longitude'];
+
+  return Property(
+    idProperty: idProperty, 
+    address: address,
+    price: price,
+    photos: propertyPhotos,
+    withRoomie: withRoomie,
+    numOfRooms: numOfRooms,
+    canBeShared: canBeShared,
+    isRented: isRented,
+    description: description,
+    latitude:  longitude, 
+    longitude: longitude,
+  );
+}
+
+
+
+
+ bool isValid() {
+      return address.isNotEmpty && price > 0 && photos.isNotEmpty && numOfRooms > 0 
+      && ((isRented == true && canBeShared == true) || (isRented == false && canBeShared == false));
     }
 
-    bool isValid() {
-      return address.isNotEmpty && price > 0 && photos.isNotEmpty;
-    }
   }
 
 

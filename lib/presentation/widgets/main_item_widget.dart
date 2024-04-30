@@ -9,6 +9,7 @@ class MainItemWidget extends StatelessWidget {
   final double price;
   final List<String> propertyPhotos;
   String withRoomie;
+  final int numOfRooms;
 
   MainItemWidget({
     Key? key,
@@ -16,11 +17,16 @@ class MainItemWidget extends StatelessWidget {
     required this.address,
     required this.price,
     required this.propertyPhotos,
-    required this.withRoomie, required Property property,
+    required this.withRoomie, 
+    required this.numOfRooms,
+    required Property property, required String description,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (numOfRooms > 0){
+      
+    }
     if (withRoomie.isEmpty) {
       withRoomie = "No tiene roomie";
     } else {

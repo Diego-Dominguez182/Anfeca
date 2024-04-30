@@ -126,7 +126,8 @@ Widget _buildAppBar(BuildContext context) {
       FirebaseFirestore.instance.collection('Property').doc(widget.idProperty).update({
         'price': price,
         'withRoomie': "",
-        'isRented': false
+        'isRented': false,
+        'canBeShared': false
       });
     } else if (price > 30000) {
             showDialog(

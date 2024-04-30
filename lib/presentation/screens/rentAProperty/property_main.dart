@@ -5,6 +5,7 @@ import 'package:resty_app/routes/app_routes.dart';
 
 class PropertyMainScreen extends StatefulWidget {
   final String? idProperty;
+
   const PropertyMainScreen({Key? key, this.idProperty}) : super(key: key);
 
   @override
@@ -14,14 +15,12 @@ class PropertyMainScreen extends StatefulWidget {
 class _PropertyMainScreen extends State<PropertyMainScreen> {
 
   String? address;
-
+  String? description;
   @override
   void initState() {
     getPropertyData(widget.idProperty);
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
             SizedBox(height: 20),
             _buildMessage(context),
             SizedBox(height: 20),
-            _buildRoomButton(context),
+            _buildImageRoom(context),
             SizedBox(height: screenHeight * .70),
             _buildAppBar(context),
           ],
@@ -56,13 +55,12 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
     );
   }
 
-
  void getPropertyData(String? idProperty) async {
     FirebaseFirestore.instance.collection('Property').doc(idProperty).get().then((snapshot) {
       if (snapshot.exists) {
         Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
         address = data['address'];
-      String description = data['description'];
+      description = data['description'];
       bool isRented = data['isRented'];
       double latitude = data['latitude'];
       double longitude = data['longitude'];
@@ -103,10 +101,18 @@ Widget _buildMessage(BuildContext context) {
 
 
 
-  Widget _buildRoomButton(BuildContext context) {
-    return Container(
-      
-    );
+  Widget _buildImageRoom(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: address != null
+        ? Text(
+            "$description",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          )
+        : Center(
+            child: CircularProgressIndicator(), 
+          ),
+  );
   }
 }
 
