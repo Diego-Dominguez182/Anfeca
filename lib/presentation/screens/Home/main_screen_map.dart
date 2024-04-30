@@ -6,16 +6,13 @@
   import 'package:cloud_firestore/cloud_firestore.dart';
 
   import 'package:geocoding/geocoding.dart';
-  import 'package:geolocator/geolocator.dart';
   import 'package:google_maps_flutter/google_maps_flutter.dart';
   import 'package:resty_app/core/utils/image_constant.dart';
   import 'package:resty_app/presentation/screens/Home/menu_screen.dart';
   import 'package:resty_app/presentation/theme/app_decoration.dart';
-  import 'package:resty_app/presentation/theme/custom_text_style.dart';
   import 'package:resty_app/presentation/widgets/custom_image_view.dart';
   import 'package:resty_app/presentation/widgets/custom_search_view.dart';
   import 'package:resty_app/presentation/widgets/icon_button_with_text.dart';
-  import 'package:resty_app/presentation/widgets/main_item_widget.dart';
 import 'package:resty_app/routes/app_routes.dart';
 
   class MainScreenMap extends StatefulWidget {
@@ -36,7 +33,6 @@ import 'package:resty_app/routes/app_routes.dart';
     void initState() {
       super.initState();
       propertiesFuture = getPropertiesFromFirebase();
-      getUserCurrentLocation();
       _currentPosition = widget.currentPosition;
     }
 
@@ -59,17 +55,7 @@ import 'package:resty_app/routes/app_routes.dart';
   }
 
 
-    Future<void> getUserCurrentLocation() async {
-      await Geolocator.requestPermission().then((value) async {
-        Position position = await Geolocator.getCurrentPosition();
-        setState(() {
-          _currentPosition = LatLng(position.latitude, position.longitude);
-        });
-      }).catchError((error) async {
-        await Geolocator.requestPermission();
-        print("ERROR: $error");
-      });
-    }
+
 
     Future<void> moveToLocation(String address) async {
 
@@ -142,6 +128,7 @@ Widget build(BuildContext context) {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 10),
+              // ignore: duplicate_ignore
               // ignore: deprecated_member_use
                 
                 child: Row(
@@ -242,7 +229,7 @@ Widget build(BuildContext context) {
     LatLng initialCameraPosition = _currentPosition ?? const LatLng(0.0, 0.0);
 
     return SizedBox(
-      height: 600,
+      height: 580 ,
       width: double.infinity,
       child: GoogleMap(
         mapType: MapType.normal,

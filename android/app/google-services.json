@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "500250644030",
-    "project_id": "resty-69a7f",
-    "storage_bucket": "resty-69a7f.appspot.com"
+    "project_number": "979053196268",
+    "project_id": "securiapp-c1974",
+    "storage_bucket": "securiapp-c1974.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:500250644030:android:993edd1700ec3667484b6f",
+        "mobilesdk_app_id": "1:979053196268:android:05436d378f2bc4af81c6c9",
         "android_client_info": {
           "package_name": "com.example.resty_app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCl4DBJWQDqGNUkW5B7LPnsVEU-L8PDums"
+          "current_key": "AIzaSyDuh4LbhrTEYo1sH-sCgrV44NIXO08RDuY"
         }
       ],
       "services": {

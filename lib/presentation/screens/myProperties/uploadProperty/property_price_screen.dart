@@ -3,15 +3,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_description_screen.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_screen.dart';
 import 'package:resty_app/routes/app_routes.dart';
 
 import '../../../widgets/app_bar/custom_app_bar.dart';
 
 class PropertyPriceScreen extends StatefulWidget {
   final String? idProperty;
+  final LatLng? currentPosition;
 
-  const PropertyPriceScreen({super.key, this.idProperty});
+  const PropertyPriceScreen({super.key, this.idProperty, this.currentPosition});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -102,11 +107,15 @@ Widget _buildAppBar(BuildContext context) {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    PropertyDescriptionScreen(idProperty: widget.idProperty)));
+                    PropertyDescriptionScreen(idProperty: widget.idProperty,
+                    currentPosition: widget.currentPosition)));
       },
       onTapRigthText: () {
         _savePrice();
-        Navigator.pushNamed(context, AppRoutes.myPropertiesScreen);
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder: (context) => MyPropertiesScreen(currentPosition: widget.currentPosition))
+        );
       },
     );
   }
@@ -116,6 +125,8 @@ Widget _buildAppBar(BuildContext context) {
     if (price > 0 && price < 30000) {
       FirebaseFirestore.instance.collection('Property').doc(widget.idProperty).update({
         'price': price,
+        'withRoomie': "",
+        'isRented': false
       });
     } else if (price > 30000) {
             showDialog(

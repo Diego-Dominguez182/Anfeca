@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/location_propertie_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
 
@@ -7,8 +8,9 @@ import '../../../widgets/app_bar/custom_app_bar.dart';
 
 class PropertyServicesScreen extends StatefulWidget {
   final String? idProperty;
+  final LatLng? currentPosition;
 
-  const PropertyServicesScreen({super.key, this.idProperty});
+  const PropertyServicesScreen({super.key, this.idProperty, this.currentPosition});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -147,14 +149,14 @@ class _PropertyServicesScreenState extends State<PropertyServicesScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    LocationPropertyScreen(idProperty: widget.idProperty)));
+                    LocationPropertyScreen(idProperty: widget.idProperty, currentPosition: widget.currentPosition)));
       },
       onTapRigthText: () {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    UploadPropertyScreen(idProperty: widget.idProperty)));
+                    UploadPropertyScreen(idProperty: widget.idProperty, currentPosition: widget.currentPosition)));
         actualizarPropiedad(widget.idProperty!);
       },
     );

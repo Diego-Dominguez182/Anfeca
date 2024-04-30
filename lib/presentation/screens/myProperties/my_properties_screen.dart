@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:resty_app/core/app_export.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_screen.dart';
 import 'package:resty_app/presentation/widgets/app_bar/appbar_leading_iconbutton.dart';
 import 'package:resty_app/presentation/widgets/app_bar/appbar_title.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
-
 import '../../widgets/icon_button_with_text.dart';
 
-class MyPropertiesScreen extends StatelessWidget {
-  const MyPropertiesScreen({Key? key}) : super(key: key);
+class MyPropertiesScreen extends StatefulWidget {
+  final LatLng? currentPosition;
+  const MyPropertiesScreen({Key? key, this.currentPosition}) : super(key: key);
+
+  @override
+  _MyPropertiesScreenState createState() => _MyPropertiesScreenState();
+}
+
+class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +50,7 @@ class MyPropertiesScreen extends StatelessWidget {
               imageName: ImageConstant.propertie,
               text: "Subir nueva propiedad",
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.uploadRoomScreen);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => UploadRoomScreen(currentPosition: widget.currentPosition)));
               },
             ),
           ),
@@ -51,12 +61,12 @@ class MyPropertiesScreen extends StatelessWidget {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      leadingWidth: 48.h,
+      leadingWidth: 48,
       leading: AppbarLeadingIconbutton(
         margin: EdgeInsets.only(
-          left: 4.h,
-          top: 12.v,
-          bottom: 22.v,
+          left: 4,
+          top: 12,
+          bottom: 22,
         ),
         onTap: () {
           onTapBack(context);
@@ -64,7 +74,7 @@ class MyPropertiesScreen extends StatelessWidget {
       ),
       title: AppbarTitle(
         text: "Mis propiedades",
-        margin: EdgeInsets.only(left: 19.h),
+        margin: EdgeInsets.only(left: 19),
       ),
       styleType: Style.bgOutline,
     );

@@ -11,8 +11,10 @@ import '../../../widgets/app_bar/custom_app_bar.dart';
 
 class LocationPropertyScreen extends StatefulWidget {
   final String? idProperty;
+  final LatLng? currentPosition;
+  
 
-  const LocationPropertyScreen({Key? key, this.idProperty}) : super(key: key);
+  const LocationPropertyScreen({Key? key, this.idProperty, this.currentPosition}) : super(key: key);
 
   @override
   _LocationPropertyScreen createState() =>
@@ -21,19 +23,25 @@ class LocationPropertyScreen extends StatefulWidget {
 
 class _LocationPropertyScreen extends State<LocationPropertyScreen> {
   Completer<GoogleMapController> googleMapController = Completer();
-  TextEditingController _searchController = TextEditingController();
-  CameraPosition _currentCameraPosition = CameraPosition(
+  final TextEditingController _searchController = TextEditingController();
+  CameraPosition _currentCameraPosition = const CameraPosition(
     target: LatLng(18.1288823, -94.44264989999999),
     zoom: 14.0,
   );
   String? addres;
 
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
 
   @override
   void initState() {
+        LatLng? _currentPosition = widget.currentPosition;
     super.initState();
-    getUserCurrentLocation();
+    setState(() {
+      _currentCameraPosition =CameraPosition(
+        target: LatLng(_currentPosition!.latitude, _currentPosition.longitude ),
+        zoom: 16);
+
+    });
   }
 
   Future<void> getUserCurrentLocation() async {
@@ -69,7 +77,7 @@ class _LocationPropertyScreen extends State<LocationPropertyScreen> {
         _moveToSearchedLocation();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content:
                 Text('No se encontraron resultados para la dirección ingresada'),
           ),
@@ -100,7 +108,7 @@ class _LocationPropertyScreen extends State<LocationPropertyScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    SettingHouseScreen(idProperty: widget.idProperty)));
+                    SettingHouseScreen(idProperty: widget.idProperty, currentPosition: widget.currentPosition)));
       },
       onTapRigthText: () {
         actualizarPropiedad(widget.idProperty!);
@@ -108,7 +116,7 @@ class _LocationPropertyScreen extends State<LocationPropertyScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    PropertyServicesScreen(idProperty: widget.idProperty)));
+                    PropertyServicesScreen(idProperty: widget.idProperty, currentPosition: widget.currentPosition)));
       },
     );
   }
@@ -127,9 +135,9 @@ class _LocationPropertyScreen extends State<LocationPropertyScreen> {
         onCameraMove: (CameraPosition position) {
           _markers.add(
             Marker(
-              markerId: MarkerId('center_location'),
+              markerId: const MarkerId('center_location'),
               position: position.target,
-              infoWindow: InfoWindow(title: 'Center Location'),
+              infoWindow: const InfoWindow(title: 'Center Location'),
             ),
           );
 
@@ -148,7 +156,7 @@ class _LocationPropertyScreen extends State<LocationPropertyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("¿Dónde está ubicado?"),
+        title: const Text("¿Dónde está ubicado?"),
       ),
       body: Column(
         children: [
@@ -158,7 +166,7 @@ class _LocationPropertyScreen extends State<LocationPropertyScreen> {
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: "Buscar dirección",
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
@@ -183,7 +191,7 @@ class _LocationPropertyScreen extends State<LocationPropertyScreen> {
 
   if (placemarks.isNotEmpty) {
     Placemark placemark = placemarks.first;
-    String address = "${placemark.street}, ${placemark.locality}, ${placemark.country}";
+    String address = "${placemark.thoroughfare}, ${placemark.locality}";
     print("Dirección encontrada: $address");
     FirebaseFirestore.instance.collection('Property').doc(idProperty).update({
       'latitude': latitude,

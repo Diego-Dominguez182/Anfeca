@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -55,8 +56,9 @@ class ImageModel extends ChangeNotifier {
 
 class UploadPropertyScreen extends StatefulWidget {
   final String? idProperty;
+  final LatLng? currentPosition;
 
-  const UploadPropertyScreen({Key? key, this.idProperty}) : super(key: key);
+  const UploadPropertyScreen({Key? key, this.idProperty, this.currentPosition}) : super(key: key);
 
   @override
   _UploadPropertyScreenState createState() => _UploadPropertyScreenState();
@@ -97,7 +99,8 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      PropertyServicesScreen(idProperty: widget.idProperty)));
+                      PropertyServicesScreen(idProperty: widget.idProperty, 
+                      currentPosition: widget.currentPosition)));
         },
         onTapRigthText: () async {
           if (_isButtonDisabled) return; 
@@ -108,7 +111,7 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
           final imageModel = Provider.of<ImageModel>(context, listen: false);
           final List<File> filesToUpload = List.from(imageModel.selectedFiles);
 
-          if (filesToUpload.length > 4) {
+          if (filesToUpload.length > 1) {
             List<String> downloadUrls = [];
 
             for (final file in filesToUpload) {
@@ -137,6 +140,7 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
                   MaterialPageRoute(
                       builder: (context) => PropertyDescriptionScreen(
                             idProperty: widget.idProperty,
+                            currentPosition: widget.currentPosition
                           )));
             }
           } else {

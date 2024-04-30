@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:resty_app/presentation/screens/Home/menu_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
+import 'package:resty_app/presentation/screens/rentAProperty/property_main.dart';
 import '../presentation/screens/Authentication/tenantRegister/message_tenant_register_screen.dart';
 import '../presentation/screens/Authentication/main_registration_screen.dart';
 import '../presentation/screens/Authentication/login_screen.dart';
@@ -59,27 +60,30 @@ class AppRoutes {
   static const String propertyPriceScreen = '/property_price_screen.dart';
 
   static const String mainScreenMap = '/main_screen_map.dart';
+  
+  static const String propertyMainScreen = '/property_main_screen.dart';
 
 
   static Map<String, WidgetBuilder> routes = {
-    mainRegistrationScreen: (context) => MainRegistrationScreen(),
-    loginScreen: (context) => LoginScreen(),
-    mainScreen: (context) => MainScreen(),
-    ownerRegistrationScreen: (context) => OwnerRegistrationScreen(),
+    mainRegistrationScreen: (context) => const MainRegistrationScreen(),
+    loginScreen: (context) => const LoginScreen(),
+    mainScreen: (context) => const MainScreen(),
+    ownerRegistrationScreen: (context) => const OwnerRegistrationScreen(),
     tenantRegistrationScreen: (context) => TenantRegistrationScreen(),
     resetPasswordScreen: (context) => ResetPasswordScreen(),
-    messageFileScreen: (context) => MessageFileScreen(),
-    messageTenantRegisterSccreen: (context) => MessageTenantRegisterScreen(),
-    menuScreen: (context) => MenuScreen(),
-    myPropertiesScreen: (context) => MyPropertiesScreen(),
-    uploadRoomScreen: (context) => UploadRoomScreen(),
+    messageFileScreen: (context) => const MessageFileScreen(),
+    messageTenantRegisterSccreen: (context) => const MessageTenantRegisterScreen(),
+    menuScreen: (context) => const MenuScreen(),
+    myPropertiesScreen: (context) => const MyPropertiesScreen(),
+    uploadRoomScreen: (context) => const UploadRoomScreen(),
     updatePasswordScreen: (context) => UpdatePasswordScreen(),
-    settingHouseScreen: (context) => SettingHouseScreen(),
-    propertyServicesScreen: (context) => PropertyServicesScreen(),
-    uploadPropertyScreen: (context) => UploadPropertyScreen(),
-    locationPropertieScreen: (context) => LocationPropertyScreen(),
-    propertyDescriptionScreen: (context) => PropertyDescriptionScreen(),
-    propertyPriceScreen: (context) => PropertyPriceScreen(),
-    mainScreenMap: (context) => MainScreenMap(),
+    settingHouseScreen: (context) => const SettingHouseScreen(),
+    propertyServicesScreen: (context) => const PropertyServicesScreen(),
+    uploadPropertyScreen: (context) => const UploadPropertyScreen(),
+    locationPropertieScreen: (context) => const LocationPropertyScreen(),
+    propertyDescriptionScreen: (context) => const PropertyDescriptionScreen(),
+    propertyPriceScreen: (context) => const PropertyPriceScreen(),
+    mainScreenMap: (context) => const MainScreenMap(),
+    propertyMainScreen: (context) => const PropertyMainScreen(),
   };
 }

@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:resty_app/core/app_export.dart';
+import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/location_propertie_screen.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 
 class SettingHouseScreen extends StatefulWidget {
   final String? idProperty;
+  final LatLng? currentPosition;
 
-  const SettingHouseScreen({Key? key, this.idProperty}) : super(key: key);
+  const SettingHouseScreen({Key? key, this.idProperty, this.currentPosition}) : super(key: key);
 
   @override
   _SettingHouseScreenState createState() => _SettingHouseScreenState();
@@ -20,10 +23,14 @@ class _SettingHouseScreenState extends State<SettingHouseScreen> {
   int _tenantsCount = 0;
 
   @override
-  void initState() {
-    super.initState();
+@override
+void initState() {
+  super.initState();
+  if (widget.idProperty != null) {
     getUserInfo();
   }
+}
+
 
   Future<void> getUserInfo() async {
     try {
@@ -33,10 +40,10 @@ class _SettingHouseScreenState extends State<SettingHouseScreen> {
           .doc(widget.idProperty)
           .get();
       setState(() {
-        _roomsCount = snapshot.data()!["numOfRooms"];
-        _bedsCount = snapshot.data()!["numOfBeds"];
-        _bathroomsCount = snapshot.data()!["numOfBathrooms"];
-        _tenantsCount = snapshot.data()!["numOfTenants"];
+        _roomsCount = snapshot.data()?["numOfRooms"];
+        _bedsCount = snapshot.data()?["numOfBeds"];
+        _bathroomsCount = snapshot.data()?["numOfBathrooms"];
+        _tenantsCount = snapshot.data()?["numOfTenants"];
       });
     } catch (e) {
       print("Error getting user info: $e");
@@ -122,7 +129,9 @@ class _SettingHouseScreenState extends State<SettingHouseScreen> {
       rightText: "Siguiente",
       showBoxShadow: false,
       onTapLeftText: () {
-        Navigator.pushNamed(context, AppRoutes.uploadRoomScreen);
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder: (context) => MyPropertiesScreen(currentPosition: widget.currentPosition)));
       },
       onTapRigthText: () {
         if (_roomsCount != 0 && _tenantsCount != 0 && _bathroomsCount != 0) {
@@ -133,7 +142,7 @@ class _SettingHouseScreenState extends State<SettingHouseScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => LocationPropertyScreen(
-                        idProperty: widget.idProperty)));
+                        idProperty: widget.idProperty, currentPosition: widget.currentPosition)));
           }
         } else {
           showDialog(

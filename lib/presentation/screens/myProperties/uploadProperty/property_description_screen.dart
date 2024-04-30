@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart'; 
 import 'package:resty_app/core/app_export.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_price_screen.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 
 final currentUser = FirebaseAuth.instance.currentUser;
@@ -10,7 +12,8 @@ final userId = currentUser?.uid;
 
 class PropertyDescriptionScreen extends StatefulWidget {
   final String? idProperty;
-  const PropertyDescriptionScreen({Key? key, this.idProperty}) : super(key: key);
+  final LatLng? currentPosition;
+  const PropertyDescriptionScreen({Key? key, this.idProperty, this.currentPosition}) : super(key: key);
 
   @override
   _PropertyDescriptionScreen createState() => _PropertyDescriptionScreen();
@@ -50,13 +53,17 @@ class _PropertyDescriptionScreen extends State<PropertyDescriptionScreen> {
       rightText: "Siguiente",
       showBoxShadow: false,
       onTapLeftText: () {
-        Navigator.pushNamed(context, AppRoutes.uploadPropertyScreen);
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder: (context) => UploadPropertyScreen(idProperty: widget.idProperty, 
+            currentPosition: widget.currentPosition)));
       },
       onTapRigthText: () {
         _saveProperty();
         Navigator.push(
           context, MaterialPageRoute(
-            builder: (context) => PropertyPriceScreen(idProperty: widget.idProperty)));
+            builder: (context) => PropertyPriceScreen(idProperty: widget.idProperty,
+            currentPosition: widget.currentPosition)));
 
       },
     );

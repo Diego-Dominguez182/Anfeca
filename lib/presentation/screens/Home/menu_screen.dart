@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:resty_app/core/app_export.dart';
+import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
 
 import '../../widgets/app_bar/appbar_leading_iconbutton.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 
 class MenuScreen extends StatefulWidget {
-  const MenuScreen({Key? key}) : super(key: key);
+  final LatLng? currentPosition;
+  const MenuScreen({Key? key, this.currentPosition}) : super(key: key);
 
   @override
   _MenuScreenState createState() => _MenuScreenState();
@@ -176,7 +179,7 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   void _goToMyProperties(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.myPropertiesScreen);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MyPropertiesScreen(currentPosition: widget.currentPosition)));
   }
 
   void _goToUploadRoom(BuildContext context) {

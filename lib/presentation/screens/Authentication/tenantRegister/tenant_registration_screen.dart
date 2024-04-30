@@ -202,12 +202,12 @@ class _TenantRegistrationScreenState extends State<TenantRegistrationScreen> {
 
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
           await FirebaseFirestore.instance
-              .collection('Configuraciones')
-              .doc('dominios')
+              .collection('configuration')
+              .doc('domains')
               .get();
 
-      final List<dynamic> allowedDomains = snapshot.data()!['permitidos'];
-      final List<dynamic> disallowedDomains = snapshot.data()!['no_permitidos'];
+      final List<dynamic> allowedDomains = snapshot.data()!['allowed'];
+      final List<dynamic> disallowedDomains = snapshot.data()!['not_allowed'];
 
       if (allowedDomains.contains(domain)) {
         _registerUserInCollection(context, email, isVerified: false);

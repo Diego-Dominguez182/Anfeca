@@ -4,8 +4,8 @@
 
   import 'package:flutter/material.dart';
   import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 
-  import 'package:geocoding/geocoding.dart';
   import 'package:geolocator/geolocator.dart';
   import 'package:google_maps_flutter/google_maps_flutter.dart';
   import 'package:resty_app/core/utils/image_constant.dart';
@@ -17,10 +17,10 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
   import 'package:resty_app/presentation/widgets/custom_search_view.dart';
   import 'package:resty_app/presentation/widgets/icon_button_with_text.dart';
   import 'package:resty_app/presentation/widgets/main_item_widget.dart';
-import 'package:resty_app/routes/app_routes.dart';
 
   class MainScreen extends StatefulWidget {
-    const MainScreen({super.key});
+    final LatLng? currentPosition;
+    const MainScreen({super.key, this.currentPosition});
 
     @override
     _MainScreenState createState() => _MainScreenState();
@@ -30,14 +30,15 @@ import 'package:resty_app/routes/app_routes.dart';
     TextEditingController searchController = TextEditingController();
     Completer<GoogleMapController> googleMapController = Completer();
     late Future<List<Property>>? propertiesFuture;
-        LatLng? _currentPosition;
+    LatLng? _currentPosition;
 
-    @override
-    void initState() {
-      super.initState();
-      propertiesFuture = getPropertiesFromFirebase();
-      getUserCurrentLocation();
-    }
+@override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  propertiesFuture = getPropertiesFromFirebase();
+  getUserCurrentLocation();
+}
+
 
  Future<void> getUserCurrentLocation() async {
       await Geolocator.requestPermission().then((value) async {
@@ -69,7 +70,8 @@ import 'package:resty_app/routes/app_routes.dart';
     }
   }
 
-
+  
+  
     @override
 Widget build(BuildContext context) {
   return SafeArea(
@@ -110,6 +112,7 @@ Widget build(BuildContext context) {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 10),
+              // ignore: duplicate_ignore
               // ignore: deprecated_member_use
                 
                 child: Row(
@@ -135,7 +138,7 @@ Widget build(BuildContext context) {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MenuScreen()),
+                MaterialPageRoute(builder: (context) =>  MenuScreen(currentPosition: _currentPosition)),
               );
             },
             child: Container(
@@ -241,7 +244,7 @@ Widget build(BuildContext context) {
       child: GridView.builder(
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          mainAxisExtent: 190,
+          mainAxisExtent: 250,
           crossAxisCount: 1,
           mainAxisSpacing: 37,
           crossAxisSpacing: 37,
@@ -250,9 +253,11 @@ Widget build(BuildContext context) {
         itemCount: properties.length,
         itemBuilder: (context, index) {
           return MainItemWidget(
+            idProperty: properties[index].idProperty,
             address: properties[index].address,
             price: properties[index].price,
-            propertyPhotos: properties[index].photos, 
+            propertyPhotos: properties[index].photos,
+            withRoomie: properties[index].withRoomie,
             property: properties[index],
           );
         },
@@ -261,31 +266,47 @@ Widget build(BuildContext context) {
   }
 
     void onTapFilter(BuildContext context) {
-      print("pene");
     }
   }
   class Property {
-    final String address;
-    final double price;
-    final List<String> photos;
+  final String idProperty; 
+  final String address;
+  final double price;
+  final List<String> photos;
+  final String withRoomie;
 
-    Property({required this.address, required this.price, required this.photos});
+  Property({
+    required this.idProperty,
+    required this.address,
+    required this.price,
+    required this.photos,
+    required this.withRoomie,
+  });
 
-    factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
-      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      List<String> propertyPhotos =
-          data['propertyPhotos'] != null ? List<String>.from(data['propertyPhotos']) : [];
+  factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
+  Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
 
-      return Property(
-        address: data['address'] ?? '',
-        price: (data['price'] ?? 0).toDouble(),
-        photos: propertyPhotos,
-      );
-    }
-
-    bool isValid() {
-      return address.isNotEmpty && price > 0 && photos.isNotEmpty;
-    }
+  if (data == null || data.isEmpty) {
+    throw Exception("Documento vacío o incompleto");
   }
 
+  String idProperty = snapshot.id;
+  String address = data['address'] ?? '';
+  double price = (data['price'] ?? 0).toDouble();
+  List<String> propertyPhotos = data['propertyPhotos'] != null ? List<String>.from(data['propertyPhotos']) : [];
+  String withRoomie = data['withRoomie'] ?? '';
 
+  return Property(
+    idProperty: idProperty, 
+    address: address,
+    price: price,
+    photos: propertyPhotos,
+    withRoomie: withRoomie,
+  );
+}
+
+
+  bool isValid() {
+    return address.isNotEmpty && price > 0 && photos.isNotEmpty;
+  }
+}

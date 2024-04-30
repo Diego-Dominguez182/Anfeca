@@ -1,15 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:resty_app/core/app_export.dart';
+import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/settings_house_screen.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 
 final currentUser = FirebaseAuth.instance.currentUser;
 final userId = currentUser?.uid;
 
+
 class UploadRoomScreen extends StatefulWidget {
-  const UploadRoomScreen({Key? key}) : super(key: key);
+  final LatLng? currentPosition;
+  const UploadRoomScreen({Key? key, this.currentPosition}) : super(key: key);
 
   @override
   _UploadRoomScreenState createState() => _UploadRoomScreenState();
@@ -33,7 +37,7 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
               .where('userId', isEqualTo: userId)
               .get();
 
-      bool allCompleted = true;
+
 
       for (DocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
         Map<String, dynamic>? data = doc.data();
@@ -48,13 +52,15 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
             data.containsKey('services') &&
             data.containsKey('description') &&
             data.containsKey('title') &&
-            data.containsKey('price'))) {
-          allCompleted = false;
+            data.containsKey('price') &&
+            data.containsKey('withRoomie') &&
+            data.containsKey('isRented'))) {
+            existingPropertyId = doc.id;
           break;
         }
       }
 
-      existingPropertyId = allCompleted ? null : snapshot.docs.first.id;
+
     }
   }
 
@@ -88,7 +94,9 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
       rightText: "Siguiente",
       showBoxShadow: false,
       onTapLeftText: () {
-        Navigator.pushNamed(context, AppRoutes.myPropertiesScreen);
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder:(context) => MyPropertiesScreen(currentPosition: widget.currentPosition) ));
       },
       onTapRigthText: () {
         if (_selectedProperty != null) {
@@ -258,7 +266,7 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => SettingHouseScreen(idProperty: docRef.id)));
+            builder: (context) => SettingHouseScreen(idProperty: docRef.id, currentPosition: widget.currentPosition )));
   }
 
   void actualizarPropiedad(
@@ -271,6 +279,6 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-            SettingHouseScreen(idProperty: existingPropertyId)));
+            SettingHouseScreen(idProperty: existingPropertyId, currentPosition: widget.currentPosition)));
   }
 }

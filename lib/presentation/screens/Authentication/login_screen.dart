@@ -263,7 +263,7 @@ class _loginScreenState extends State<LoginScreen> {
   }
 
   void onTapUploadFile(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.loginScreen);
+    Navigator.pushNamed(context, AppRoutes.messageFileScreen);
   }
 
   void onTapResetPassword(BuildContext context) {
