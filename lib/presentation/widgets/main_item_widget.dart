@@ -10,6 +10,8 @@ class MainItemWidget extends StatelessWidget {
   final List<String> propertyPhotos;
   String withRoomie;
   final int numOfRooms;
+  final String description;
+  final List<String> services;
 
   MainItemWidget({
     Key? key,
@@ -19,7 +21,9 @@ class MainItemWidget extends StatelessWidget {
     required this.propertyPhotos,
     required this.withRoomie, 
     required this.numOfRooms,
-    required Property property, required String description,
+    required Property property, 
+    required this.description, 
+    required this.services,
   }) : super(key: key);
 
   @override
@@ -42,16 +46,27 @@ class MainItemWidget extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                PropertyMainScreen(idProperty: this.idProperty),
+                PropertyMainScreen(
+                  idProperty: this.idProperty,
+                  propertyPhotos: this.propertyPhotos,
+                  description: this.description,
+                  price: this.price,
+                  address: this.address,
+                  services: this.services)
           ),
         );
       },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.blue),
+          border: Border(
+            top: BorderSide(color: Colors.blue),
+            left: BorderSide(color: Colors.blue),
+            right: BorderSide(color: Colors.blue),
+            bottom: BorderSide(width: 2.0, color: Colors.blue), 
+          ),
         ),
-        height: 250, // Ajusta la altura del contenedor
+        height: 250, 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -67,7 +82,7 @@ class MainItemWidget extends StatelessWidget {
                           Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) => Icon(Icons.error),
                       fit: BoxFit.cover,
-                      height: 200, // Ajusta el tamaño de la imagen
+                      height: 200, 
                       width: double.infinity,
                     ),
                   );
@@ -81,9 +96,10 @@ class MainItemWidget extends StatelessWidget {
                 address,
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
+                  fontFamily: 'volkorn'
                 ),
               ),
             ),
@@ -96,6 +112,7 @@ class MainItemWidget extends StatelessWidget {
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
+                  fontFamily: 'volkorn'
                 ),
               ),
             ),
@@ -106,9 +123,10 @@ class MainItemWidget extends StatelessWidget {
                 formattedPrice,
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
+                  fontFamily: 'volkorn'
                 ),
               ),
             ),

@@ -32,8 +32,8 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
     LatLng? _currentPosition;
 
 @override
-void didChangeDependencies() {
-  super.didChangeDependencies();
+  void initState() {
+  super.initState();
   propertiesFuture = getPropertiesFromFirebase();
   getUserCurrentLocation();
 }
@@ -52,22 +52,27 @@ void didChangeDependencies() {
     }
 
     Future<List<Property>> getPropertiesFromFirebase() async {
-    try {
-      QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('Property').get();
-      List<Property> loadedProperties = [];
-      for (var doc in querySnapshot.docs) {
+  try {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('Property').get();
+    List<Property> loadedProperties = [];
+    for (var doc in querySnapshot.docs) {
+      try {
         Property property = Property.fromDocumentSnapshot(doc);
         if (property.isValid()) { 
           loadedProperties.add(property);
         }
+      } catch (e) {
+        print('Documento incompleto: ${doc.id}');
       }
-      return loadedProperties;
-    } catch (e) {
-      print('Error getting properties: $e');
-      return [];
     }
+    return loadedProperties;
+  } catch (e) {
+    print('Error al obtener propiedades: $e');
+    return [];
   }
+}
+
 
   
   
@@ -260,6 +265,7 @@ Widget build(BuildContext context) {
             property: properties[index],
             numOfRooms: properties[index].numOfRooms,
             description: properties[index].description,
+            services: properties[index].services
           );
         },
       ),
@@ -279,6 +285,7 @@ Widget build(BuildContext context) {
   final bool canBeShared;
   final bool isRented;
   final String description;
+  final List<String> services;
 
   Property({
     required this.idProperty,
@@ -290,6 +297,7 @@ Widget build(BuildContext context) {
     required this.canBeShared,
     required this.isRented,
     required this.description,
+    required this.services
   });
 
   factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
@@ -308,6 +316,7 @@ Widget build(BuildContext context) {
   bool canBeShared = data['canBeShared'];
   bool isRented = data['isRented'];
   String description = data['description'];
+  List<String> services = data['services'] != null ? List<String>.from(data['services']) : [];
 
   return Property(
     idProperty: idProperty, 
@@ -319,6 +328,7 @@ Widget build(BuildContext context) {
     canBeShared: canBeShared,
     isRented: isRented,
     description: description,
+    services: services,
   );
 }
 

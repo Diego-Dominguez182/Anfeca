@@ -29,6 +29,7 @@ dependencies:
   firebase_storage: ^11.7.0
   geolocator: ^11.0.0
   geocoding: ^3.0.0
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
@@ -45,3 +46,24 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+
+  fonts:
+    - family: Empire
+      fonts:
+        - asset: assets/fonts/Empire.ttf
+
+    - family: Chantelli
+      fonts:
+        - asset: assets/fonts/Chantelli.ttf
+
+    - family: Athene
+      fonts:
+        - asset: assets/fonts/Athene.otf
+
+    - family: medio
+      fonts:
+        - asset: assets/fonts/medio.otf
+
+    - family: volkorn
+      fonts:
+        - asset: assets/fonts/volkorn.ttf

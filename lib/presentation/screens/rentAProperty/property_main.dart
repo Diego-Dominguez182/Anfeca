@@ -1,91 +1,186 @@
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:carousel_slider/carousel_slider.dart'; 
+import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
+import 'package:resty_app/presentation/screens/Home/menu_screen.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 import 'package:resty_app/routes/app_routes.dart';
 
 class PropertyMainScreen extends StatefulWidget {
   final String? idProperty;
+  final String? previousPage;
+  final LatLng? currentPosition;
+  final List<String>? propertyPhotos;
+  final String? description;
+  final double? price;
+  final String? address;
+    final List<String>? services;
 
-  const PropertyMainScreen({Key? key, this.idProperty}) : super(key: key);
+  const PropertyMainScreen({Key? key, 
+  this.idProperty, 
+  this.previousPage, 
+  this.currentPosition,
+  this.propertyPhotos,
+  this.description,
+  this.price,
+  this.address,
+  this.services
+  }) : super(key: key);
 
   @override
   _PropertyMainScreen createState() => _PropertyMainScreen();
 }
 
 class _PropertyMainScreen extends State<PropertyMainScreen> {
-
   String? address;
   String? description;
+  List<String>? propertyPhotos = [];
+  double? price;
+  List<String>? services;
+
   @override
   void initState() {
-    getPropertyData(widget.idProperty);
+    propertyPhotos = widget.propertyPhotos;
+    description = widget.description;
+    price = widget.price;
+    address = widget.address;
+    services = widget.services;
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: ListView(
-          children: [
-            SizedBox(height: 20),
-            _buildMessage(context),
-            SizedBox(height: 20),
-            _buildImageRoom(context),
-            SizedBox(height: screenHeight * .70),
-            _buildAppBar(context),
-          ],
-        ),
+Widget build(BuildContext context) {
+  double screenHeight = MediaQuery.of(context).size.height;
+  
+  return SafeArea(
+    child: Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          ListView(
+            padding: EdgeInsets.only(bottom: screenHeight * 0.15), 
+            children: [
+              _buildImageSlider(context),
+              SizedBox(height: 20),
+              _buildAddress(context),
+              SizedBox(height: 10),
+              _buildPrice(context),
+              SizedBox(height: 10),
+              _buildDescription(context),
+              _buildServices(context)
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: _buildAppBar(context),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+Widget _buildImageSlider(BuildContext context) {
+  return propertyPhotos != null && propertyPhotos!.isNotEmpty
+      ? CarouselSlider(
+          options: CarouselOptions(
+            aspectRatio: 16 / 9,
+            enlargeCenterPage: true,
+            autoPlay: true,
+            autoPlayInterval: Duration(seconds: 8),
+            autoPlayAnimationDuration: Duration(milliseconds: 800),
+            enableInfiniteScroll: true,
+            viewportFraction: 1, 
+          ),
+          items: propertyPhotos!.map((photo) {
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(photo),
+                    ),
+                  ),
+                );
+              },
+            );
+          }).toList(),
+        )
+      : Container(); 
+}
+
+
+  Widget _buildAddress(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Text(
+        address ?? '',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+Widget _buildPrice(BuildContext context) {
+  String formattedPrice =
+      NumberFormat.currency(locale: 'es_MX', symbol: '\$').format(price);
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: Text(
+      formattedPrice,
+      style: TextStyle(fontSize: 18),
+    ),
+  );
+}
+
+  Widget _buildDescription(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Text(
+        description ?? '',
+        style: TextStyle(fontSize: 16),
       ),
     );
   }
 
   Widget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
+  return Positioned(
+    bottom: 0,
+    left: 0,
+    right: 0,
+    child: CustomAppBar(
       backgroundColor: Colors.white,
       leadingWidth: 48,
       leftText: "Atrás",
       rightText: "Rentar",
       showBoxShadow: false,
       onTapLeftText: () {
-        Navigator.pushNamed(context, AppRoutes.mainScreen);
+        if (widget.previousPage == 'Mapa') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MainScreenMap(currentPosition: widget.currentPosition)),
+          );
+        } else {
+          Navigator.pushNamed(context, AppRoutes.mainScreen);
+        }
       },
-    );
-  }
+      onTapRigthText: () {
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder: (context) => MenuScreen()));
+      },
+    ),
+  );
+}
 
- void getPropertyData(String? idProperty) async {
-    FirebaseFirestore.instance.collection('Property').doc(idProperty).get().then((snapshot) {
-      if (snapshot.exists) {
-        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-        address = data['address'];
-      description = data['description'];
-      bool isRented = data['isRented'];
-      double latitude = data['latitude'];
-      double longitude = data['longitude'];
-      int numOfBathrooms = data['numOfBathrooms'];
-      int numOfBeds = data['numOfBeds'];
-      int numOfRooms = data['numOfRooms'];
-      int numOfTenants = data['numOfTenants'];
-      int price = data['price'];
-      List propertyPhotos = data['propertyPhotos'];
-      String propertyType = data['propertyType'];
-      List services = data['services'];
-      String title = data['title'];
-      String userId = data['userId'];
-      String withRoomie = data['withRoomie'];
-        setState(() {
-        });
-      } else {
-        print('No existe un documento con el ID proporcionado');
-      }
-    }).catchError((error) {
-      print('Error al obtener datos: $error');
-    });
-  }
+
 Widget _buildMessage(BuildContext context) {
-   
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20),
     child: address != null
@@ -107,6 +202,20 @@ Widget _buildMessage(BuildContext context) {
     child: address != null
         ? Text(
             "$description",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          )
+        : Center(
+            child: CircularProgressIndicator(), 
+          ),
+  );
+  }
+
+    Widget _buildServices(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: address != null
+        ? Text(
+            "$services",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           )
         : Center(

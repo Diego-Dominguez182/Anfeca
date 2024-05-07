@@ -54,8 +54,11 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
             data.containsKey('title') &&
             data.containsKey('price') &&
             data.containsKey('withRoomie') &&
-            data.containsKey('isRented'))) {
+            data.containsKey('isRented') &&
+            data.containsKey('canBeShared') &&
+            data.containsKey('address'))) {
             existingPropertyId = doc.id;
+            print(existingPropertyId);
           break;
         }
       }

@@ -183,6 +183,6 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   void _goToUploadRoom(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.myPropertiesScreen);
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> MyPropertiesScreen(currentPosition: widget.currentPosition)));
   }
 }

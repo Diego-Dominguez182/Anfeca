@@ -9,6 +9,7 @@
   import 'package:google_maps_flutter/google_maps_flutter.dart';
   import 'package:resty_app/core/utils/image_constant.dart';
   import 'package:resty_app/presentation/screens/Home/menu_screen.dart';
+import 'package:resty_app/presentation/screens/rentAProperty/property_main.dart';
   import 'package:resty_app/presentation/theme/app_decoration.dart';
   import 'package:resty_app/presentation/widgets/custom_image_view.dart';
   import 'package:resty_app/presentation/widgets/custom_search_view.dart';
@@ -26,42 +27,62 @@ import 'package:resty_app/routes/app_routes.dart';
   class _MainScreenMapState extends State<MainScreenMap> {
     TextEditingController searchController = TextEditingController();
     Completer<GoogleMapController> googleMapController = Completer();
-    late Future<List<Property>>? propertiesFuture;
+    
     LatLng? _currentPosition;
+    late List<Property> loadedProperties; 
 
   final Set<Marker> _markers = {};
   
-    @override
-    void initState() {
-      super.initState();
-      propertiesFuture = getPropertiesFromFirebase();
-      _currentPosition = widget.currentPosition;
-    }
+@override
+void initState() {
+  super.initState();
+  _loadPropertiesFromFirebase(); 
+  _currentPosition = widget.currentPosition;
+}
 
-    Future<List<Property>> getPropertiesFromFirebase() async {
-    try {
-      QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('Property').get();
-      List<Property> loadedProperties = [];
-      for (var doc in querySnapshot.docs) {
+Future<void> _loadPropertiesFromFirebase() async {
+  try {
+    QuerySnapshot querySnapshot =
+    await FirebaseFirestore.instance.collection('Property').get();
+    loadedProperties = [];
+    for (var doc in querySnapshot.docs) {
+      try {
         Property property = Property.fromDocumentSnapshot(doc);
-        if (property.isValid()) { 
-           _markers.add(
-            Marker(
-              markerId: MarkerId(property.idProperty),
-              position: LatLng(property.latitude , property.longitude ),
-            ),
-          );
+        if (property.isValid()) {
+          setState(() {
+            _markers.add(
+              Marker(
+                markerId: MarkerId(property.idProperty),
+                position: LatLng(property.latitude, property.longitude),
+                onTap: () {
+                  Navigator.push(
+                    context, MaterialPageRoute(
+                      builder: (context) => 
+                      PropertyMainScreen(
+                        idProperty: property.idProperty,
+                         previousPage: "Mapa",
+                         currentPosition: _currentPosition,
+                         description: property.description,
+                         price: property.price,
+                         propertyPhotos: property.photos,
+                         address: property.address,
+                         )));
+                },
+              ),
+            );
+            loadedProperties.add(property);
+          });
+        } else {
+          print('La propiedad con ID ${property.idProperty} no es válida y será omitida.');
         }
+      } catch (e) {
+        print('Error al cargar la propiedad: $e');
       }
-      return loadedProperties;
-    } catch (e) {
-      print('Error getting properties: $e');
-      return [];
     }
+  } catch (e) {
+    print('Error obteniendo propiedades: $e');
   }
-
-
+}
 
 
     Future<void> moveToLocation(String address) async {
@@ -165,7 +186,7 @@ Widget build(BuildContext context) {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MenuScreen()),
+                MaterialPageRoute(builder: (context) => MenuScreen(currentPosition: widget.currentPosition)),
               );
             },
             child: Container(
@@ -236,7 +257,7 @@ Widget build(BuildContext context) {
     LatLng initialCameraPosition = _currentPosition ?? const LatLng(0.0, 0.0);
 
     return SizedBox(
-      height: 580 ,
+      height: 580,
       width: double.infinity,
       child: GoogleMap(
         mapType: MapType.normal,
@@ -247,10 +268,16 @@ Widget build(BuildContext context) {
         zoomControlsEnabled: false,
         zoomGesturesEnabled: true,
         myLocationEnabled: true,
+        markers: _markers,
         onMapCreated: (GoogleMapController controller) {
-          if (!googleMapController.isCompleted) { 
+          if (!googleMapController.isCompleted) {
             googleMapController.complete(controller);
           }
+        },
+        onCameraMove: (CameraPosition position) {
+          setState(() {
+            _currentPosition = position.target;
+          });
         },
       ),
     );
@@ -288,24 +315,28 @@ Widget build(BuildContext context) {
     required this.longitude,
   });
 
-  factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
+factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
   Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
 
-  if (data == null || data.isEmpty ) { 
+  if (data == null || data.isEmpty) {
     throw Exception("Documento vacío o incompleto");
   }
 
   String idProperty = snapshot.id;
-  String address = data['address'] ?? '';
-  double price = (data['price'] ?? 0).toDouble();
-  List<String> propertyPhotos = data['propertyPhotos'] != null ? List<String>.from(data['propertyPhotos']) : [];
-  String withRoomie = data['withRoomie'] ?? '';
-  int numOfRooms = data['numOfRooms'];
-  bool canBeShared = data['canBeShared'];
-  bool isRented = data['isRented'];
-  String description = data['description'];
-  LatLng latitude = data['latitude'];
-  LatLng longitude = data['longitude'];
+  String? address = data['address'];
+  double? price = (data['price'] as num?)?.toDouble();
+  List<String>? propertyPhotos = (data['propertyPhotos'] as List<dynamic>?)?.map((photo) => photo.toString()).toList();
+  String? withRoomie = data['withRoomie'];
+  int? numOfRooms = data['numOfRooms'];
+  bool canBeShared = data['canBeShared'] ?? false;
+  bool isRented = data['isRented'] ?? false;
+  String? description = data['description'];
+  double? latitude = (data['latitude'] as num?)?.toDouble();
+  double? longitude = (data['longitude'] as num?)?.toDouble();
+
+  if (address == null || price == null || propertyPhotos == null || withRoomie == null || numOfRooms == null || description == null || latitude == null || longitude == null) {
+    throw Exception("Documento incompleto, no contiene todos los valores requeridos");
+  }
 
   return Property(
     idProperty: idProperty, 
@@ -317,7 +348,7 @@ Widget build(BuildContext context) {
     canBeShared: canBeShared,
     isRented: isRented,
     description: description,
-    latitude:  longitude, 
+    latitude: latitude,
     longitude: longitude,
   );
 }

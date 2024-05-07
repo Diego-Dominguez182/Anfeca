@@ -111,7 +111,7 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
           final imageModel = Provider.of<ImageModel>(context, listen: false);
           final List<File> filesToUpload = List.from(imageModel.selectedFiles);
 
-          if (filesToUpload.length > 1) {
+          if (filesToUpload.length > 0) {
             List<String> downloadUrls = [];
 
             for (final file in filesToUpload) {
