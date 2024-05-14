@@ -1,14 +1,12 @@
 
 // ignore_for_file: prefer_final_fields
 
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_description_screen.dart';
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_screen.dart';
-import 'package:resty_app/routes/app_routes.dart';
 
 import '../../../widgets/app_bar/custom_app_bar.dart';
 
@@ -26,6 +24,30 @@ class PropertyPriceScreen extends StatefulWidget {
 class _PropertyPriceScreenState extends State<PropertyPriceScreen> {
   int _currentPrice = 0;
   TextEditingController _priceController = TextEditingController();
+  late int price;
+
+  @override
+  void initState() {
+    super.initState();
+    getPropertyInfo();
+  }
+
+  Future<void> getPropertyInfo() async {
+  try {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('Property')
+        .doc(widget.idProperty)
+        .get();
+    setState(() {
+      price = snapshot.data()?["price"];
+      _priceController.text = price.toString(); 
+    });
+  } catch (e) {
+    print("Error getting user info: $e");
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,23 +94,23 @@ class _PropertyPriceScreenState extends State<PropertyPriceScreen> {
               },
             ),
             const SizedBox(height: 20.0),
-            TextField(
-              controller: _priceController,
-              decoration: const InputDecoration(
-                labelText: 'Precio',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-  int? parsedValue = int.tryParse(value);
-  if (parsedValue != null && parsedValue >= 0 && parsedValue <= 30000) {
-    setState(() {
-      _currentPrice = parsedValue;
-    });
-  }
-},
-
-            ),
+TextField(
+  controller: _priceController,
+  decoration: InputDecoration(
+    labelText: 'Precio', 
+    border: OutlineInputBorder(),
+  ),
+  keyboardType: TextInputType.number,
+  onChanged: (value) {
+    int? parsedValue = int.tryParse(value);
+    if (parsedValue != null && parsedValue >= 0 && parsedValue <= 30000) {
+      setState(() {
+        _currentPrice = parsedValue;
+      });
+    }
+  },
+),
+ 
             const SizedBox(height: 20.0),
           ],
         ),
@@ -125,7 +147,7 @@ Widget _buildAppBar(BuildContext context) {
     if (price > 0 && price < 30000) {
       FirebaseFirestore.instance.collection('Property').doc(widget.idProperty).update({
         'price': price,
-        'withRoomie': "",
+        'withRoomies': [],
         'isRented': false,
         'canBeShared': false
       });

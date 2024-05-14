@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart'; 
-import 'package:resty_app/core/app_export.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_price_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
@@ -24,6 +23,30 @@ class _PropertyDescriptionScreen extends State<PropertyDescriptionScreen> {
   String? existingPropertyId;
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
+  String? title;
+  String? description;
+
+  @override
+  void initState() {
+    super.initState();
+    getPropertyInfo();
+  }
+
+  Future<void> getPropertyInfo() async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+          .instance
+          .collection('Property')
+          .doc(widget.idProperty)
+          .get();
+      setState(() {
+        title = snapshot.data()?["title"];
+        description = snapshot.data()?["description"];
+      });
+    } catch (e) {
+      print("Error getting user info: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +120,7 @@ class _PropertyDescriptionScreen extends State<PropertyDescriptionScreen> {
             child: TextField(
               controller: _titleController,
               decoration: InputDecoration(
-                hintText: "Ingresa un título",
+                hintText: title,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(color: Colors.black, width: 2),
@@ -123,7 +146,7 @@ class _PropertyDescriptionScreen extends State<PropertyDescriptionScreen> {
             child: TextField(
               controller: _descriptionController,
               decoration: InputDecoration(
-                hintText: "Ingresa una descripción corta",
+                hintText: description,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(color: Colors.black, width: 2),

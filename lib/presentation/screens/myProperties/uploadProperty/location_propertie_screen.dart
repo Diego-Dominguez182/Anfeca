@@ -34,7 +34,7 @@ class _LocationPropertyScreen extends State<LocationPropertyScreen> {
 
   @override
   void initState() {
-        LatLng? _currentPosition = widget.currentPosition;
+    LatLng? _currentPosition = widget.currentPosition;
     super.initState();
     setState(() {
       _currentCameraPosition =CameraPosition(

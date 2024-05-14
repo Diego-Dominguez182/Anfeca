@@ -19,6 +19,9 @@ import '../presentation/screens/myProperties/uploadProperty/property_services_sc
 import '../presentation/screens/myProperties/uploadProperty/property_description_screen.dart';
 import '../presentation/screens/myProperties/uploadProperty/property_price_screen.dart';
 import '../presentation/screens/Home/main_screen_map.dart';
+import '../presentation/screens/rentAProperty/my_rents_screen.dart';
+import 'package:resty_app/presentation/screens/Home/preference_form.dart';
+
 
 class AppRoutes {
   static const String mainRegistrationScreen = '/main_registration_screen';
@@ -63,6 +66,12 @@ class AppRoutes {
   
   static const String propertyMainScreen = '/property_main_screen.dart';
 
+  static const String myRentsScreen = '/my_rents_screen.dart';
+
+  static const String preferenceForm = '/preference_form.dart';
+
+  
+
 
   static Map<String, WidgetBuilder> routes = {
     mainRegistrationScreen: (context) => const MainRegistrationScreen(),
@@ -85,5 +94,7 @@ class AppRoutes {
     propertyPriceScreen: (context) => const PropertyPriceScreen(),
     mainScreenMap: (context) => const MainScreenMap(),
     propertyMainScreen: (context) => const PropertyMainScreen(),
+    myRentsScreen: (context) => const MyRentsScreen(),
+    preferenceForm: (context) => PreferenceForm(),
   };
 }

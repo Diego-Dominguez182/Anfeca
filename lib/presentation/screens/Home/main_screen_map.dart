@@ -60,12 +60,16 @@ Future<void> _loadPropertiesFromFirebase() async {
                       builder: (context) => 
                       PropertyMainScreen(
                         idProperty: property.idProperty,
-                         previousPage: "Mapa",
-                         currentPosition: _currentPosition,
-                         description: property.description,
-                         price: property.price,
-                         propertyPhotos: property.photos,
-                         address: property.address,
+                        previousPage: "Mapa",
+                        currentPosition: _currentPosition,
+                        description: property.description,
+                        price: property.price,
+                        propertyPhotos: property.photos,
+                        address: property.address,
+                        services: property.services,
+                        numOfBathrooms: property.numOfBathrooms,
+                        numOfBeds: property.numOfBeds,
+                        numOfTenants: property.numOfTenants
                          )));
                 },
               ),
@@ -300,6 +304,10 @@ Widget build(BuildContext context) {
   final String description;
   final double latitude; 
   final double longitude;
+  final List<String> services;
+  final int numOfBathrooms;
+  final int numOfBeds;
+  final int numOfTenants;
 
   Property({
     required this.idProperty,
@@ -313,6 +321,10 @@ Widget build(BuildContext context) {
     required this.description,
     required this.latitude,
     required this.longitude,
+    required this.services,
+    required this.numOfBathrooms,
+    required this.numOfBeds,
+    required this.numOfTenants,
   });
 
 factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
@@ -333,6 +345,10 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
   String? description = data['description'];
   double? latitude = (data['latitude'] as num?)?.toDouble();
   double? longitude = (data['longitude'] as num?)?.toDouble();
+  List<String> services = data['services'] != null ? List<String>.from(data['services']) : [];
+  int numOfBathrooms = data['numOfBathrooms'];
+  int numOfBeds = data['numOfBeds'];
+  int numOfTenants = data['numOfTenants'];
 
   if (address == null || price == null || propertyPhotos == null || withRoomie == null || numOfRooms == null || description == null || latitude == null || longitude == null) {
     throw Exception("Documento incompleto, no contiene todos los valores requeridos");
@@ -350,6 +366,10 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
     description: description,
     latitude: latitude,
     longitude: longitude,
+    services: services,
+    numOfBathrooms: numOfBathrooms,
+    numOfBeds: numOfBeds,
+    numOfTenants: numOfTenants,
   );
 }
 

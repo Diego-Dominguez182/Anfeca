@@ -264,6 +264,7 @@ class _TenantRegistrationScreenState extends State<TenantRegistrationScreen> {
         'verified': false,
         'userType': 'Tenant',
         'schoolFile': null,
+        'firstTime': true
       });
 
       showDialog(

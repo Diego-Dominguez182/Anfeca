@@ -168,7 +168,7 @@ class _loginScreenState extends State<LoginScreen> {
           'verified': true,
         });
         Navigator.pushNamed(context, AppRoutes.mainScreen);
-      } else if ((snapshot_user.data() != null &&
+      } else if ((snapshot_user.  data() != null &&
               snapshot_user.data()!["userType"] == "Tenant" &&
               snapshot_user.data()!["schoolFile"] == null) ||
           (snapshot_user_check.data() != null &&
@@ -216,7 +216,9 @@ class _loginScreenState extends State<LoginScreen> {
             );
           },
         );
-      } else {
+      } else if (snapshot_user.data()?['firstTime'] == true){
+          Navigator.pushNamed(context, AppRoutes.preferenceForm);
+     }else {
         Navigator.pushNamed(context, AppRoutes.mainScreen);
       }
     } catch (e) {

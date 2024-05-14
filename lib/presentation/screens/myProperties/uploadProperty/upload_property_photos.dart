@@ -226,21 +226,24 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
   }
 
   Future<void> saveDownloadUrls(List<String> downloadUrls) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        DocumentReference userDocRef = FirebaseFirestore.instance
-            .collection('Property')
-            .doc(widget.idProperty);
-        await userDocRef.set(
-          {'propertyPhotos': FieldValue.arrayUnion(downloadUrls)},
-          SetOptions(merge: true),
-        );
-      } else {
-        throw Exception('Usuario no autenticado');
-      }
-    } catch (error) {
-      print("Error al guardar los URLs de descarga: $error");
+  try {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentReference userDocRef = FirebaseFirestore.instance
+          .collection('Property')
+          .doc(widget.idProperty);
+
+      await userDocRef.update({'propertyPhotos': FieldValue.delete()});
+
+      await userDocRef.set(
+        {'propertyPhotos': downloadUrls},
+        SetOptions(merge: true),
+      );
+    } else {
+      throw Exception('Usuario no autenticado');
     }
+  } catch (error) {
+    print("Error al guardar los URLs de descarga: $error");
   }
+}
 }

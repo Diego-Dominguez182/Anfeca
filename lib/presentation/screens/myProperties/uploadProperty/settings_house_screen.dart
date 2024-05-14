@@ -142,7 +142,8 @@ void initState() {
                 context,
                 MaterialPageRoute(
                     builder: (context) => LocationPropertyScreen(
-                        idProperty: widget.idProperty, currentPosition: widget.currentPosition)));
+                        idProperty: widget.idProperty, 
+                        currentPosition: widget.currentPosition,)));
           }
         } else {
           showDialog(

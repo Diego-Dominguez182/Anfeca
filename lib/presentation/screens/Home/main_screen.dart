@@ -2,7 +2,7 @@
 
   import 'dart:async';
 
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
   import 'package:cloud_firestore/cloud_firestore.dart';
 
   import 'package:geolocator/geolocator.dart';
@@ -59,7 +59,7 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
     for (var doc in querySnapshot.docs) {
       try {
         Property property = Property.fromDocumentSnapshot(doc);
-        if (property.isValid()) { 
+        if (property.isValid(true)) { 
           loadedProperties.add(property);
         }
       } catch (e) {
@@ -73,8 +73,6 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
   }
 }
 
-
-  
   
     @override
 Widget build(BuildContext context) {
@@ -261,11 +259,16 @@ Widget build(BuildContext context) {
             address: properties[index].address,
             price: properties[index].price,
             propertyPhotos: properties[index].photos,
-            withRoomie: properties[index].withRoomie,
-            property: properties[index],
+            withRoomies: properties[index].withRoomies,
             numOfRooms: properties[index].numOfRooms,
             description: properties[index].description,
-            services: properties[index].services
+            services: properties[index].services,
+            numOfBathrooms: properties[index].numOfBathrooms,
+            numOfBeds: properties[index].numOfBeds,
+            numOfTenants: properties[index].numOfTenants,
+            title: properties[index].title,
+            isOnMyProperties: "No",
+            isRentedBy: properties[index].isRentedBy,
           );
         },
       ),
@@ -280,24 +283,34 @@ Widget build(BuildContext context) {
   final String address;
   final double price;
   final List<String> photos;
-  final String withRoomie;
+  final List<String> withRoomies;
   final int numOfRooms;
   final bool canBeShared;
   final bool isRented;
   final String description;
   final List<String> services;
+  final int numOfBathrooms;
+  final int numOfBeds;
+  final int numOfTenants;
+  final String title;
+  final List<String> isRentedBy;
 
   Property({
     required this.idProperty,
     required this.address,
     required this.price,
     required this.photos,
-    required this.withRoomie,
+    required this.withRoomies,
     required this.numOfRooms,
     required this.canBeShared,
     required this.isRented,
     required this.description,
-    required this.services
+    required this.services,
+    required this.numOfBathrooms,
+    required this.numOfBeds,
+    required this.numOfTenants,
+    required this.title,
+    required this.isRentedBy,
   });
 
   factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
@@ -311,33 +324,46 @@ Widget build(BuildContext context) {
   String address = data['address'] ?? '';
   double price = (data['price'] ?? 0).toDouble();
   List<String> propertyPhotos = data['propertyPhotos'] != null ? List<String>.from(data['propertyPhotos']) : [];
-  String withRoomie = data['withRoomie'] ?? '';
+  List<String> withRoomies = data['withRoomies'] != null ? List<String>.from(data['withRoomies']) : [];
   int numOfRooms = data['numOfRooms'];
   bool canBeShared = data['canBeShared'];
   bool isRented = data['isRented'];
   String description = data['description'];
   List<String> services = data['services'] != null ? List<String>.from(data['services']) : [];
+  int numOfBathrooms = data['numOfBathrooms'];
+  int numOfBeds = data['numOfBeds'];
+  int numOfTenants = data['numOfTenants'];
+  String title = data['title'];
+  List<String> isRentedBy = data['isRentedBy'] != null ? List<String>.from(data['isRentedBy']) : [];
 
   return Property(
     idProperty: idProperty, 
     address: address,
     price: price,
     photos: propertyPhotos,
-    withRoomie: withRoomie,
+    withRoomies: withRoomies,
     numOfRooms: numOfRooms,
     canBeShared: canBeShared,
     isRented: isRented,
     description: description,
     services: services,
+    numOfBathrooms: numOfBathrooms,
+    numOfBeds: numOfBeds,
+    numOfTenants: numOfTenants,
+    title: title,
+    isRentedBy: isRentedBy,
   );
 }
 
 
-  bool isValid() {
-
-      return address.isNotEmpty && price > 0 && photos.isNotEmpty && numOfRooms > 0 
+  bool isValid(bool i) {
+    if (i){
+      return address.isNotEmpty && price > 0 && photos.isNotEmpty && numOfRooms > 0  && numOfBeds > 0
       && ((isRented == true && canBeShared == true) || (isRented == false && canBeShared == false));
-
+    }
+    else {
+        return address.isNotEmpty && price > 0 && photos.isNotEmpty && numOfRooms > 0;
+    }
     }
   }
 

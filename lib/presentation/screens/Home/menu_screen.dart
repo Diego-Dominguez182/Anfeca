@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:resty_app/core/app_export.dart';
 import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
+import 'package:resty_app/presentation/screens/rentAProperty/my_rents_screen.dart';
 
 import '../../widgets/app_bar/appbar_leading_iconbutton.dart';
 import '../../widgets/app_bar/appbar_title.dart';
@@ -53,7 +54,9 @@ class _MenuScreenState extends State<MenuScreen> {
             children: [
               _buildAppBar(context),
               _buildMyProfile(context),
-              if (userType == "Tenant") ...[_buildMyPreferences(context)],
+              if (userType == "Tenant") ...[
+                _buildMyPreferences(context),
+                _buildMyRents(context)],
               if (userType == "Owner") ...[
                 _buildMyProperties(context),
               ],
@@ -123,7 +126,11 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Widget _buildMyPreferences(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: (){
+        _goToMyPreferences(context);
+      },
+      child: Container(
       width: double.maxFinite,
       padding: EdgeInsets.fromLTRB(12, 14, 12, 13),
       decoration: AppDecoration.outlineWhiteA,
@@ -131,7 +138,7 @@ class _MenuScreenState extends State<MenuScreen> {
         "Mis preferencias",
         style: CustomTextStyles.bodySmallWhiteA700,
       ),
-    );
+    ));
   }
 
   Widget _buildMyProperties(BuildContext context) {
@@ -145,6 +152,25 @@ class _MenuScreenState extends State<MenuScreen> {
         decoration: AppDecoration.outlineWhiteA,
         child: Text(
           "Mis propiedades",
+          style: CustomTextStyles.bodySmallWhiteA700,
+        ),
+      ),
+    );
+  }
+
+
+
+  Widget _buildMyRents(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _goToMyRents(context);
+      },
+      child: Container(
+        width: double.maxFinite,
+        padding: EdgeInsets.fromLTRB(11, 14, 11, 13),
+        decoration: AppDecoration.outlineWhiteA,
+        child: Text(
+          "Mis rentas",
           style: CustomTextStyles.bodySmallWhiteA700,
         ),
       ),
@@ -182,7 +208,12 @@ class _MenuScreenState extends State<MenuScreen> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => MyPropertiesScreen(currentPosition: widget.currentPosition)));
   }
 
-  void _goToUploadRoom(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> MyPropertiesScreen(currentPosition: widget.currentPosition)));
+  void _goToMyPreferences(BuildContext context){
+    Navigator.pushNamed(context, AppRoutes.preferenceForm);
   }
+  void _goToMyRents(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MyRentsScreen()));
+  }
+
+
 }

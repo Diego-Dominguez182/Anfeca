@@ -11,15 +11,15 @@ import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 import 'package:resty_app/presentation/widgets/icon_button_with_text.dart';
 import 'package:resty_app/presentation/widgets/main_item_widget.dart';
 
-class MyPropertiesScreen extends StatefulWidget {
+class MyRentsScreen extends StatefulWidget {
   final LatLng? currentPosition;
-  const MyPropertiesScreen({Key? key, this.currentPosition}) : super(key: key);
+  const MyRentsScreen({Key? key, this.currentPosition}) : super(key: key);
 
   @override
-  _MyPropertiesScreenState createState() => _MyPropertiesScreenState();
+  _MyRentsScreenState createState() => _MyRentsScreenState();
 }
 
-class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
+class _MyRentsScreenState extends State<MyRentsScreen> {
   late Future<List<Property>>? propertiesFuture;
 
   @override
@@ -28,35 +28,53 @@ class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
     propertiesFuture = getPropertiesFromFirebase();
   }
 
-  Future<List<Property>> getPropertiesFromFirebase() async {
-    try {
-      User? currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser != null) {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('Property')
-            .where('userId', isEqualTo: currentUser.uid)
-            .get();
-        List<Property> loadedProperties = [];
-        for (var doc in querySnapshot.docs) {
-          try {
-            Property property = Property.fromDocumentSnapshot(doc);
-            if (property.isValid(false)) { 
-              loadedProperties.add(property);
-            }
-          } catch (e) {
-            print('Error al procesar documento: $e');
-          }
+
+Future<List<Property>> getPropertiesFromFirebase() async {
+  try {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      List<Property> loadedProperties = [];
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Property')
+          .where('isRentedBy', isEqualTo: currentUser.uid) 
+          .get();
+      
+      for (var doc in querySnapshot.docs) {
+        try {
+          Property property = Property.fromDocumentSnapshot(doc);
+            loadedProperties.add(property);
+        } catch (e) {
+          print('Error al procesar documento: $e');
         }
-        return loadedProperties;
-      } else {
-        print('Usuario no autenticado');
-        return [];
       }
-    } catch (e) {
-      print('Error al obtener propiedades: $e');
+
+      QuerySnapshot querySnapshot2 = await FirebaseFirestore.instance
+          .collection('Property')
+          .where('isRentedBy', arrayContains: currentUser.uid) 
+          .get();
+
+      for (var doc in querySnapshot2.docs) {
+        try {
+          Property property = Property.fromDocumentSnapshot(doc);
+            loadedProperties.add(property);
+
+        } catch (e) {
+          print('Error al procesar documento: $e');
+        }
+      }
+
+      return loadedProperties;
+    } else {
+      print('Usuario no autenticado');
       return [];
     }
+  } catch (e) {
+    print('Error al obtener propiedades: $e');
+    return [];
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +88,6 @@ class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildAppBar(context),
-                _buildAddNewRoom(context),
                 _buildRooms(context)
               ],
             ),
@@ -127,32 +144,14 @@ class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
             numOfBeds: properties[index].numOfBeds,
             numOfTenants: properties[index].numOfTenants,
             title: properties[index].title,
-            isOnMyProperties: "Yes",
+            isOnMyProperties: "Yess",
           );
         },
       ),
     );
   }
 
-  Widget _buildAddNewRoom(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: IconButtonWithText(
-              imageName: ImageConstant.propertie,
-              text: "Subir nueva propiedad",
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UploadRoomScreen(currentPosition: widget.currentPosition)));
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
+  
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       leadingWidth: 48,
@@ -167,7 +166,7 @@ class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
         },
       ),
       title: AppbarTitle(
-        text: "Mis propiedades",
+        text: "Mis rentas",
         margin: EdgeInsets.only(left: 19),
       ),
       styleType: Style.bgOutline,
@@ -181,12 +180,12 @@ class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
 
   
 
-class PropertyMyScreen {
-  final String idProperty; 
+class PropertyMyRents {
+  final String idProperty;
   final String address;
   final double price;
   final List<String> photos;
-  final String withRoomie;
+  final String withRoomies;
   final int numOfRooms;
   final bool canBeShared;
   final bool isRented;
@@ -196,13 +195,14 @@ class PropertyMyScreen {
   final int numOfBeds;
   final int numOfTenants;
   final String title;
+  final dynamic isRentedBy; 
 
-  PropertyMyScreen({
+  PropertyMyRents({
     required this.idProperty,
     required this.address,
     required this.price,
     required this.photos,
-    required this.withRoomie,
+    required this.withRoomies,
     required this.numOfRooms,
     required this.canBeShared,
     required this.isRented,
@@ -212,50 +212,50 @@ class PropertyMyScreen {
     required this.numOfBeds,
     required this.numOfTenants,
     required this.title,
+    required this.isRentedBy, 
   });
 
-  factory PropertyMyScreen.fromDocumentSnapshot(DocumentSnapshot snapshot) {
-  Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+  factory PropertyMyRents.fromDocumentSnapshot(DocumentSnapshot snapshot) {
+    Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
 
-  if (data == null || data.isEmpty ) { 
-    throw Exception("Documento vacío o incompleto");
+    if (data == null || data.isEmpty) {
+      throw Exception("Documento vacío o incompleto");
+    }
+
+    String idProperty = snapshot.id;
+    String address = data['address'] ?? '';
+    double price = (data['price'] ?? 0).toDouble();
+    List<String> propertyPhotos = data['photos'] != null ? List<String>.from(data['photos']) : [];
+    String withRoomies = data['withRoomies'] ?? '';
+    int numOfRooms = data['numOfRooms'] ?? 0;
+    bool canBeShared = data['canBeShared'] ?? false;
+    bool isRented = data['isRented'] ?? false;
+    String description = data['description'] ?? '';
+    List<String> services = data['services'] != null ? List<String>.from(data['services']) : [];
+    int numOfBathrooms = data['numOfBathrooms'] ?? 0;
+    int numOfBeds = data['numOfBeds'] ?? 0;
+    int numOfTenants = data['numOfTenants'] ?? 0;
+    String title = data['title'] ?? '';
+    dynamic isRentedBy = data['isRentedBy']; 
+
+    return PropertyMyRents(
+      idProperty: idProperty,
+      address: address,
+      price: price,
+      photos: propertyPhotos,
+      withRoomies: withRoomies,
+      numOfRooms: numOfRooms,
+      canBeShared: canBeShared,
+      isRented: isRented,
+      description: description,
+      services: services,
+      numOfBathrooms: numOfBathrooms,
+      numOfBeds: numOfBeds,
+      numOfTenants: numOfTenants,
+      title: title,
+      isRentedBy: isRentedBy, 
+    );
   }
 
-  String idProperty = snapshot.id;
-  String address = data['address'] ?? '';
-  double price = (data['price'] ?? 0).toDouble();
-  List<String> propertyPhotos = data['photos'] != null ? List<String>.from(data['photos']) : [];
-  String withRoomie = data['withRoomie'] ?? '';
-  int numOfRooms = data['numOfRooms'] ?? 0;
-  bool canBeShared = data['canBeShared'] ?? false;
-  bool isRented = data['isRented'] ?? false;
-  String description = data['description'] ?? '';
-  List<String> services = data['services'] != null ? List<String>.from(data['services']) : [];
-  int numOfBathrooms = data['numOfBathrooms'] ?? 0;
-  int numOfBeds = data['numOfBeds'] ?? 0;
-  int numOfTenants = data['numOfTenants'] ?? 0;
-  String title = data['title'] ?? '';
-
-  return PropertyMyScreen(
-    idProperty: idProperty, 
-    address: address,
-    price: price,
-    photos: propertyPhotos,
-    withRoomie: withRoomie,
-    numOfRooms: numOfRooms,
-    canBeShared: canBeShared,
-    isRented: isRented,
-    description: description,
-    services: services,
-    numOfBathrooms: numOfBathrooms,
-    numOfBeds: numOfBeds,
-    numOfTenants: numOfTenants,
-    title: title,
-  );
 }
 
-
-  bool isValid() {
-    return address.isNotEmpty && price > 0 && photos.isNotEmpty && numOfRooms > 0;
-  }
-}

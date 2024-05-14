@@ -13,7 +13,8 @@ final userId = currentUser?.uid;
 
 class UploadRoomScreen extends StatefulWidget {
   final LatLng? currentPosition;
-  const UploadRoomScreen({Key? key, this.currentPosition}) : super(key: key);
+  final String? myPropertyId;
+  const UploadRoomScreen({Key? key, this.currentPosition, this.myPropertyId}) : super(key: key);
 
   @override
   _UploadRoomScreenState createState() => _UploadRoomScreenState();
@@ -30,14 +31,13 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
   }
 
   void verificarPropiedadExistente() async {
+    if (widget.myPropertyId == null){
     if (userId != null) {
       final QuerySnapshot<Map<String, dynamic>> snapshot =
           await FirebaseFirestore.instance
               .collection('Property')
               .where('userId', isEqualTo: userId)
               .get();
-
-
 
       for (DocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
         Map<String, dynamic>? data = doc.data();
@@ -62,8 +62,10 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
           break;
         }
       }
-
-
+    }
+    }
+        else {
+      existingPropertyId = widget.myPropertyId;
     }
   }
 

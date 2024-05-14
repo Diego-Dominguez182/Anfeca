@@ -9,6 +9,7 @@ var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void main() async { 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  runApp(MyApp());
   
   runApp(
     ChangeNotifierProvider(
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'SecuriSpace',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.mainScreen,
+          initialRoute: AppRoutes.loginScreen,
           routes: AppRoutes.routes,
         );
       },
