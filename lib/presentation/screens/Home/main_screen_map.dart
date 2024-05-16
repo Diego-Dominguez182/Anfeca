@@ -297,7 +297,7 @@ Widget build(BuildContext context) {
   final String address;
   final double price;
   final List<String> photos;
-  final String withRoomie;
+  final List<dynamic>? withRoomies;
   final int numOfRooms;
   final bool canBeShared;
   final bool isRented;
@@ -308,13 +308,14 @@ Widget build(BuildContext context) {
   final int numOfBathrooms;
   final int numOfBeds;
   final int numOfTenants;
+  final List<String> isRentedBy;
 
   Property({
     required this.idProperty,
     required this.address,
     required this.price,
     required this.photos,
-    required this.withRoomie,
+    required this.withRoomies,
     required this.numOfRooms,
     required this.canBeShared,
     required this.isRented,
@@ -325,6 +326,7 @@ Widget build(BuildContext context) {
     required this.numOfBathrooms,
     required this.numOfBeds,
     required this.numOfTenants,
+    required this.isRentedBy,
   });
 
 factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
@@ -338,7 +340,7 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
   String? address = data['address'];
   double? price = (data['price'] as num?)?.toDouble();
   List<String>? propertyPhotos = (data['propertyPhotos'] as List<dynamic>?)?.map((photo) => photo.toString()).toList();
-  String? withRoomie = data['withRoomie'];
+  List<dynamic>? withRoomies = data['withRoomies'];
   int? numOfRooms = data['numOfRooms'];
   bool canBeShared = data['canBeShared'] ?? false;
   bool isRented = data['isRented'] ?? false;
@@ -349,8 +351,10 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
   int numOfBathrooms = data['numOfBathrooms'];
   int numOfBeds = data['numOfBeds'];
   int numOfTenants = data['numOfTenants'];
+  List<String> isRentedBy = data['isRentedBy'] != null ? List<String>.from(data['isRentedBy']) : [];
 
-  if (address == null || price == null || propertyPhotos == null || withRoomie == null || numOfRooms == null || description == null || latitude == null || longitude == null) {
+
+  if (address == null || price == null || propertyPhotos == null  || numOfRooms == null || description == null || latitude == null || longitude == null) {
     throw Exception("Documento incompleto, no contiene todos los valores requeridos");
   }
 
@@ -359,7 +363,7 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
     address: address,
     price: price,
     photos: propertyPhotos,
-    withRoomie: withRoomie,
+    withRoomies: withRoomies,
     numOfRooms: numOfRooms,
     canBeShared: canBeShared,
     isRented: isRented,
@@ -370,6 +374,7 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
     numOfBathrooms: numOfBathrooms,
     numOfBeds: numOfBeds,
     numOfTenants: numOfTenants,
+    isRentedBy: isRentedBy,
   );
 }
 
@@ -377,9 +382,7 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
 
 
  bool isValid() {
-      return address.isNotEmpty && price > 0 && photos.isNotEmpty && numOfRooms > 0 
-      && ((isRented == true && canBeShared == true) || (isRented == false && canBeShared == false));
-    }
+      return address.isNotEmpty && price > 0 && photos.isNotEmpty && numOfRooms > 0 ;    }
 
   }
 

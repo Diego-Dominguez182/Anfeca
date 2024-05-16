@@ -98,18 +98,20 @@ if (snapshot.data() != null && snapshot.data()!['preferences'] != null) {
   }
 }
 
-  Future<void> calculatePreferenceMatch() async {
-    int numOfMatches = 0;
+ Future<void> calculatePreferenceMatch() async {
+  int numOfMatches = 0;
   for (int i = 0; i < currentUserPreferences.length; i++) {
     String currentUserPreference = currentUserPreferences[i];
-    if (rentingUserPreferences.contains(currentUserPreference)) {
+    String rentingUserPreference = rentingUserPreferences[i];
+    if (currentUserPreference == rentingUserPreference) {
       numOfMatches++;
     }
   }
   setState(() {
-         _matchPercentage = ((numOfMatches + 1) / 5) * 100;
-      });
+    _matchPercentage = (numOfMatches / currentUserPreferences.length) * 100;
+  });
 }
+
 
 
   @override

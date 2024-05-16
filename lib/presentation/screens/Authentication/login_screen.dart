@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resty_app/core/app_export.dart';
+import 'package:resty_app/presentation/screens/Home/preference_form.dart';
 import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
 import 'package:resty_app/presentation/widgets/custom_text_form_field.dart';
 import 'package:resty_app/presentation/widgets/button_state.dart';
@@ -217,7 +218,9 @@ class _loginScreenState extends State<LoginScreen> {
           },
         );
       } else if (snapshot_user.data()?['firstTime'] == true){
-          Navigator.pushNamed(context, AppRoutes.preferenceForm);
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder: (context) => PreferenceForm(firstTime: true)));
      }else {
         Navigator.pushNamed(context, AppRoutes.mainScreen);
       }

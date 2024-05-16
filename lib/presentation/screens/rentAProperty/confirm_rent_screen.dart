@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:resty_app/core/app_export.dart';
 import 'package:resty_app/presentation/screens/Home/main_screen.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
+import 'package:resty_app/presentation/widgets/date_input_formatter.dart';
 
 class NuevaPantalla extends StatefulWidget {
   final String? idProperty;
@@ -43,6 +46,7 @@ class _NuevaPantallaState extends State<NuevaPantalla> {
   TextEditingController _numeroTarjetaController = TextEditingController();
   TextEditingController _nombreController = TextEditingController();
   TextEditingController _ccvController = TextEditingController();
+  TextEditingController _fechaVencimientoController = TextEditingController();
   bool _compartir = false;
   double _precioFinal = 0.0;
   late String userName = '';
@@ -82,9 +86,11 @@ class _NuevaPantallaState extends State<NuevaPantalla> {
               padding: EdgeInsets.only(bottom: screenHeight * 0.15),
               children: [
                 SizedBox(height: 20),
+                _buildNombreTextField(context),
+                SizedBox(height: 20),
                 _buildNumeroTarjetaTextField(context),
                 SizedBox(height: 20),
-                _buildNombreTextField(context),
+                _expirationDateController(context),
                 SizedBox(height: 10),
                 _buildCCVTextField(context),
                 SizedBox(height: 10),
@@ -103,43 +109,138 @@ class _NuevaPantallaState extends State<NuevaPantalla> {
     );
   }
 
-  Widget _buildNumeroTarjetaTextField(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextField(
-        controller: _numeroTarjetaController,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: 'Número de Tarjeta',
+Widget _buildNumeroTarjetaTextField(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Número de Tarjeta',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-      ),
-    );
-  }
+        SizedBox(height: 5),
+        Container(
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: TextField(
+            controller: _numeroTarjetaController,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(16),           
+            ],
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
-  Widget _buildNombreTextField(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextField(
-        controller: _nombreController,
-        decoration: InputDecoration(
-          labelText: 'Nombre',
+Widget _buildNombreTextField(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Nombre',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-      ),
-    );
-  }
+        SizedBox(height: 5),
+        Container(
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: TextField(
+            controller: _nombreController,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
-  Widget _buildCCVTextField(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextField(
-        controller: _ccvController,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: 'CCV',
+Widget _buildCCVTextField(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'CCV',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-      ),
-    );
-  }
+        SizedBox(height: 5),
+        Container(
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: TextField(
+            controller: _ccvController,
+            keyboardType: TextInputType.number,
+             inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(3),           
+               ],
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _expirationDateController(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Fecha de Vencimiento (MM/AA)',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 5),
+        Container(
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: TextField(
+            controller: _fechaVencimientoController,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(4),
+              MMYYInputFormatter(),
+            ],
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
  Widget _buildCompartirSwitch(BuildContext context) {
   return Padding(
@@ -230,7 +331,7 @@ DocumentSnapshot<Map<String, dynamic>> propertySnapshot = await propertyRef.get(
         'withRoomies': [],
         'isRented': true,
         'canBeShared': false,
-        'isRentedBy': uid,
+        'isRentedBy': FieldValue.arrayUnion([uid]),
         'numOfBathrooms': newNumOfBathrooms,
         'numOfBeds': newNumOfBeds,
         'numOfTenants': newNumOfTenants,

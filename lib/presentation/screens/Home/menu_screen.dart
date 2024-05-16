@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:resty_app/core/app_export.dart';
+import 'package:resty_app/presentation/screens/Home/preference_form.dart';
 import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
 import 'package:resty_app/presentation/screens/rentAProperty/my_rents_screen.dart';
 
@@ -94,7 +95,11 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Widget _buildMyProfile(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, AppRoutes.userProfileScreen);}
+      ,
+      child: Container(
       width: double.maxFinite,
       padding: EdgeInsets.fromLTRB(11, 14, 11, 13),
       decoration: AppDecoration.outlineWhiteA,
@@ -122,7 +127,7 @@ class _MenuScreenState extends State<MenuScreen> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildMyPreferences(BuildContext context) {
@@ -209,7 +214,9 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   void _goToMyPreferences(BuildContext context){
-    Navigator.pushNamed(context, AppRoutes.preferenceForm);
+            Navigator.push(
+          context, MaterialPageRoute(
+            builder: (context) => PreferenceForm(firstTime: false)));
   }
   void _goToMyRents(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => MyRentsScreen()));

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
-import 'package:resty_app/presentation/screens/Home/main_screen.dart' show Property; // Importa la clase Property de main_screen.dart con el nombre original
+import 'package:resty_app/presentation/screens/Home/main_screen.dart' show Property; 
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_screen.dart';
 import 'package:resty_app/core/app_export.dart';
 import 'package:firebase_auth/firebase_auth.dart';

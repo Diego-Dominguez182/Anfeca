@@ -5,6 +5,9 @@ import 'package:resty_app/core/app_export.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 
 class PreferenceForm extends StatefulWidget {
+  bool? firstTime;
+  PreferenceForm({super.key, this.firstTime});
+
   @override
   _PreferenceFormState createState() => _PreferenceFormState();
 }
@@ -67,18 +70,33 @@ class _PreferenceFormState extends State<PreferenceForm> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      backgroundColor: Colors.white,
-      leadingWidth: 48,
-      rightText: 'Siguiente',
-      showBoxShadow: false,
-      onTapRigthText: () {
-        _savePreferences();
-      },
-    );
+   Widget _buildAppBar(BuildContext context) {
+    if (widget.firstTime == false) { 
+      return CustomAppBar(
+        backgroundColor: Colors.white,
+        leadingWidth: 48,
+        leftText: "Atrás",
+        rightText: 'Siguiente',
+        showBoxShadow: false,
+        onTapLeftText: () { 
+          Navigator.pop(context);
+        },
+        onTapRigthText: () {
+          _savePreferences();
+        },
+      );
+    } else {
+      return CustomAppBar(
+        backgroundColor: Colors.white,
+        leadingWidth: 48,
+        rightText: 'Siguiente',
+        showBoxShadow: false,
+        onTapRigthText: () {
+          _savePreferences();
+        },
+      );
+    }
   }
-
   Widget _buildQuestionContainer(String question, Widget questionWidget) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -244,6 +262,7 @@ void _savePreferences(){
         'smokingAllowed': smokingAllowed,
         'drinkAllowed': drinkAllowed,
         'visitAllowed': visitAllowed,
+        'noiseAllowerd': noiseAllowed
       }
     });
   }

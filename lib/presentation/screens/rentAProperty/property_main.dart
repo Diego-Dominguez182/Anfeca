@@ -102,7 +102,7 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
                 _buildServices(context),
                 SizedBox(height: 10),
                 _buildDescription(context),
-                SizedBox(height: 40),
+                SizedBox(height: 30),
                 _buildPrice(context),
               ],
             ),
