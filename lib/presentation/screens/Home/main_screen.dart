@@ -30,7 +30,7 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
     Completer<GoogleMapController> googleMapController = Completer();
     late Future<List<Property>>? propertiesFuture;
     LatLng? _currentPosition;
-
+  
 @override
   void initState() {
   super.initState();
@@ -269,6 +269,8 @@ Widget build(BuildContext context) {
             title: properties[index].title,
             isOnMyProperties: "No",
             isRentedBy: properties[index].isRentedBy,
+            longitude: properties[index].longitude,
+            latitude: properties[index].latitude
           );
         },
       ),
@@ -294,6 +296,8 @@ Widget build(BuildContext context) {
   final int numOfTenants;
   final String title;
   final List<String> isRentedBy;
+  final double latitude;
+  final double longitude;
 
   Property({
     required this.idProperty,
@@ -311,6 +315,8 @@ Widget build(BuildContext context) {
     required this.numOfTenants,
     required this.title,
     required this.isRentedBy,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
@@ -335,6 +341,8 @@ Widget build(BuildContext context) {
   int numOfTenants = data['numOfTenants'];
   String title = data['title'];
   List<String> isRentedBy = data['isRentedBy'] != null ? List<String>.from(data['isRentedBy']) : [];
+  double? latitude = (data['latitude'] as num).toDouble();
+  double? longitude = (data['longitude'] as num).toDouble();
 
   return Property(
     idProperty: idProperty, 
@@ -352,6 +360,8 @@ Widget build(BuildContext context) {
     numOfTenants: numOfTenants,
     title: title,
     isRentedBy: isRentedBy,
+    longitude: longitude,
+    latitude: latitude,
   );
 }
 

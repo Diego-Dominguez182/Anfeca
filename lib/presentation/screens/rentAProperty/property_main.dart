@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
@@ -29,6 +31,8 @@ class PropertyMainScreen extends StatefulWidget {
   final List<String>? withRoomies;
   final String? title;
   final String? isOnMyProperties;
+  final double latitude;
+  final double longitude;
 
   const PropertyMainScreen({Key? key, 
   this.idProperty, 
@@ -45,7 +49,9 @@ class PropertyMainScreen extends StatefulWidget {
   this.withRoomies,
   this.title,
   this.numOfRooms,
-  this.isOnMyProperties
+  this.isOnMyProperties,
+  required this.latitude,
+  required this.longitude,
   }) : super(key: key);
 
   @override
@@ -53,6 +59,8 @@ class PropertyMainScreen extends StatefulWidget {
 }
 
 class _PropertyMainScreen extends State<PropertyMainScreen> {
+  Completer<GoogleMapController> googleMapController = Completer();
+
   late String address;
   late String description;
   late List<String> propertyPhotos;
@@ -64,6 +72,7 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
   late int numOfTenants;
   late List<String>? withRoomies;
   late String title;
+  final Set<Marker> _markers = {};
 
   @override
   void initState() {
@@ -78,6 +87,7 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
     numOfRooms = widget.numOfRooms ?? 0;
     withRoomies = widget.withRoomies;
     title = widget.title ?? '';
+    
     super.initState();
   }
 
@@ -104,6 +114,7 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
                 _buildDescription(context),
                 SizedBox(height: 30),
                 _buildPrice(context),
+                _buildMaps(context)
               ],
             ),
             Positioned(
@@ -118,6 +129,14 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
     );
   }
 
+void setMarker(){
+              _markers.add(
+              Marker(
+                markerId: MarkerId("1"),
+                position: LatLng(widget.latitude, widget.longitude),
+              )
+              );
+}
 Widget _buildTitle(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -510,6 +529,30 @@ void _buildDeleteConfirmationDialog(BuildContext context) {
   }
 }
 
+  Widget _buildMaps(BuildContext context) {
+    LatLng initialCameraPosition = LatLng(widget.latitude, widget.longitude);
+    return SizedBox(
 
+      height: 120,
+      width: double.infinity,
+      child: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: CameraPosition(
+          target: initialCameraPosition,
+          zoom: 14.0,
+        ),
+        markers: _markers,
+        zoomControlsEnabled: false,
+        zoomGesturesEnabled: true,
+        myLocationEnabled: true,
+        onMapCreated: (GoogleMapController controller) {
+          if (!googleMapController.isCompleted) {
+            googleMapController.complete(controller);
+          }
+        },
+
+      ),
+    );
+  }
 }
 

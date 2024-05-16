@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:resty_app/core/app_export.dart';
-import 'package:resty_app/presentation/widgets/button_state.dart';
 import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
 
 class MainRegistrationScreen extends StatelessWidget {
@@ -29,27 +27,21 @@ class MainRegistrationScreen extends StatelessWidget {
   }
 
   Widget _buildTenantRegistrationButton(BuildContext context) {
-    return Consumer<ButtonState>(builder: (context, ButtonState, _) {
       return CustomOutlinedButton(
           text: "Inquilino",
           margin: EdgeInsets.symmetric(horizontal: 34.h),
           onPressed: () {
-            ButtonState.setResetPasswordPressed("Tenant");
             onTapTenant(context);
           });
-    });
   }
 
   Widget _buildOwnerRegistrationButton(BuildContext context) {
-    return Consumer<ButtonState>(builder: (context, ButtonState, _) {
       return CustomOutlinedButton(
           text: "Propietario",
           margin: EdgeInsets.symmetric(horizontal: 34.h),
           onPressed: () {
-            ButtonState.setResetPasswordPressed("Owner");
             onTapOwner(context);
           });
-    });
   }
 
   Widget _buildCancelButton(BuildContext context) {

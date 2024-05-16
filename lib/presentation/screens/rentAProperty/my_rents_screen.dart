@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:resty_app/presentation/screens/Home/main_screen.dart' show Property; 
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_screen.dart';
 import 'package:resty_app/core/app_export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resty_app/presentation/widgets/app_bar/appbar_leading_iconbutton.dart';
 import 'package:resty_app/presentation/widgets/app_bar/appbar_title.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
-import 'package:resty_app/presentation/widgets/icon_button_with_text.dart';
 import 'package:resty_app/presentation/widgets/main_item_widget.dart';
 
 class MyRentsScreen extends StatefulWidget {
@@ -145,6 +143,8 @@ Future<List<Property>> getPropertiesFromFirebase() async {
             numOfTenants: properties[index].numOfTenants,
             title: properties[index].title,
             isOnMyProperties: "Yess",
+            longitude: properties[index].longitude,
+            latitude: properties[index].latitude
           );
         },
       ),

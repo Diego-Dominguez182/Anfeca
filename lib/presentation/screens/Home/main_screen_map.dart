@@ -69,7 +69,9 @@ Future<void> _loadPropertiesFromFirebase() async {
                         services: property.services,
                         numOfBathrooms: property.numOfBathrooms,
                         numOfBeds: property.numOfBeds,
-                        numOfTenants: property.numOfTenants
+                        numOfTenants: property.numOfTenants,
+                        latitude: property.latitude,
+                        longitude: property.longitude,
                          )));
                 },
               ),

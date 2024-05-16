@@ -113,11 +113,6 @@ class CustomSearchView extends StatelessWidget {
         prefixIcon: prefix ??
             Container(
               margin: EdgeInsets.fromLTRB(15.h, 14.v, 30.h, 13.v),
-              child: CustomImageView(
-                imagePath: ImageConstant.lupa,
-                height: 20.adaptSize,
-                width: 20.adaptSize,
-              ),
             ),
         prefixIconConstraints: prefixConstraints ??
             BoxConstraints(

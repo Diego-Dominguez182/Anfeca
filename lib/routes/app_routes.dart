@@ -96,7 +96,7 @@ class AppRoutes {
     propertyDescriptionScreen: (context) => const PropertyDescriptionScreen(),
     propertyPriceScreen: (context) => const PropertyPriceScreen(),
     mainScreenMap: (context) => const MainScreenMap(),
-    propertyMainScreen: (context) => const PropertyMainScreen(),
+    propertyMainScreen: (context) => const PropertyMainScreen(latitude: 0, longitude: 0,),
     myRentsScreen: (context) => const MyRentsScreen(),
     preferenceForm: (context) => PreferenceForm(),
     userProfileScreen: (context) => UserProfileScreen(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,7 +21,8 @@ class MainItemWidget extends StatefulWidget {
   final String title;
   final String isOnMyProperties;
   final List<String>? isRentedBy;
-
+  final double latitude; 
+  final double longitude;
   MainItemWidget({
     Key? key,
     required this.idProperty,
@@ -37,6 +39,8 @@ class MainItemWidget extends StatefulWidget {
     required this.title,
     required this.isOnMyProperties,
     this.isRentedBy,
+    required this.latitude,
+    required this.longitude
   }) : super(key: key);
 
   @override
@@ -135,6 +139,8 @@ if (snapshot.data() != null && snapshot.data()!['preferences'] != null) {
                     withRoomies: widget.withRoomies,
                     title: widget.title,
                     isOnMyProperties: widget.isOnMyProperties,
+                    latitude: widget.latitude,
+                    longitude: widget.longitude,
                   ),
                 ),
               );

@@ -128,6 +128,8 @@ class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
             numOfTenants: properties[index].numOfTenants,
             title: properties[index].title,
             isOnMyProperties: "Yes",
+            longitude: properties[index].longitude,
+            latitude: properties[index].latitude
           );
         },
       ),

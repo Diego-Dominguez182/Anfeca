@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
-import 'package:resty_app/core/app_export.dart';
 import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/location_propertie_screen.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';

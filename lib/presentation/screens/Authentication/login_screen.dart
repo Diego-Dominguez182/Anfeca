@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:resty_app/core/app_export.dart';
 import 'package:resty_app/presentation/screens/Home/preference_form.dart';
 import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
 import 'package:resty_app/presentation/widgets/custom_text_form_field.dart';
-import 'package:resty_app/presentation/widgets/button_state.dart';
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -109,18 +106,13 @@ class _loginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildResetPassword(BuildContext context) {
-    return Consumer<ButtonState>(
-      builder: (context, buttonState, _) {
         return CustomOutlinedButton(
           text: "Reestablecer contraseña",
           margin: EdgeInsets.symmetric(horizontal: 34.h),
           onPressed: () {
-            buttonState.setResetPasswordPressed("Reset");
             onTapResetPassword(context);
           },
         );
-      },
-    );
   }
 
   void onTapLoginButton(BuildContext context) async {

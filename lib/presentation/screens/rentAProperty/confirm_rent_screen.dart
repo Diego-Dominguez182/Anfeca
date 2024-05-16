@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:resty_app/core/app_export.dart';
 import 'package:resty_app/presentation/screens/Home/main_screen.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
@@ -55,7 +54,7 @@ class _NuevaPantallaState extends State<NuevaPantalla> {
   @override
   void initState() {
     super.initState();
-    _precioFinal = widget.price ?? 0.0;
+    _precioFinal = (widget.price! * 1.5) ;
     getUserInfo();
   }
 
@@ -305,12 +304,10 @@ void _savePrice() async {
 DocumentSnapshot<Map<String, dynamic>> propertySnapshot = await propertyRef.get() as DocumentSnapshot<Map<String, dynamic>>;
     Map<String, dynamic> propertyData = propertySnapshot.data()!;
 
-    int currentNumOfBathrooms = propertyData['numOfBathrooms'];
     int currentNumOfBeds = propertyData['numOfBeds'];
     int currentNumOfTenants = propertyData['numOfTenants'];
     int currentNumOfRooms = propertyData['numOfRooms'];
 
-    int newNumOfBathrooms = currentNumOfBathrooms - 1;
     int newNumOfBeds = currentNumOfBeds - 1;
     int newNumOfTenants = currentNumOfTenants - 1;
     int newNumOfRooms = currentNumOfRooms - 1;
@@ -321,7 +318,6 @@ DocumentSnapshot<Map<String, dynamic>> propertySnapshot = await propertyRef.get(
         'isRented': true,
         'canBeShared': true,
         'isRentedBy': FieldValue.arrayUnion([uid]),
-        'numOfBathrooms': newNumOfBathrooms,
         'numOfBeds': newNumOfBeds,
         'numOfTenants': newNumOfTenants,
         'numOfRooms': newNumOfRooms
@@ -332,7 +328,6 @@ DocumentSnapshot<Map<String, dynamic>> propertySnapshot = await propertyRef.get(
         'isRented': true,
         'canBeShared': false,
         'isRentedBy': FieldValue.arrayUnion([uid]),
-        'numOfBathrooms': newNumOfBathrooms,
         'numOfBeds': newNumOfBeds,
         'numOfTenants': newNumOfTenants,
         'numOfRooms': newNumOfRooms

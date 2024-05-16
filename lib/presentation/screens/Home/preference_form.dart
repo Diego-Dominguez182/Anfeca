@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:resty_app/core/app_export.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 
+// ignore: must_be_immutable
 class PreferenceForm extends StatefulWidget {
   bool? firstTime;
   PreferenceForm({super.key, this.firstTime});
