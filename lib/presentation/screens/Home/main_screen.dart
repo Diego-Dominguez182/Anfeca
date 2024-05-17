@@ -34,8 +34,8 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
 @override
   void initState() {
   super.initState();
-  propertiesFuture = getPropertiesFromFirebase();
   getUserCurrentLocation();
+  propertiesFuture = getPropertiesFromFirebase();
 }
 
 
@@ -138,11 +138,14 @@ Widget build(BuildContext context) {
           ),
           InkWell(
             onTap: () {
+              if (_currentPosition == null) {
+                getUserCurrentLocation();
+              } else {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) =>  MenuScreen(currentPosition: _currentPosition)),
               );
-            },
+            }},
             child: Container(
               height: 57,
               width: 47,

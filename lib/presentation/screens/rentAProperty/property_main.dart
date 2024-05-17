@@ -87,7 +87,7 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
     numOfRooms = widget.numOfRooms ?? 0;
     withRoomies = widget.withRoomies;
     title = widget.title ?? '';
-    
+    setMarker();
     super.initState();
   }
 
@@ -532,7 +532,6 @@ void _buildDeleteConfirmationDialog(BuildContext context) {
   Widget _buildMaps(BuildContext context) {
     LatLng initialCameraPosition = LatLng(widget.latitude, widget.longitude);
     return SizedBox(
-
       height: 120,
       width: double.infinity,
       child: GoogleMap(
