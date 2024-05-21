@@ -30,12 +30,15 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
     Completer<GoogleMapController> googleMapController = Completer();
     late Future<List<Property>>? propertiesFuture;
     LatLng? _currentPosition;
+    String? propertyType;
+    double? price;
+    bool? withRoomie;
   
 @override
   void initState() {
   super.initState();
   getUserCurrentLocation();
-  propertiesFuture = getPropertiesFromFirebase();
+  propertiesFuture = getPropertiesFromFirebase(null, 100000, false);
 }
 
 
@@ -51,7 +54,7 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
       });
     }
 
-    Future<List<Property>> getPropertiesFromFirebase() async {
+   Future<List<Property>> getPropertiesFromFirebase(String? propertyType, double? price, bool? withRoomie) async {
   try {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('Property').get();
@@ -59,7 +62,9 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
     for (var doc in querySnapshot.docs) {
       try {
         Property property = Property.fromDocumentSnapshot(doc);
-        if (property.isValid(true)) { 
+        if (property.isValid(true) && 
+        (propertyType == null || property.propertyType == propertyType)
+        && (price != 0 && property.price <= price!)) {
           loadedProperties.add(property);
         }
       } catch (e) {
@@ -72,6 +77,7 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
     return [];
   }
 }
+
 
   
     @override
@@ -280,8 +286,116 @@ Widget build(BuildContext context) {
     );
   }
 
-    void onTapFilter(BuildContext context) {
-    }
+void onTapFilter(BuildContext context) {
+  TextEditingController priceController = TextEditingController(); 
+
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.filter),
+              title: Text('Tipo de propiedad'),
+              onTap: () {
+                _showSubmenuType(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.filter),
+              title: Text('Precio'),
+              onTap: () {
+                _showPriceDialog(context, priceController); 
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text("Aplicar"),
+              onTap: () {
+                getPropertiesFromFirebase(propertyType, price, withRoomie).then((properties) {
+                  setState(() {
+                    propertiesFuture = Future.value(properties);
+                  });
+                });
+                Navigator.pop(context);
+              },
+            ),
+           ListTile(
+              leading: Icon(Icons.home),
+              title: Text("Limpiar filtros"),
+              onTap: () {
+                price = 100000;
+                propertyType = null;
+                getPropertiesFromFirebase(propertyType, price, withRoomie).then((properties) {
+                  setState(() {
+                    propertiesFuture = Future.value(properties);
+                  });
+                });
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
+      );
+    },
+  );
+}
+
+void _showPriceDialog(BuildContext context, TextEditingController priceController) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Introduce el precio'),
+        content: TextField(
+          controller: priceController,
+          keyboardType: TextInputType.number,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              price = double.tryParse(priceController.text);
+            },
+            child: Text('Confirmar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showSubmenuType(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              title: Text('Casa completa'),
+              onTap: () {
+                propertyType = "Casa completa";
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Cuarto individual'),
+              onTap: () {
+                propertyType = "Cuarto individual";
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
   }
   class Property {
   final String idProperty; 
@@ -301,6 +415,7 @@ Widget build(BuildContext context) {
   final List<String> isRentedBy;
   final double latitude;
   final double longitude;
+  final String propertyType;
 
   Property({
     required this.idProperty,
@@ -320,6 +435,7 @@ Widget build(BuildContext context) {
     required this.isRentedBy,
     required this.latitude,
     required this.longitude,
+    required this.propertyType
   });
 
   factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
@@ -346,6 +462,8 @@ Widget build(BuildContext context) {
   List<String> isRentedBy = data['isRentedBy'] != null ? List<String>.from(data['isRentedBy']) : [];
   double? latitude = (data['latitude'] as num).toDouble();
   double? longitude = (data['longitude'] as num).toDouble();
+  String propertyType = data['propertyType'];
+
 
   return Property(
     idProperty: idProperty, 
@@ -365,6 +483,7 @@ Widget build(BuildContext context) {
     isRentedBy: isRentedBy,
     longitude: longitude,
     latitude: latitude,
+    propertyType: propertyType
   );
 }
 

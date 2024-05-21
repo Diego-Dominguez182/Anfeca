@@ -113,8 +113,9 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
                 SizedBox(height: 10),
                 _buildDescription(context),
                 SizedBox(height: 30),
+                _buildMaps(context),
+                SizedBox(height: 20),
                 _buildPrice(context),
-                _buildMaps(context)
               ],
             ),
             Positioned(
@@ -532,18 +533,17 @@ void _buildDeleteConfirmationDialog(BuildContext context) {
   Widget _buildMaps(BuildContext context) {
     LatLng initialCameraPosition = LatLng(widget.latitude, widget.longitude);
     return SizedBox(
-      height: 120,
+      height: 200,
       width: double.infinity,
       child: GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: CameraPosition(
           target: initialCameraPosition,
-          zoom: 14.0,
+          zoom: 15.0,
         ),
         markers: _markers,
         zoomControlsEnabled: false,
-        zoomGesturesEnabled: true,
-        myLocationEnabled: true,
+        zoomGesturesEnabled: false,
         onMapCreated: (GoogleMapController controller) {
           if (!googleMapController.isCompleted) {
             googleMapController.complete(controller);

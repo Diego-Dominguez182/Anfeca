@@ -30,25 +30,28 @@ import 'package:resty_app/routes/app_routes.dart';
     
     LatLng? _currentPosition;
     late List<Property> loadedProperties; 
-
-  final Set<Marker> _markers = {};
+    String? propertyType;
+    double? price;
+  Set<Marker> _markers = {};
   
 @override
 void initState() {
   super.initState();
-  _loadPropertiesFromFirebase(); 
+  getPropertiesFromFirebase(null, 100000); 
   _currentPosition = widget.currentPosition;
 }
 
-Future<void> _loadPropertiesFromFirebase() async {
+Future<void> getPropertiesFromFirebase(String? propertyType, double? price) async {
   try {
-    QuerySnapshot querySnapshot =
-    await FirebaseFirestore.instance.collection('Property').get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Property').get();
     loadedProperties = [];
+    _markers.clear(); 
     for (var doc in querySnapshot.docs) {
       try {
         Property property = Property.fromDocumentSnapshot(doc);
-        if (property.isValid()) {
+        if (property.isValid() &&
+            (propertyType == null || property.propertyType == propertyType) &&
+            (price == null || property.price <= price)) { 
           setState(() {
             _markers.add(
               Marker(
@@ -56,9 +59,9 @@ Future<void> _loadPropertiesFromFirebase() async {
                 position: LatLng(property.latitude, property.longitude),
                 onTap: () {
                   Navigator.push(
-                    context, MaterialPageRoute(
-                      builder: (context) => 
-                      PropertyMainScreen(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PropertyMainScreen(
                         idProperty: property.idProperty,
                         previousPage: "Mapa",
                         currentPosition: _currentPosition,
@@ -72,7 +75,9 @@ Future<void> _loadPropertiesFromFirebase() async {
                         numOfTenants: property.numOfTenants,
                         latitude: property.latitude,
                         longitude: property.longitude,
-                         )));
+                      ),
+                    ),
+                  );
                 },
               ),
             );
@@ -289,9 +294,116 @@ Widget build(BuildContext context) {
     );
   }
 
-    void onTapFilter(BuildContext context) {
-      print("pene");
-    }
+void onTapFilter(BuildContext context) {
+  TextEditingController priceController = TextEditingController();
+
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.filter),
+              title: Text('Tipo de propiedad'),
+              onTap: () {
+                _showSubmenuType(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.filter),
+              title: Text('Precio'),
+              onTap: () {
+                _showPriceDialog(context, priceController);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text("Aplicar"),
+              onTap: () {
+                getPropertiesFromFirebase(propertyType, price);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text("Limpiar filtros"),
+              onTap: () {
+                price = null;
+                propertyType = null;
+                getPropertiesFromFirebase(null, null); 
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
+      );
+    },
+  );
+}
+
+void _showPriceDialog(BuildContext context, TextEditingController priceController) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Introduce el precio'),
+        content: TextField(
+          controller: priceController,
+          keyboardType: TextInputType.number,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              double? enteredPrice = double.tryParse(priceController.text);
+              if (enteredPrice != null) {
+                setState(() {
+                  price = enteredPrice;
+                });
+              }
+            },
+            child: Text('Confirmar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showSubmenuType(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              title: Text('Casa completa'),
+              onTap: () {
+                setState(() {
+                  propertyType = "Casa completa";
+                });
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Cuarto individual'),
+              onTap: () {
+                setState(() {
+                  propertyType = "Cuarto individual";
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
   }
   
   class Property {
@@ -311,6 +423,7 @@ Widget build(BuildContext context) {
   final int numOfBeds;
   final int numOfTenants;
   final List<String> isRentedBy;
+  final String propertyType;
 
   Property({
     required this.idProperty,
@@ -329,6 +442,7 @@ Widget build(BuildContext context) {
     required this.numOfBeds,
     required this.numOfTenants,
     required this.isRentedBy,
+    required this.propertyType,
   });
 
 factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
@@ -354,7 +468,7 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
   int numOfBeds = data['numOfBeds'];
   int numOfTenants = data['numOfTenants'];
   List<String> isRentedBy = data['isRentedBy'] != null ? List<String>.from(data['isRentedBy']) : [];
-
+  String propertyType = data['propertyType'];
 
   if (address == null || price == null || propertyPhotos == null  || numOfRooms == null || description == null || latitude == null || longitude == null) {
     throw Exception("Documento incompleto, no contiene todos los valores requeridos");
@@ -377,6 +491,7 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
     numOfBeds: numOfBeds,
     numOfTenants: numOfTenants,
     isRentedBy: isRentedBy,
+    propertyType: propertyType,
   );
 }
 
@@ -384,7 +499,11 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
 
 
  bool isValid() {
-      return address.isNotEmpty && price > 0 && photos.isNotEmpty && numOfRooms > 0 ;    }
+      return address.isNotEmpty && 
+      price > 0 && 
+      photos.isNotEmpty && 
+      numOfRooms > 0  && 
+      ((canBeShared == false && isRented == false)  || (canBeShared == true && isRented == true));    }
 
   }
 
