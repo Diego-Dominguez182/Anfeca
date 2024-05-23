@@ -1,15 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
 import 'package:resty_app/presentation/screens/myProperties/uploadProperty/location_propertie_screen.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
+import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_screen.dart';
 import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
 
 class SettingHouseScreen extends StatefulWidget {
   final String? idProperty;
   final LatLng? currentPosition;
+  final String? selectedProperty;
 
-  const SettingHouseScreen({Key? key, this.idProperty, this.currentPosition}) : super(key: key);
+  const SettingHouseScreen({Key? key, this.idProperty, 
+  this.currentPosition,
+  this.selectedProperty}) : super(key: key);
 
   @override
   _SettingHouseScreenState createState() => _SettingHouseScreenState();
@@ -48,8 +54,20 @@ void initState() {
       print("Error getting user info: $e");
     }
   }
+  
+  void checkProperty(String? selectedProperty){
+  if (selectedProperty == "Cuarto individual"){
+    setState(() {
+      _roomsCount = 1;
+      _bedsCount = 1;
+      _bathroomsCount = 1;
+      _tenantsCount = 1;
+    });
+  }
+}
 
-  void _incrementCounter(String field) {
+void _incrementCounter(String field) {
+  if (widget.selectedProperty != "Cuarto individual") {
     setState(() {
       switch (field) {
         case 'rooms':
@@ -67,8 +85,10 @@ void initState() {
       }
     });
   }
+}
 
-  void _decrementCounter(String field) {
+void _decrementCounter(String field) {
+  if (widget.selectedProperty != "Cuarto individual") {
     setState(() {
       switch (field) {
         case 'rooms':
@@ -86,39 +106,43 @@ void initState() {
       }
     });
   }
+}
 
-  @override
-  Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: ListView(
-          children: [
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                "Un poco sobre tu propiedad",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
+
+ @override
+Widget build(BuildContext context) {
+  double screenHeight = MediaQuery.of(context).size.height;
+  checkProperty(widget.selectedProperty); 
+  return SafeArea(
+    child: Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: ListView(
+        children: [
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              "Un poco sobre tu propiedad",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
-            _buildCounterOption("Habitaciones", _roomsCount, 'rooms', context),
-            _buildDivider(),
-            _buildCounterOption("Camas", _bedsCount, 'beds', context),
-            _buildDivider(),
-            _buildCounterOption("Baños", _bathroomsCount, 'bathrooms', context),
-            _buildDivider(),
-            _buildCounterOption(
-                "Inquilinos", _tenantsCount, 'tenants', context),
-            SizedBox(height: screenHeight * .38),
-            _buildAppBar(context),
-          ],
-        ),
+          ),
+          SizedBox(height: 20),
+          _buildCounterOption("Habitaciones", _roomsCount, 'rooms', context),
+          _buildDivider(),
+          _buildCounterOption("Camas", _bedsCount, 'beds', context),
+          _buildDivider(),
+          _buildCounterOption("Baños", _bathroomsCount, 'bathrooms', context),
+          _buildDivider(),
+          _buildCounterOption(
+              "Inquilinos", _tenantsCount, 'tenants', context),
+          SizedBox(height: screenHeight * .38),
+          _buildAppBar(context),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildAppBar(BuildContext context) {
     return CustomAppBar(
@@ -130,7 +154,7 @@ void initState() {
       onTapLeftText: () {
         Navigator.push(
           context, MaterialPageRoute(
-            builder: (context) => MyPropertiesScreen(currentPosition: widget.currentPosition)));
+            builder: (context) => UploadRoomScreen(currentPosition: widget.currentPosition)));
       },
       onTapRigthText: () {
         if (_roomsCount != 0 && _tenantsCount != 0 && _bathroomsCount != 0) {

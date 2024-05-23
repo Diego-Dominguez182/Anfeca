@@ -33,6 +33,7 @@ class PropertyMainScreen extends StatefulWidget {
   final String? isOnMyProperties;
   final double latitude;
   final double longitude;
+  final double? matchPercentage;
 
   const PropertyMainScreen({Key? key, 
   this.idProperty, 
@@ -50,6 +51,7 @@ class PropertyMainScreen extends StatefulWidget {
   this.title,
   this.numOfRooms,
   this.isOnMyProperties,
+  this.matchPercentage,
   required this.latitude,
   required this.longitude,
   }) : super(key: key);
@@ -73,6 +75,7 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
   late List<String>? withRoomies;
   late String title;
   final Set<Marker> _markers = {};
+  late double? matchPercentage;
 
   @override
   void initState() {
@@ -87,6 +90,7 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
     numOfRooms = widget.numOfRooms ?? 0;
     withRoomies = widget.withRoomies;
     title = widget.title ?? '';
+    matchPercentage = widget.matchPercentage;
     setMarker();
     super.initState();
   }
@@ -107,15 +111,15 @@ class _PropertyMainScreen extends State<PropertyMainScreen> {
                 SizedBox(height: 10),
                 _buildTitle(context),
                 SizedBox(height: 10),
-                _buildAddress(context),
+                _buildDescription(context),
                 SizedBox(height: 10),
                 _buildServices(context),
                 SizedBox(height: 10),
-                _buildDescription(context),
-                SizedBox(height: 30),
-                _buildMaps(context),
-                SizedBox(height: 20),
                 _buildPrice(context),
+                SizedBox(height: 20),
+                _buildAddress(context),
+                SizedBox(height: 20),
+                _buildMaps(context),
               ],
             ),
             Positioned(
@@ -153,7 +157,7 @@ Widget _buildAddress(BuildContext context) {
     padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Text(
       address,
-      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
     ),
   );
 }
@@ -177,7 +181,7 @@ Widget _buildDescription(BuildContext context) {
       children: [
         Text(
           description,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 10),
         Text(
@@ -222,10 +226,21 @@ Widget _buildServices(BuildContext context) {
               );
             }).toList(),
           ),
+        if (withRoomies != null) 
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: withRoomies!.map((roomie) {
+              return Text(
+                "- Compañero de cuarto: $roomie" + "$matchPercentage %" ,
+                style: TextStyle(fontSize: 16),
+              );
+            }).toList(),
+          ),
       ],
     ),
   );
 }
+
 
 
 
@@ -518,7 +533,8 @@ void _buildDeleteConfirmationDialog(BuildContext context) {
           'isRentedBy': rentedByList,
           'isRented': false,
           'canBeShared': false,
-          'withRoomies': []
+          'withRoomies': [],
+          'dateOfPayment': ''
         });
         }
         
@@ -539,7 +555,7 @@ void _buildDeleteConfirmationDialog(BuildContext context) {
         mapType: MapType.normal,
         initialCameraPosition: CameraPosition(
           target: initialCameraPosition,
-          zoom: 15.0,
+          zoom: 14.7,
         ),
         markers: _markers,
         zoomControlsEnabled: false,

@@ -141,6 +141,7 @@ if (snapshot.data() != null && snapshot.data()!['preferences'] != null) {
                     isOnMyProperties: widget.isOnMyProperties,
                     latitude: widget.latitude,
                     longitude: widget.longitude,
+                    matchPercentage:_matchPercentage
                   ),
                 ),
               );

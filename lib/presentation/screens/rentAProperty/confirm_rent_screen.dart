@@ -312,6 +312,9 @@ DocumentSnapshot<Map<String, dynamic>> propertySnapshot = await propertyRef.get(
     int newNumOfTenants = currentNumOfTenants - 1;
     int newNumOfRooms = currentNumOfRooms - 1;
 
+    DateTime now = DateTime.now();
+    DateTime dateOfPayment = DateTime(now.year, now.month + 1, now.day, 0, 0, 0);
+
     if (_compartir) {
       await propertyRef.update({
         'withRoomies': FieldValue.arrayUnion([userName]),
@@ -320,7 +323,8 @@ DocumentSnapshot<Map<String, dynamic>> propertySnapshot = await propertyRef.get(
         'isRentedBy': FieldValue.arrayUnion([uid]),
         'numOfBeds': newNumOfBeds,
         'numOfTenants': newNumOfTenants,
-        'numOfRooms': newNumOfRooms
+        'numOfRooms': newNumOfRooms,
+        'dateOfPayment': dateOfPayment,
       });
     } else {
       await propertyRef.update({
@@ -330,9 +334,11 @@ DocumentSnapshot<Map<String, dynamic>> propertySnapshot = await propertyRef.get(
         'isRentedBy': FieldValue.arrayUnion([uid]),
         'numOfBeds': newNumOfBeds,
         'numOfTenants': newNumOfTenants,
-        'numOfRooms': newNumOfRooms
+        'numOfRooms': newNumOfRooms,
+        'dateOfPayment': dateOfPayment,
       });
     }
+
 
     showDialog(
       context: context,

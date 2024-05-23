@@ -52,11 +52,10 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
             data.containsKey('description') &&
             data.containsKey('title') &&
             data.containsKey('price') &&
-            data.containsKey('withRoomie') &&
+            data.containsKey('withRoomies') &&
             data.containsKey('isRented') &&
             data.containsKey('canBeShared') &&
-            data.containsKey('address') &&
-            data.containsKey('propertyCompleted'))) {
+            data.containsKey('address'))) {
             existingPropertyId = doc.id;
             print(existingPropertyId);
           break;
@@ -83,13 +82,49 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
             _buildHouseButton(context),
             SizedBox(height: 20),
             _buildRoomButton(context),
-            SizedBox(height: screenHeight * .38),
+
+            SizedBox(height: screenHeight * .30),
             _buildAppBar(context),
+            if (existingPropertyId != null) 
+            _deleteProperty(context),
           ],
         ),
       ),
     );
   }
+
+
+Widget _deleteProperty(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+    FirebaseFirestore.instance.collection('Property').doc(existingPropertyId).delete().then((value) {
+      Navigator.pop(context);
+    }).catchError((error) {
+      print("Error al eliminar la propiedad: $error");
+    });
+    },
+    child: Padding(
+      padding: const EdgeInsets.only(right: 20.0, left: 10),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        decoration: BoxDecoration(
+          color: Colors.red[600], 
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Text(
+          "Eliminar propiedad", 
+          style: TextStyle(
+            color: Colors.white, 
+            fontSize: 18.0,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+
+
 
   Widget _buildAppBar(BuildContext context) {
     return CustomAppBar(
@@ -271,7 +306,10 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => SettingHouseScreen(idProperty: docRef.id, currentPosition: widget.currentPosition )));
+            builder: (context) => SettingHouseScreen(idProperty: docRef.id, 
+            currentPosition: widget.currentPosition,
+            selectedProperty: _selectedProperty,
+             )));
   }
 
   void actualizarPropiedad(
@@ -284,6 +322,9 @@ class _UploadRoomScreenState extends State<UploadRoomScreen> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-            SettingHouseScreen(idProperty: existingPropertyId, currentPosition: widget.currentPosition)));
+            SettingHouseScreen(idProperty: existingPropertyId, 
+            currentPosition: widget.currentPosition,
+            selectedProperty: _selectedProperty,
+            )));
   }
 }

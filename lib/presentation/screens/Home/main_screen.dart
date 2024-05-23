@@ -31,7 +31,7 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
     late Future<List<Property>>? propertiesFuture;
     LatLng? _currentPosition;
     String? propertyType;
-    double? price;
+    double? price = 10000;
     bool? withRoomie;
   
 @override
@@ -119,10 +119,9 @@ Widget build(BuildContext context) {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(bottom: 0),
               // ignore: duplicate_ignore
               // ignore: deprecated_member_use
-                
                 child: Row(
                   children: [
                     Expanded(
@@ -287,7 +286,7 @@ Widget build(BuildContext context) {
   }
 
 void onTapFilter(BuildContext context) {
-  TextEditingController priceController = TextEditingController(); 
+  TextEditingController priceController = TextEditingController();
 
   showModalBottomSheet(
     context: context,
@@ -297,21 +296,21 @@ void onTapFilter(BuildContext context) {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: Icon(Icons.filter),
+              leading: Icon(Icons.home_outlined),
               title: Text('Tipo de propiedad'),
               onTap: () {
                 _showSubmenuType(context);
               },
             ),
             ListTile(
-              leading: Icon(Icons.filter),
+              leading: Icon(Icons.money),
               title: Text('Precio'),
               onTap: () {
                 _showPriceDialog(context, priceController); 
               },
             ),
             ListTile(
-              leading: Icon(Icons.home),
+              leading: Icon(Icons.arrow_forward),
               title: Text("Aplicar"),
               onTap: () {
                 getPropertiesFromFirebase(propertyType, price, withRoomie).then((properties) {
@@ -323,7 +322,7 @@ void onTapFilter(BuildContext context) {
               },
             ),
            ListTile(
-              leading: Icon(Icons.home),
+              leading: Icon(Icons.clear_all),
               title: Text("Limpiar filtros"),
               onTap: () {
                 price = 100000;
