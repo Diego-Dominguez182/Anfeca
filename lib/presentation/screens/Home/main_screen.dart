@@ -33,12 +33,13 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
     String? propertyType;
     double? price = 10000;
     bool? withRoomie;
+    String? city;
   
 @override
   void initState() {
   super.initState();
   getUserCurrentLocation();
-  propertiesFuture = getPropertiesFromFirebase(null, 100000, false);
+  propertiesFuture = getPropertiesFromFirebase(null, 100000, false, null);
 }
 
 
@@ -54,17 +55,17 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
       });
     }
 
-   Future<List<Property>> getPropertiesFromFirebase(String? propertyType, double? price, bool? withRoomie) async {
+   Future<List<Property>> getPropertiesFromFirebase(String? propertyType, double? price, bool? withRoomie, String? city) async {
   try {
     QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('Property').get();
+    await FirebaseFirestore.instance.collection('Property').get();
     List<Property> loadedProperties = [];
     for (var doc in querySnapshot.docs) {
       try {
         Property property = Property.fromDocumentSnapshot(doc);
         if (property.isValid(true) && 
         (propertyType == null || property.propertyType == propertyType)
-        && (price != 0 && property.price <= price!)) {
+        && (price != 0 && property.price <= price!) && (city == null || property.address.contains(city))) {
           loadedProperties.add(property);
         }
       } catch (e) {
@@ -287,6 +288,7 @@ Widget build(BuildContext context) {
 
 void onTapFilter(BuildContext context) {
   TextEditingController priceController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
 
   showModalBottomSheet(
     context: context,
@@ -310,10 +312,17 @@ void onTapFilter(BuildContext context) {
               },
             ),
             ListTile(
+              leading: Icon(Icons.location_city),
+              title: Text('Dirección'),
+              onTap: () {
+                _showCityDialog(context, cityController); 
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.arrow_forward),
               title: Text("Aplicar"),
               onTap: () {
-                getPropertiesFromFirebase(propertyType, price, withRoomie).then((properties) {
+                getPropertiesFromFirebase(propertyType, price, withRoomie, city).then((properties) {
                   setState(() {
                     propertiesFuture = Future.value(properties);
                   });
@@ -327,7 +336,7 @@ void onTapFilter(BuildContext context) {
               onTap: () {
                 price = 100000;
                 propertyType = null;
-                getPropertiesFromFirebase(propertyType, price, withRoomie).then((properties) {
+                getPropertiesFromFirebase(propertyType, price, withRoomie, null).then((properties) {
                   setState(() {
                     propertiesFuture = Future.value(properties);
                   });
@@ -357,6 +366,30 @@ void _showPriceDialog(BuildContext context, TextEditingController priceControlle
             onPressed: () {
               Navigator.pop(context);
               price = double.tryParse(priceController.text);
+            },
+            child: Text('Confirmar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showCityDialog(BuildContext context, TextEditingController cityController) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Introduce la direccion'),
+        content: TextField(
+          controller: cityController,
+          keyboardType: TextInputType.name,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              city = cityController.text;
             },
             child: Text('Confirmar'),
           ),

@@ -8,7 +8,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
-  
 
 }
 
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'SecuriSpace',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.mainScreen,
+          initialRoute: AppRoutes.loginScreen,
           routes: AppRoutes.routes,
         );
       },

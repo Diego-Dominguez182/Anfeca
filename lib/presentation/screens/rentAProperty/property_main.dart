@@ -231,7 +231,7 @@ Widget _buildServices(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: withRoomies!.map((roomie) {
               return Text(
-                "- Compañero de cuarto: $roomie" + "$matchPercentage %" ,
+                "- Compañero de cuarto: $roomie" + " $matchPercentage %" ,
                 style: TextStyle(fontSize: 16),
               );
             }).toList(),
@@ -512,7 +512,6 @@ void _buildDeleteConfirmationDialog(BuildContext context) {
       final propertyData = propertySnapshot.data() as Map<String, dynamic>?;
 
       if (propertyData != null) {
-        final newNumOfBathrooms = propertyData['numOfBathrooms'] + 1;
         final newNumOfBeds = propertyData['numOfBeds'] + 1;
         final newNumOfTenants = propertyData['numOfTenants'] + 1;
         final newNumOfRooms = propertyData['numOfRooms'] + 1;
@@ -526,7 +525,6 @@ void _buildDeleteConfirmationDialog(BuildContext context) {
         if (rentedByList.contains(uid)){
         rentedByList.remove(uid);
         await propertyRef.update({
-          'numOfBathrooms': newNumOfBathrooms,
           'numOfBeds': newNumOfBeds,
           'numOfTenants': newNumOfTenants,
           'numOfRooms': newNumOfRooms,

@@ -411,7 +411,7 @@ void _showSubmenuType(BuildContext context) {
   final String address;
   final double price;
   final List<String> photos;
-  final List<dynamic>? withRoomies;
+  final List<String>? withRoomies;
   final int numOfRooms;
   final bool canBeShared;
   final bool isRented;
@@ -456,7 +456,7 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
   String? address = data['address'];
   double? price = (data['price'] as num?)?.toDouble();
   List<String>? propertyPhotos = (data['propertyPhotos'] as List<dynamic>?)?.map((photo) => photo.toString()).toList();
-  List<dynamic>? withRoomies = data['withRoomies'];
+  List<String>? withRoomies = data['withRoomies'];
   int? numOfRooms = data['numOfRooms'];
   bool canBeShared = data['canBeShared'] ?? false;
   bool isRented = data['isRented'] ?? false;

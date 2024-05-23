@@ -248,6 +248,7 @@ Widget _expirationDateController(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text('Precio: \$${_precioFinal.toStringAsFixed(2)}'),
+        Text("¿Deseas compartir?"),
         Switch(
           value: _compartir,
           onChanged: (value) {

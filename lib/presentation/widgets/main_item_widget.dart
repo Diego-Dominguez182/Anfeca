@@ -104,12 +104,14 @@ if (snapshot.data() != null && snapshot.data()!['preferences'] != null) {
 
  Future<void> calculatePreferenceMatch() async {
   int numOfMatches = 0;
-  for (int i = 0; i < currentUserPreferences.length; i++) {
-    String currentUserPreference = currentUserPreferences[i];
-    String rentingUserPreference = rentingUserPreferences[i];
-    if (currentUserPreference == rentingUserPreference) {
-      numOfMatches++;
-    }
+  for (int i = 0; i < widget.withRoomies.length; i++){
+    for (int j = 0; j < currentUserPreferences.length; j++) {
+      String currentUserPreference = currentUserPreferences[j];
+      String rentingUserPreference = rentingUserPreferences[j];
+      if (currentUserPreference == rentingUserPreference) {
+        numOfMatches++;
+      }
+  }
   }
   setState(() {
     _matchPercentage = (numOfMatches / currentUserPreferences.length) * 100;
