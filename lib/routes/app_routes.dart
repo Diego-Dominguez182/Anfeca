@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:resty_app/presentation/screens/Home/menu_screen.dart';
-import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
-import 'package:resty_app/presentation/screens/rentAProperty/property_main.dart';
+import 'package:SecuriSpace/presentation/screens/Home/menu_screen.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/my_properties_screen.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
+import 'package:SecuriSpace/presentation/screens/rentAProperty/property_main.dart';
 import '../presentation/screens/Authentication/tenantRegister/message_tenant_register_screen.dart';
 import '../presentation/screens/Authentication/main_registration_screen.dart';
 import '../presentation/screens/Authentication/login_screen.dart';
@@ -20,8 +20,8 @@ import '../presentation/screens/myProperties/uploadProperty/property_description
 import '../presentation/screens/myProperties/uploadProperty/property_price_screen.dart';
 import '../presentation/screens/Home/main_screen_map.dart';
 import '../presentation/screens/rentAProperty/my_rents_screen.dart';
-import 'package:resty_app/presentation/screens/Home/preference_form.dart';
-import 'package:resty_app/presentation/screens/Home/user_profile_screen.dart';
+import 'package:SecuriSpace/presentation/screens/Home/preference_form.dart';
+import 'package:SecuriSpace/presentation/screens/Home/user_profile_screen.dart';
 
 
 

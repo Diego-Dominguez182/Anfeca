@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resty_app/core/app_export.dart';
+import 'package:SecuriSpace/core/app_export.dart';
 
 class AppDecoration {
   static BoxDecoration get fillWhiteA => BoxDecoration(

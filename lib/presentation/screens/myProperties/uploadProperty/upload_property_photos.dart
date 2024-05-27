@@ -6,8 +6,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_description_screen.dart';
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_services_screen.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/uploadProperty/property_description_screen.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/uploadProperty/property_services_screen.dart';
 
 import '../../../widgets/app_bar/custom_app_bar.dart';
 

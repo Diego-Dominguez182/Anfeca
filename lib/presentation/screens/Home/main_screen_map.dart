@@ -7,14 +7,14 @@
 
   import 'package:geocoding/geocoding.dart';
   import 'package:google_maps_flutter/google_maps_flutter.dart';
-  import 'package:resty_app/core/utils/image_constant.dart';
-  import 'package:resty_app/presentation/screens/Home/menu_screen.dart';
-import 'package:resty_app/presentation/screens/rentAProperty/property_main.dart';
-  import 'package:resty_app/presentation/theme/app_decoration.dart';
-  import 'package:resty_app/presentation/widgets/custom_image_view.dart';
-  import 'package:resty_app/presentation/widgets/custom_search_view.dart';
-  import 'package:resty_app/presentation/widgets/icon_button_with_text.dart';
-import 'package:resty_app/routes/app_routes.dart';
+  import 'package:SecuriSpace/core/utils/image_constant.dart';
+  import 'package:SecuriSpace/presentation/screens/Home/menu_screen.dart';
+import 'package:SecuriSpace/presentation/screens/rentAProperty/property_main.dart';
+  import 'package:SecuriSpace/presentation/theme/app_decoration.dart';
+  import 'package:SecuriSpace/presentation/widgets/custom_image_view.dart';
+  import 'package:SecuriSpace/presentation/widgets/custom_search_view.dart';
+  import 'package:SecuriSpace/presentation/widgets/icon_button_with_text.dart';
+import 'package:SecuriSpace/routes/app_routes.dart';
 
   class MainScreenMap extends StatefulWidget {
     final LatLng? currentPosition; 
@@ -32,16 +32,17 @@ import 'package:resty_app/routes/app_routes.dart';
     late List<Property> loadedProperties; 
     String? propertyType;
     double? price;
+    String? city;
   Set<Marker> _markers = {};
   
 @override
 void initState() {
   super.initState();
-  getPropertiesFromFirebase(null, 100000); 
+  getPropertiesFromFirebase(null, 100000, null); 
   _currentPosition = widget.currentPosition;
 }
 
-Future<void> getPropertiesFromFirebase(String? propertyType, double? price) async {
+Future<void> getPropertiesFromFirebase(String? propertyType, double? price, String? city) async {
   try {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Property').get();
     loadedProperties = [];
@@ -51,7 +52,7 @@ Future<void> getPropertiesFromFirebase(String? propertyType, double? price) asyn
         Property property = Property.fromDocumentSnapshot(doc);
         if (property.isValid() &&
             (propertyType == null || property.propertyType == propertyType) &&
-            (price == null || property.price <= price)) { 
+            (price == null || property.price <= price) && (city == null || property.address.contains(city))) { 
           setState(() {
             _markers.add(
               Marker(
@@ -296,6 +297,8 @@ Widget build(BuildContext context) {
 
 void onTapFilter(BuildContext context) {
   TextEditingController priceController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+
 
   showModalBottomSheet(
     context: context,
@@ -319,10 +322,17 @@ void onTapFilter(BuildContext context) {
               },
             ),
             ListTile(
+              leading: Icon(Icons.location_city),
+              title: Text('Dirección'),
+              onTap: () {
+                _showCityDialog(context, cityController); 
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.home),
               title: Text("Aplicar"),
               onTap: () {
-                getPropertiesFromFirebase(propertyType, price);
+                getPropertiesFromFirebase(propertyType, price, city);
                 Navigator.pop(context);
               },
             ),
@@ -332,7 +342,8 @@ void onTapFilter(BuildContext context) {
               onTap: () {
                 price = null;
                 propertyType = null;
-                getPropertiesFromFirebase(null, null); 
+                city = null;
+                getPropertiesFromFirebase(null, null, null); 
                 Navigator.pop(context);
               },
             )
@@ -404,6 +415,31 @@ void _showSubmenuType(BuildContext context) {
     },
   );
 }
+  
+  
+  void _showCityDialog(BuildContext context, TextEditingController cityController) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Introduce la direccion'),
+        content: TextField(
+          controller: cityController,
+          keyboardType: TextInputType.name,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              city = cityController.text;
+            },
+            child: Text('Confirmar'),
+          ),
+        ],
+      );
+    },
+  );
+}
   }
   
   class Property {
@@ -411,7 +447,7 @@ void _showSubmenuType(BuildContext context) {
   final String address;
   final double price;
   final List<String> photos;
-  final List<String>? withRoomies;
+  final List<dynamic>? withRoomies;
   final int numOfRooms;
   final bool canBeShared;
   final bool isRented;
@@ -456,7 +492,7 @@ factory Property.fromDocumentSnapshot(DocumentSnapshot snapshot) {
   String? address = data['address'];
   double? price = (data['price'] as num?)?.toDouble();
   List<String>? propertyPhotos = (data['propertyPhotos'] as List<dynamic>?)?.map((photo) => photo.toString()).toList();
-  List<String>? withRoomies = data['withRoomies'];
+  List<dynamic>? withRoomies = data['withRoomies'];
   int? numOfRooms = data['numOfRooms'];
   bool canBeShared = data['canBeShared'] ?? false;
   bool isRented = data['isRented'] ?? false;

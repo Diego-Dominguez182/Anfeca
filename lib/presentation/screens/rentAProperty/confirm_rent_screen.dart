@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:resty_app/core/app_export.dart';
-import 'package:resty_app/presentation/screens/Home/main_screen.dart';
-import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
-import 'package:resty_app/presentation/widgets/date_input_formatter.dart';
+import 'package:SecuriSpace/core/app_export.dart';
+import 'package:SecuriSpace/presentation/screens/Home/main_screen.dart';
+import 'package:SecuriSpace/presentation/widgets/app_bar/custom_app_bar.dart';
+import 'package:SecuriSpace/presentation/widgets/date_input_formatter.dart';
 
 class NuevaPantalla extends StatefulWidget {
   final String? idProperty;
@@ -54,7 +54,7 @@ class _NuevaPantallaState extends State<NuevaPantalla> {
   @override
   void initState() {
     super.initState();
-    _precioFinal = (widget.price! * 1.5) ;
+    _precioFinal = (widget.price! * 2) ;
     getUserInfo();
   }
 
@@ -270,7 +270,7 @@ Widget _expirationDateController(BuildContext context) {
       if (_compartir) {
         _precioFinal = widget.price ?? 0.0;
       } else {
-        _precioFinal = (widget.price ?? 0.0) * 1.5;
+        _precioFinal = (widget.price ?? 0.0) * 2;
       }
     });
   }

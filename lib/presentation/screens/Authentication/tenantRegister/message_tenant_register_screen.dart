@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:resty_app/core/app_export.dart';
-import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
+import 'package:SecuriSpace/core/app_export.dart';
+import 'package:SecuriSpace/presentation/widgets/custom_outlined_button.dart';
 
 class MessageTenantRegisterScreen extends StatelessWidget {
   const MessageTenantRegisterScreen({Key? key}) : super(key: key);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resty_app/core/app_export.dart';
+import 'package:SecuriSpace/core/app_export.dart';
 
 // ignore: must_be_immutable
 class AppbarTitle extends StatelessWidget {

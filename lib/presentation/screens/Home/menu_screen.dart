@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
-import 'package:resty_app/core/app_export.dart';
-import 'package:resty_app/presentation/screens/Home/preference_form.dart';
-import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
-import 'package:resty_app/presentation/screens/rentAProperty/my_rents_screen.dart';
+import 'package:SecuriSpace/core/app_export.dart';
+import 'package:SecuriSpace/presentation/screens/Home/preference_form.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/my_properties_screen.dart';
+import 'package:SecuriSpace/presentation/screens/rentAProperty/my_rents_screen.dart';
 
 import '../../widgets/app_bar/appbar_leading_iconbutton.dart';
 import '../../widgets/app_bar/appbar_title.dart';

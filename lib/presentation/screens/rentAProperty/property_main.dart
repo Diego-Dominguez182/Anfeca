@@ -8,12 +8,12 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
-import 'package:resty_app/presentation/screens/myProperties/my_properties_screen.dart';
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_screen.dart';
-import 'package:resty_app/presentation/screens/rentAProperty/confirm_rent_screen.dart';
-import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
-import 'package:resty_app/routes/app_routes.dart';
+import 'package:SecuriSpace/presentation/screens/Home/main_screen_map.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/my_properties_screen.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/uploadProperty/upload_property_screen.dart';
+import 'package:SecuriSpace/presentation/screens/rentAProperty/confirm_rent_screen.dart';
+import 'package:SecuriSpace/presentation/widgets/app_bar/custom_app_bar.dart';
+import 'package:SecuriSpace/routes/app_routes.dart';
 
 class PropertyMainScreen extends StatefulWidget {
   final String? idProperty;

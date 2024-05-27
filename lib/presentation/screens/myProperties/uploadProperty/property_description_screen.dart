@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart'; 
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/property_price_screen.dart';
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
-import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/uploadProperty/property_price_screen.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/uploadProperty/upload_property_photos.dart';
+import 'package:SecuriSpace/presentation/widgets/app_bar/custom_app_bar.dart';
 
 final currentUser = FirebaseAuth.instance.currentUser;
 final userId = currentUser?.uid;

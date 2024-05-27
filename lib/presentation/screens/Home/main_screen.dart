@@ -7,15 +7,15 @@ import 'package:flutter/material.dart';
 
   import 'package:geolocator/geolocator.dart';
   import 'package:google_maps_flutter/google_maps_flutter.dart';
-  import 'package:resty_app/core/utils/image_constant.dart';
-import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
-  import 'package:resty_app/presentation/screens/Home/menu_screen.dart';
-  import 'package:resty_app/presentation/theme/app_decoration.dart';
-  import 'package:resty_app/presentation/theme/custom_text_style.dart';
-  import 'package:resty_app/presentation/widgets/custom_image_view.dart';
-  import 'package:resty_app/presentation/widgets/custom_search_view.dart';
-  import 'package:resty_app/presentation/widgets/icon_button_with_text.dart';
-  import 'package:resty_app/presentation/widgets/main_item_widget.dart';
+  import 'package:SecuriSpace/core/utils/image_constant.dart';
+import 'package:SecuriSpace/presentation/screens/Home/main_screen_map.dart';
+  import 'package:SecuriSpace/presentation/screens/Home/menu_screen.dart';
+  import 'package:SecuriSpace/presentation/theme/app_decoration.dart';
+  import 'package:SecuriSpace/presentation/theme/custom_text_style.dart';
+  import 'package:SecuriSpace/presentation/widgets/custom_image_view.dart';
+  import 'package:SecuriSpace/presentation/widgets/custom_search_view.dart';
+  import 'package:SecuriSpace/presentation/widgets/icon_button_with_text.dart';
+  import 'package:SecuriSpace/presentation/widgets/main_item_widget.dart';
 
   class MainScreen extends StatefulWidget {
     final LatLng? currentPosition;
@@ -39,7 +39,7 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
   void initState() {
   super.initState();
   getUserCurrentLocation();
-  propertiesFuture = getPropertiesFromFirebase(null, 100000, false, null);
+  propertiesFuture = getPropertiesFromFirebase(null, 100000, null);
 }
 
 
@@ -55,7 +55,7 @@ import 'package:resty_app/presentation/screens/Home/main_screen_map.dart';
       });
     }
 
-   Future<List<Property>> getPropertiesFromFirebase(String? propertyType, double? price, bool? withRoomie, String? city) async {
+   Future<List<Property>> getPropertiesFromFirebase(String? propertyType, double? price, String? city) async {
   try {
     QuerySnapshot querySnapshot =
     await FirebaseFirestore.instance.collection('Property').get();
@@ -322,7 +322,7 @@ void onTapFilter(BuildContext context) {
               leading: Icon(Icons.arrow_forward),
               title: Text("Aplicar"),
               onTap: () {
-                getPropertiesFromFirebase(propertyType, price, withRoomie, city).then((properties) {
+                getPropertiesFromFirebase(propertyType, price, city).then((properties) {
                   setState(() {
                     propertiesFuture = Future.value(properties);
                   });
@@ -336,7 +336,8 @@ void onTapFilter(BuildContext context) {
               onTap: () {
                 price = 100000;
                 propertyType = null;
-                getPropertiesFromFirebase(propertyType, price, withRoomie, null).then((properties) {
+                city = null;
+                getPropertiesFromFirebase(propertyType, price, null).then((properties) {
                   setState(() {
                     propertiesFuture = Future.value(properties);
                   });

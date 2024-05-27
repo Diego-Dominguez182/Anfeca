@@ -1,9 +1,9 @@
-export 'package:resty_app/core/utils/image_constant.dart';
-export 'package:resty_app/core/utils/size_utils.dart';
-export 'package:resty_app/routes/app_routes.dart';
-export 'package:resty_app/presentation/theme/app_decoration.dart';
-export 'package:resty_app/presentation/theme/custom_text_style.dart';
-export 'package:resty_app/presentation/theme/theme_helper.dart';
-export 'package:resty_app/presentation/widgets/custom_image_view.dart';
+export 'package:SecuriSpace/core/utils/image_constant.dart';
+export 'package:SecuriSpace/core/utils/size_utils.dart';
+export 'package:SecuriSpace/routes/app_routes.dart';
+export 'package:SecuriSpace/presentation/theme/app_decoration.dart';
+export 'package:SecuriSpace/presentation/theme/custom_text_style.dart';
+export 'package:SecuriSpace/presentation/theme/theme_helper.dart';
+export 'package:SecuriSpace/presentation/widgets/custom_image_view.dart';
 export '../presentation/theme/custom_button_style.dart';
-export 'package:resty_app/core/utils/date_time_utils.dart';
+export 'package:SecuriSpace/core/utils/date_time_utils.dart';

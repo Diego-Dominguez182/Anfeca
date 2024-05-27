@@ -6,7 +6,7 @@
 <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <application
         android:name="androidx.multidex.MultiDexApplication"
-        android:label="resty_app"
+        android:label="SecuriSpace"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

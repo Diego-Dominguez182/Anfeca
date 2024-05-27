@@ -1,6 +1,6 @@
-import 'package:resty_app/presentation/widgets/custom_search_view.dart';
+import 'package:SecuriSpace/presentation/widgets/custom_search_view.dart';
 import 'package:flutter/material.dart';
-import 'package:resty_app/core/app_export.dart';
+import 'package:SecuriSpace/core/app_export.dart';
 
 // ignore: must_be_immutable
 class AppbarTitleSearchview extends StatelessWidget {

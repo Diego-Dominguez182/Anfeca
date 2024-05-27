@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
-import 'package:resty_app/presentation/screens/Home/main_screen.dart' show Property; 
-import 'package:resty_app/core/app_export.dart';
+import 'package:SecuriSpace/presentation/screens/Home/main_screen.dart' show Property; 
+import 'package:SecuriSpace/core/app_export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:resty_app/presentation/widgets/app_bar/appbar_leading_iconbutton.dart';
-import 'package:resty_app/presentation/widgets/app_bar/appbar_title.dart';
-import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
-import 'package:resty_app/presentation/widgets/main_item_widget.dart';
+import 'package:SecuriSpace/presentation/widgets/app_bar/appbar_leading_iconbutton.dart';
+import 'package:SecuriSpace/presentation/widgets/app_bar/appbar_title.dart';
+import 'package:SecuriSpace/presentation/widgets/app_bar/custom_app_bar.dart';
+import 'package:SecuriSpace/presentation/widgets/main_item_widget.dart';
 
 class MyRentsScreen extends StatefulWidget {
   final LatLng? currentPosition;

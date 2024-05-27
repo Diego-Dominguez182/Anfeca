@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:resty_app/core/app_export.dart';
-import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
-import 'package:resty_app/presentation/widgets/custom_text_form_field.dart';
+import 'package:SecuriSpace/core/app_export.dart';
+import 'package:SecuriSpace/presentation/widgets/custom_outlined_button.dart';
+import 'package:SecuriSpace/presentation/widgets/custom_text_form_field.dart';
 
 // ignore: must_be_immutable
 class ResetPasswordScreen extends StatelessWidget {

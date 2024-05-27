@@ -1,4 +1,4 @@
-package com.example.resty_app
+package com.example.SecuriSpace
 
 import io.flutter.embedding.android.FlutterActivity
 

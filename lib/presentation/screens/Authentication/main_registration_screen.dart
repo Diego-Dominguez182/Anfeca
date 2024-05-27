@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:resty_app/core/app_export.dart';
-import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
+import 'package:SecuriSpace/core/app_export.dart';
+import 'package:SecuriSpace/presentation/widgets/custom_outlined_button.dart';
 
 class MainRegistrationScreen extends StatelessWidget {
   const MainRegistrationScreen({super.key});

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:resty_app/core/app_export.dart';
+import 'package:SecuriSpace/core/app_export.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:resty_app/presentation/widgets/custom_outlined_button.dart';
-import 'package:resty_app/presentation/widgets/custom_text_form_field.dart';
+import 'package:SecuriSpace/presentation/widgets/custom_outlined_button.dart';
+import 'package:SecuriSpace/presentation/widgets/custom_text_form_field.dart';
 
 class TenantRegistrationScreen extends StatefulWidget {
   TenantRegistrationScreen({Key? key}) : super(key: key);

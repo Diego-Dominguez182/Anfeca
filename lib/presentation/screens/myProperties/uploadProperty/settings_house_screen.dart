@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/location_propertie_screen.dart';
-import 'package:resty_app/presentation/screens/myProperties/uploadProperty/upload_property_screen.dart';
-import 'package:resty_app/presentation/widgets/app_bar/custom_app_bar.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/uploadProperty/location_propertie_screen.dart';
+import 'package:SecuriSpace/presentation/screens/myProperties/uploadProperty/upload_property_screen.dart';
+import 'package:SecuriSpace/presentation/widgets/app_bar/custom_app_bar.dart';
 
 class SettingHouseScreen extends StatefulWidget {
   final String? idProperty;
