@@ -134,7 +134,14 @@ Widget build(BuildContext context) {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.search), onPressed: () {  },
+                      icon: const Icon(Icons.search), 
+                      onPressed: () { 
+                        getPropertiesFromFirebase(null, 100000, searchController.text).then((properties) {
+                  setState(() {
+                    propertiesFuture = Future.value(properties);
+                  });
+                        });
+                       },
                     ),
                   ],
               ),
