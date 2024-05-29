@@ -113,6 +113,11 @@ class CustomSearchView extends StatelessWidget {
         prefixIcon: prefix ??
             Container(
               margin: EdgeInsets.fromLTRB(15.h, 14.v, 30.h, 13.v),
+              child: CustomImageView(
+                imagePath: ImageConstant.lupa,
+                height: 20.adaptSize,
+                width: 20.adaptSize,
+              ),
             ),
         prefixIconConstraints: prefixConstraints ??
             BoxConstraints(
@@ -166,7 +171,7 @@ class CustomSearchView extends StatelessWidget {
       );
 }
 
-
+/// Extension on [CustomSearchView] to facilitate inclusion of all types of border style etc
 extension SearchViewStyleHelper on CustomSearchView {
   static OutlineInputBorder get outlineBlackTL20 => OutlineInputBorder(
         borderRadius: BorderRadius.vertical(
